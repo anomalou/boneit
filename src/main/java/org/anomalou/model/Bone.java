@@ -13,38 +13,39 @@ import java.io.Serial;
 
 public class Bone extends Layer{ //is a bone, like a rig in blender
     @Getter
+    @Setter
     private transient BufferedImage transformBitmap;
     @Getter
     @Setter
     private Point rootPosition; //position of root of the bone on its layer, not the same as "position"
     @Getter
     @Setter
-    private Point directionPosition; //position of direction of the bone on workspace
+    private FPoint directionPosition; //position of direction of the bone on workspace
 
     public Bone(){
         super();
 
         name = "NewBone";
-        transformBitmap = new BufferedImage(0, 0, BufferedImage.TYPE_INT_ARGB);
+        transformBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         rootPosition = new Point(0, 0);
-        directionPosition = new Point(0, 0);
+        directionPosition = new FPoint(0, 0);
     }
 
     public double getAngle(){
-        Point normalizedVector = new Point(directionPosition.x - (position.x - rootPosition.x), directionPosition.y - (position.y - rootPosition.y));
+        FPoint normalizedVector = new FPoint(directionPosition.x - position.x - rootPosition.x, directionPosition.y - position.y - rootPosition.y);
 
         double cos = normalizedVector.x / (Math.sqrt(1) * Math.sqrt(Math.pow(normalizedVector.x, 2) + Math.pow(normalizedVector.y, 2)));
-        return Math.acos(cos);
+        return -Math.acos(cos);
     }
 
     //maybe it should be in controller. I will try move it later
     public void applyPosition(){
         for(Layer child : children){
             if(child instanceof Bone){
-                Point diff = new Point(directionPosition.x - child.position.x, directionPosition.y - child.position.y);
-                child.position = new Point(child.position.x + diff.x, child.position.y + diff.y);
-                Point oldDirection = ((Bone)child).directionPosition;
-                ((Bone)child).directionPosition = new Point(oldDirection.x + diff.x, oldDirection.y + diff.y);
+                FPoint diff = new FPoint(directionPosition.x - child.position.x, directionPosition.y - child.position.y);
+                child.position = new Point((int) (child.position.x + diff.x), (int) (child.position.y + diff.y));
+                FPoint oldDirection = ((Bone)child).directionPosition;
+                ((Bone)child).directionPosition = new FPoint(oldDirection.x + diff.x, oldDirection.y + diff.y);
                 ((Bone)child).applyPosition();
             }
         }
@@ -66,7 +67,17 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
             g2d.dispose();
             transformBitmap = nBaseBitmap;
         }
-        // need to redraw ALL base bitmap to transform bitmap !!!!!!!!!
+
+        applyRotation();
+    }
+
+    public void applyRotation(){
+        if(transformBitmap.getWidth() != baseBitmap.getWidth() || transformBitmap.getHeight() != baseBitmap.getHeight())
+            transformBitmap = new BufferedImage(baseBitmap.getWidth(), baseBitmap.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = transformBitmap.createGraphics();
+        g2d.rotate(getAngle(), rootPosition.x, rootPosition.y);
+        g2d.drawImage(baseBitmap, null, 0, 0);
+        g2d.dispose();
     }
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES

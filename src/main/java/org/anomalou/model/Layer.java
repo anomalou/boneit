@@ -20,6 +20,7 @@ public class Layer implements Serializable { //a base class for layers or bones
     @Getter
     protected final UUID uuid = UUID.randomUUID();
     @Getter
+    @Setter
     protected transient BufferedImage baseBitmap;
     @Getter
     @Setter
@@ -30,9 +31,9 @@ public class Layer implements Serializable { //a base class for layers or bones
     public Layer(){
         name = "NewLayer";
         position = new Point(0, 0);
-        baseBitmap = new BufferedImage(0, 0, BufferedImage.TYPE_INT_ARGB);
+        baseBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         children = new ArrayList<>();
-        logger.info(String.format("Entity %s created!", getUuid().toString()));
+        logger.info(String.format("Entity %s(%s) created!", name, getUuid().toString()));
     }
 
     //maybe is HUETA and do not work

@@ -3,11 +3,12 @@ package org.anomalou.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class Workspace {
+public class Workspace implements Serializable {
     private final Logger logger = Logger.getLogger(Workspace.class.getName());
 
     @Getter
@@ -28,6 +29,7 @@ public class Workspace {
         name = "NewWorkspace";
         width = 0;
         height = 0;
+        layers = new ArrayList<>();
 
         logger.info(String.format("Workspace %s(%s) is created", name, uuid.toString()));
     }

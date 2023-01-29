@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="gitignore edit" />
+    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="gitignore edit">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Application.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ProjectController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/FPoint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Layer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Layer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Workspace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Workspace.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,6 +54,15 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.anomalou.Main" />
+      <module name="boneit" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -67,7 +86,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674918121615</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="gitignore edit">
+      <created>1674918293321</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1674918293321</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <option name="createBranch" value="false" />
     <servers />
   </component>
@@ -86,5 +112,21 @@
     <MESSAGE value="init, base models" />
     <MESSAGE value="gitignore edit" />
     <option name="LAST_COMMIT_MESSAGE" value="gitignore edit" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/anomalou/Main.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java</url>
+          <line>36</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
