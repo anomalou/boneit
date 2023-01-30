@@ -31,7 +31,6 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
     public Bone(){
         super();
 
-        name = "NewBone";
         transformBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         rootBasePosition = new Point(0, 0);
         rootDirectionPosition = new Point(0, 0);
@@ -66,30 +65,30 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
                 ((Bone)child).applyPosition();
             }
         }
-        logger.info(String.format("Positions for bone %s(%s) is applied", getName(), getUuid().toString()));
+        logger.info(String.format("Positions for bone (%s) is applied", getUuid().toString()));
     }
 
     //maybe is HUETA and do not work
-    public Bone findByName(String name) {
-        if(this.name.equals(name)){
-            logger.info(String.format("Child with name \"%s\"(%s) found!", name, getUuid().toString()));
-            return this;
-        }
-
-        for(Bone child : children){
-//            if(child.getName().equals(name)){
-//                logger.info(String.format("Child with name \"%s\"(%s) found!", name, getUuid().toString()));
-//                return child;
-//            }
-
-            Bone outChild = child.findByName(name);
-            if(outChild.equals(null))
-                logger.info(String.format("Bone by name \"%s\"(%s) do not have child with name \"%s\"", child.getName(), child.getUuid().toString(), name));
-            else
-                return outChild;
-        }
-        return null;
-    }
+//    public Bone findByName(String name) {
+//        if(this.name.equals(name)){
+//            logger.info(String.format("Child with name \"%s\"(%s) found!", name, getUuid().toString()));
+//            return this;
+//        }
+//
+//        for(Bone child : children){
+////            if(child.getName().equals(name)){
+////                logger.info(String.format("Child with name \"%s\"(%s) found!", name, getUuid().toString()));
+////                return child;
+////            }
+//
+//            Bone outChild = child.findByName(name);
+//            if(outChild.equals(null))
+//                logger.info(String.format("Bone by name \"%s\"(%s) do not have child with name \"%s\"", child.getName(), child.getUuid().toString(), name));
+//            else
+//                return outChild;
+//        }
+//        return null;
+//    }
 
     @Override
     public void reshape(int w, int h){

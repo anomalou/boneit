@@ -17,12 +17,13 @@ public class Project implements Serializable {
     private final UUID uuid = UUID.randomUUID();
     @Getter
     @Setter
-    private Workspace workspace;
+    private Canvas canvas;
+    private NameBuffer nameBuffer;
     //here maybe something else, like history of changes or something like that
 
     public Project(){
         name = "NewProject";
-        workspace = new Workspace();
+        canvas = new Canvas();
     }
 
     public Project(String name){

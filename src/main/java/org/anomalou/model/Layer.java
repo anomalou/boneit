@@ -15,9 +15,6 @@ public class Layer implements Serializable { //a base class for layers or bones
     protected transient final Logger logger = Logger.getLogger(Layer.class.getName());
 
     @Getter
-    @Setter
-    protected String name;
-    @Getter
     protected final UUID uuid = UUID.randomUUID();
     @Getter
     @Setter
@@ -27,10 +24,9 @@ public class Layer implements Serializable { //a base class for layers or bones
     protected Point position; //position on workspace
 
     public Layer(){
-        name = "NewLayer";
         position = new Point(0, 0);
         baseBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        logger.info(String.format("Entity %s(%s) created!", name, getUuid().toString()));
+        logger.info(String.format("Entity (%s) created!", getUuid().toString()));
     }
 
     public void reshape(int w, int h){

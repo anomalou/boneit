@@ -1,5 +1,7 @@
 package org.anomalou.controller;
 
-public class ProjectController {
+import java.util.logging.Logger;
 
+public class ProjectController {
+    private final Logger logger = Logger.getLogger(ProjectController.class.getName());
 }

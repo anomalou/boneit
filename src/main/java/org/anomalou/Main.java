@@ -2,6 +2,8 @@ package org.anomalou;
 
 import org.anomalou.model.Bone;
 import org.anomalou.model.FPoint;
+import org.anomalou.model.Project;
+import org.anomalou.view.CanvasPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,32 +19,36 @@ public class Main {
 
         JFrame frame = makeFrame();
 
-        Bone bone = new Bone();
+//        Bone bone = new Bone();
 
+        BufferedImage img;
         try{
-            BufferedImage img = ImageIO.read(new File("test.png"));
-            bone.setBaseBitmap(img);
+            img = ImageIO.read(new File("test.png"));
+//            bone.setBaseBitmap(img);
         }catch (IOException ex){
             ex.printStackTrace();
         }
 
-        bone.setRootBasePosition(new Point(70, 70));
-        bone.setRootDirectionPosition(new Point(75, 70));
-        bone.setDirection(new FPoint(1, 0));
+        Project project = new Project();
+        CanvasPanel canvasPanel = new CanvasPanel(project.getCanvas());
 
-        logger.info(String.valueOf(bone.getAngle()));
+//        bone.setRootBasePosition(new Point(70, 70));
+//        bone.setRootDirectionPosition(new Point(75, 70));
+//        bone.setDirection(new FPoint(1, 0));
+//
+//        logger.info(String.valueOf(bone.getAngle()));
+//
+//        bone.applyRotation();
 
-        bone.applyRotation();
+//        JPanel panel = new JPanel(){
+//            @Override
+//            protected void paintComponent(Graphics g){
+//                super.paintComponent(g);
+//                g.drawImage(bone.getTransformBitmap(), 0, 0, 400, 400, null);
+//            }
+//        };
 
-        JPanel panel = new JPanel(){
-            @Override
-            protected void paintComponent(Graphics g){
-                super.paintComponent(g);
-                g.drawImage(bone.getTransformBitmap(), 0, 0, 400, 400, null);
-            }
-        };
-
-        frame.add(panel);
+        frame.add(canvasPanel);
         frame.revalidate();
     }
 
