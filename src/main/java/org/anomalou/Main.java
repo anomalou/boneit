@@ -26,8 +26,9 @@ public class Main {
             ex.printStackTrace();
         }
 
-        bone.setRootPosition(new Point(70, 70));
-        bone.setDirectionPosition(new FPoint(75, 69.8));
+        bone.setRootBasePosition(new Point(70, 70));
+        bone.setRootDirectionPosition(new Point(75, 70));
+        bone.setDirection(new FPoint(1, 0));
 
         logger.info(String.valueOf(bone.getAngle()));
 
@@ -42,8 +43,7 @@ public class Main {
         };
 
         frame.add(panel);
-        frame.invalidate();
-        frame.repaint();
+        frame.revalidate();
     }
 
     public static JFrame makeFrame(){

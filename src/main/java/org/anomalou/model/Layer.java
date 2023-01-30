@@ -25,31 +25,12 @@ public class Layer implements Serializable { //a base class for layers or bones
     @Getter
     @Setter
     protected Point position; //position on workspace
-    @Getter
-    protected ArrayList<Layer> children;
 
     public Layer(){
         name = "NewLayer";
         position = new Point(0, 0);
         baseBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        children = new ArrayList<>();
         logger.info(String.format("Entity %s(%s) created!", name, getUuid().toString()));
-    }
-
-    //maybe is HUETA and do not work
-    public Layer findByName(String name) {
-        for(Layer child : children){
-            if(child.getName().equals(name)){
-                logger.info(String.format("Child with name \"%s\"(%s) found!", name, getUuid().toString()));
-                return child;
-            }
-            Layer outChild = child.findByName(name);
-            if(outChild.equals(null))
-                logger.info(String.format("Layer by name \"%s\"(%s) do not have child with name \"%s\"", child.getName(), child.getUuid().toString(), name));
-            else
-                return outChild;
-        }
-        return null;
     }
 
     public void reshape(int w, int h){

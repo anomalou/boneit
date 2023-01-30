@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="gitignore edit">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ProjectController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/FPoint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Project.java" afterDir="false" />
+    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="rotation tests">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/view/Canvas.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Layer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Layer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Workspace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Workspace.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +89,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674918293321</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="rotation tests">
+      <created>1675011248458</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1675011248458</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <option name="createBranch" value="false" />
     <servers />
   </component>
@@ -111,22 +114,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init, base models" />
     <MESSAGE value="gitignore edit" />
-    <option name="LAST_COMMIT_MESSAGE" value="gitignore edit" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/anomalou/Main.java</url>
-          <line>35</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java</url>
-          <line>36</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="rotation tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="rotation tests" />
   </component>
 </project>
