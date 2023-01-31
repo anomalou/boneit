@@ -26,7 +26,7 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
     @Setter
     private FPoint direction; //direction in unit circle
     @Getter
-    private ArrayList<Bone> children;
+    private ArrayList<Bone> children; //TODO NEED CONVERT IT TO LAYER TYPE BECAUSE ITS FKING GENIUS! <--------
 
     public Bone(){
         super();
@@ -54,15 +54,15 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
         return Math.acos(cos) * side;
     }
 
-    //maybe it should be in controller. I will try move it later
+    //TODO maybe it should be in controller. I will try move it later
     public void applyPosition(){
-        for(Layer child : children){
+        for(Bone child : children){
             if(child instanceof Bone){
                 FPoint diff = new FPoint(direction.x - child.position.x, direction.y - child.position.y);
                 child.position = new Point((int) (child.position.x + diff.x), (int) (child.position.y + diff.y));
-                FPoint oldDirection = ((Bone)child).direction;
-                ((Bone)child).direction = new FPoint(oldDirection.x + diff.x, oldDirection.y + diff.y);
-                ((Bone)child).applyPosition();
+                FPoint oldDirection = child.direction;
+                child.direction = new FPoint(oldDirection.x + diff.x, oldDirection.y + diff.y);
+                child.applyPosition();
             }
         }
         logger.info(String.format("Positions for bone (%s) is applied", getUuid().toString()));
@@ -109,6 +109,7 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
         applyRotation();
     }
 
+    //TODO move it to controller IMPORTANT
     public void applyRotation(){
         if(transformBitmap.getWidth() != baseBitmap.getWidth() || transformBitmap.getHeight() != baseBitmap.getHeight())
             transformBitmap = new BufferedImage(baseBitmap.getWidth(), baseBitmap.getHeight(), BufferedImage.TYPE_INT_ARGB);

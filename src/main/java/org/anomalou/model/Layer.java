@@ -16,6 +16,11 @@ public class Layer implements Serializable { //a base class for layers or bones
 
     @Getter
     protected final UUID uuid = UUID.randomUUID();
+
+    /**
+     Just image of the layer, its shape MUST be 1x1 or more! <br>
+     Do not try to transform this image, its just raw pixel information for future transformation!
+     */
     @Getter
     @Setter
     protected transient BufferedImage baseBitmap;

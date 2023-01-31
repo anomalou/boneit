@@ -18,12 +18,18 @@ public class Project implements Serializable {
     @Getter
     @Setter
     private Canvas canvas;
-    private NameBuffer nameBuffer;
-    //here maybe something else, like history of changes or something like that
+    @Getter
+    private NameCache nameCache;
+    @Getter
+    private ObjectCache objectCache;
+    //TODO here maybe something else, like history of changes or something like that
 
     public Project(){
         name = "NewProject";
         canvas = new Canvas();
+
+        nameCache = new NameCache();
+        objectCache = new ObjectCache();
     }
 
     public Project(String name){

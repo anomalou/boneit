@@ -7,7 +7,7 @@ import org.anomalou.model.Project;
 public class Application {
     private Project project;
     @Getter
-    private ProjectController projectController;
+    private ProjectController controller;
 
     public Application(){
 
@@ -15,9 +15,11 @@ public class Application {
 
     public void createProject(){
         project = new Project();
+        controller = new ProjectController(project);
     }
 
     public void createProject(String name){
         project = new Project(name);
+        controller = new ProjectController(project);
     }
 }
