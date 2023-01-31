@@ -31,8 +31,4 @@ public class Canvas implements Serializable {
 
         logger.info(String.format("Workspace (%s) is created", uuid.toString()));
     }
-
-    public void createLayer(){
-
-    }
 }

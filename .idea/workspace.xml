@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="in work for canvas hierarchy">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/ObjectCache.java" afterDir="false" />
+    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="object cache, project controller and some refactoring">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ProjectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Layer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Layer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/NameBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/NameCache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Canvas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Canvas.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +109,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675088408911</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="object cache, project controller and some refactoring">
+      <created>1675163422214</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1675163422214</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <option name="createBranch" value="false" />
     <servers />
   </component>
@@ -134,6 +137,7 @@
     <MESSAGE value="rotation tests" />
     <MESSAGE value="angle method fix, everything tested" />
     <MESSAGE value="in work for canvas hierarchy" />
-    <option name="LAST_COMMIT_MESSAGE" value="in work for canvas hierarchy" />
+    <MESSAGE value="object cache, project controller and some refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="object cache, project controller and some refactoring" />
   </component>
 </project>

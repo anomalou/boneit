@@ -2,6 +2,7 @@ package org.anomalou;
 
 import org.anomalou.model.Bone;
 import org.anomalou.model.FPoint;
+import org.anomalou.model.Layer;
 import org.anomalou.model.Project;
 import org.anomalou.view.CanvasPanel;
 
@@ -21,7 +22,7 @@ public class Main {
 
 //        Bone bone = new Bone();
 
-        BufferedImage img;
+        BufferedImage img = null;
         try{
             img = ImageIO.read(new File("test.png"));
 //            bone.setBaseBitmap(img);
@@ -29,8 +30,13 @@ public class Main {
             ex.printStackTrace();
         }
 
-        Project project = new Project();
-        CanvasPanel canvasPanel = new CanvasPanel(project.getCanvas());
+        Application application = new Application();
+        application.createProject();
+        Layer layer = application.getController().createLayer();
+        layer.setBaseBitmap(img);
+        layer.setPosition(new Point(50, 50));
+
+        CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas());
 
 //        bone.setRootBasePosition(new Point(70, 70));
 //        bone.setRootDirectionPosition(new Point(75, 70));

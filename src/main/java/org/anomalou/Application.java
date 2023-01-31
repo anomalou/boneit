@@ -5,6 +5,8 @@ import org.anomalou.controller.ProjectController;
 import org.anomalou.model.Project;
 
 public class Application {
+
+    @Getter //TODO set it for TEST only!
     private Project project;
     @Getter
     private ProjectController controller;
