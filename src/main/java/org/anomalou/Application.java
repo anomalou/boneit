@@ -11,6 +11,8 @@ public class Application {
     @Getter
     private ProjectController controller;
 
+    //TODO here will be view, shortcut controller and etc
+
     public Application(){
 
     }

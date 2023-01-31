@@ -110,6 +110,7 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
     }
 
     //TODO move it to controller IMPORTANT
+    //TODO maybe, in future, if i have time, make transformBitmap adaptation to rotation of the image
     public void applyRotation(){
         if(transformBitmap.getWidth() != baseBitmap.getWidth() || transformBitmap.getHeight() != baseBitmap.getHeight())
             transformBitmap = new BufferedImage(baseBitmap.getWidth(), baseBitmap.getHeight(), BufferedImage.TYPE_INT_ARGB);

@@ -21,10 +21,10 @@ public class CanvasPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g){
         for(Layer l : canvas.getLayersHierarchy()){
-            if(l instanceof Layer){
+            if(l.getClass().equals(Layer.class)){
                 drawLayer(l, g);
             }
-            if(l instanceof Bone){
+            if(l.getClass().equals(Bone.class)){
                 drawSkeleton((Bone) l, g);
             }
         }

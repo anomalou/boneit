@@ -35,6 +35,13 @@ public class Main {
         Layer layer = application.getController().createLayer();
         layer.setBaseBitmap(img);
         layer.setPosition(new Point(50, 50));
+        Bone bone = application.getController().createSkeleton();
+        bone.setBaseBitmap(img);
+        bone.setPosition(new Point(60 ,60));
+        bone.setRootBasePosition(new Point(0, 0));
+        bone.setRootDirectionPosition(new Point(10,10));
+        bone.setDirection(new FPoint(1, 0));
+        bone.applyRotation();
 
         CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas());
 
