@@ -27,7 +27,7 @@ public class ProjectController {
         project.getNameCache().registerName(layer.getUuid(), "NewLayer");
         project.getObjectCache().registerObject(layer.getUuid(), layer);
         //TODO make here check for exception if something won't registered, if so invoke dialog window with description
-        project.getCanvas().getLayersHierarchy().add(layer);
+        project.getCanvas().getLayersHierarchy().add(layer.getUuid());
         return layer;
     }
 
@@ -36,7 +36,7 @@ public class ProjectController {
         project.getNameCache().registerName(bone.getUuid(), "NewSkeleton");
         project.getObjectCache().registerObject(bone.getUuid(), bone);
         //TODO make here check for exception if something won't registered, if so invoke dialog window with description
-        project.getCanvas().getLayersHierarchy().add(bone);
+        project.getCanvas().getLayersHierarchy().add(bone.getUuid());
         return bone;
     }
 
@@ -45,7 +45,7 @@ public class ProjectController {
         project.getNameCache().registerName(newBone.getUuid(), "NewBone");
         project.getObjectCache().registerObject(newBone.getUuid(), newBone);
         //TODO make here check for exception if something won't registered, if so invoke dialog window with description
-        bone.getChildren().add(newBone);
+        bone.getChildren().add(newBone.getUuid());
         return bone;
     }
 

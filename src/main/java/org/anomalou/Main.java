@@ -43,7 +43,7 @@ public class Main {
         bone.setDirection(new FPoint(1, 0));
         bone.applyRotation();
 
-        CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas());
+        CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getProject().getObjectCache());
 
 //        bone.setRootBasePosition(new Point(70, 70));
 //        bone.setRootDirectionPosition(new Point(75, 70));

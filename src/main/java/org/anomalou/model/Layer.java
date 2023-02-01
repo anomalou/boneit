@@ -18,15 +18,25 @@ public class Layer implements Serializable { //a base class for layers or bones
     protected final UUID uuid = UUID.randomUUID();
 
     /**
-     Just image of the layer, its shape MUST be 1x1 or more! <br>
-     Do not try to transform this image, its just raw pixel information for future transformation!
+     * Just image of the layer, its shape MUST be 1x1 or more! <br>
+     * Do not try to transform this image, its just raw pixel information for future transformation!
      */
     @Getter
     @Setter
     protected transient BufferedImage baseBitmap;
+    /**
+     * Offset on canvas. Bones will ignore this parameter.
+     */
     @Getter
     @Setter
-    protected Point position; //position on workspace
+    protected Point position;
+    /**
+     * Priority of the layer in render queue. <br>
+     * Big number of priority, means early render, also work oppositely
+     */
+    @Getter
+    @Setter
+    protected int priority;
 
     public Layer(){
         position = new Point(0, 0);

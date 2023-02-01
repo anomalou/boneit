@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serial;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Bone extends Layer{ //is a bone, like a rig in blender
     @Getter
@@ -26,7 +27,7 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
     @Setter
     private FPoint direction; //direction in unit circle
     @Getter
-    private ArrayList<Bone> children; //TODO NEED CONVERT IT TO LAYER TYPE BECAUSE ITS FKING GENIUS! <--------
+    private ArrayList<UUID> children; //TODO now can be only bones, not else!
 
     public Bone(){
         super();
@@ -55,39 +56,18 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
     }
 
     //TODO maybe it should be in controller. I will try move it later
-    public void applyPosition(){
-        for(Bone child : children){
-            if(child instanceof Bone){
-                FPoint diff = new FPoint(direction.x - child.position.x, direction.y - child.position.y);
-                child.position = new Point((int) (child.position.x + diff.x), (int) (child.position.y + diff.y));
-                FPoint oldDirection = child.direction;
-                child.direction = new FPoint(oldDirection.x + diff.x, oldDirection.y + diff.y);
-                child.applyPosition();
-            }
-        }
-        logger.info(String.format("Positions for bone (%s) is applied", getUuid().toString()));
-    }
-
-    //maybe is HUETA and do not work
-//    public Bone findByName(String name) {
-//        if(this.name.equals(name)){
-//            logger.info(String.format("Child with name \"%s\"(%s) found!", name, getUuid().toString()));
-//            return this;
-//        }
-//
+    //TODO NOT WORKS NOW
+//    public void applyPosition(){
 //        for(Bone child : children){
-////            if(child.getName().equals(name)){
-////                logger.info(String.format("Child with name \"%s\"(%s) found!", name, getUuid().toString()));
-////                return child;
-////            }
-//
-//            Bone outChild = child.findByName(name);
-//            if(outChild.equals(null))
-//                logger.info(String.format("Bone by name \"%s\"(%s) do not have child with name \"%s\"", child.getName(), child.getUuid().toString(), name));
-//            else
-//                return outChild;
+//            if(child instanceof Bone){
+//                FPoint diff = new FPoint(direction.x - child.position.x, direction.y - child.position.y);
+//                child.position = new Point((int) (child.position.x + diff.x), (int) (child.position.y + diff.y));
+//                FPoint oldDirection = child.direction;
+//                child.direction = new FPoint(oldDirection.x + diff.x, oldDirection.y + diff.y);
+//                child.applyPosition();
+//            }
 //        }
-//        return null;
+//        logger.info(String.format("Positions for bone (%s) is applied", getUuid().toString()));
 //    }
 
     @Override
@@ -126,13 +106,13 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         ImageIO.write(baseBitmap, "png", out);
-        ImageIO.write(transformBitmap, "png", out); //NEED MORE TEST! ITS MAY NOT BE WORK
+        ImageIO.write(transformBitmap, "png", out); //TODO NEED MORE TEST! ITS MAY NOT BE WORK
     }
 
     @Serial
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
         in.defaultReadObject();
         baseBitmap = ImageIO.read(in);
-        transformBitmap = ImageIO.read(in); //NEED MORE TEST! ITS MAY NOT BE WORK
+        transformBitmap = ImageIO.read(in); //TODO NEED MORE TEST! ITS MAY NOT BE WORK
     }
 }
