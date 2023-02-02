@@ -26,16 +26,24 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
     @Getter
     @Setter
     private FPoint direction; //direction in unit circle
+    /**
+     * Visibility of the bone rig.
+     */
+    @Getter
+    @Setter
+    private boolean isBoneVisible;
     @Getter
     private ArrayList<UUID> children; //TODO now can be only bones, not else!
 
     public Bone(){
         super();
 
+        name = "NewBone";
         transformBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         rootBasePosition = new Point(0, 0);
         rootDirectionPosition = new Point(0, 0);
         direction = new FPoint(0, 0);
+        isBoneVisible = false;
         children = new ArrayList<>();
     }
 

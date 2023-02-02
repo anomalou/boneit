@@ -21,8 +21,8 @@ public class Project implements Serializable {
     /**
      * Cache that stores names of every object on canvas. The cache do not allow names to repeat.
      */
-    @Getter
-    private NameCache nameCache;
+//    @Getter
+//    private NameCache nameCache;
     /**
      * Cache that stores every object on scene. This allows get needed object faster.
      */
@@ -34,12 +34,25 @@ public class Project implements Serializable {
         name = "NewProject";
         canvas = new Canvas();
 
-        nameCache = new NameCache();
+//        nameCache = new NameCache();
+        objectCache = new ObjectCache();
+    }
+
+    public Project(int width, int height){
+        name = "NewProject";
+        canvas = new Canvas(width, height);
+
         objectCache = new ObjectCache();
     }
 
     public Project(String name){
         this();
+
+        this.name = name;
+    }
+
+    public Project(String name, int width, int height){
+        this(width, height);
 
         this.name = name;
     }

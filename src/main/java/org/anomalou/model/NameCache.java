@@ -4,14 +4,17 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+//TODO remember, why I even made that class?
+@Deprecated
 public class NameCache implements Serializable {
     private final Logger logger = Logger.getLogger(NameCache.class.getName());
 
     @Getter
-    private HashMap<UUID, String> names;
+    private HashMap<UUID, String> names; //TODO replace to Set
 
     public NameCache(){
         names = new HashMap<>();
@@ -24,7 +27,7 @@ public class NameCache implements Serializable {
         }
         if(names.containsValue(name)){
             String temp = ""; //TODO check it work later, its MAYBE, AS ALWAYS, ITS NOT WORKING AS I WANT
-            for(int i = 0; i < 1000; i++){
+            for(int i = 0; i < 1000; i++){ //TODO move 1000 to config
                 temp = String.format("%s (%d)", name, i);
                 if(!names.containsValue(temp))
                     break;

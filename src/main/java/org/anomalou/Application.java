@@ -17,13 +17,14 @@ public class Application {
 
     }
 
-    public void createProject(){
+    public Project createProject(){
         project = new Project();
         controller = new ProjectController(project);
+        return project;
     }
 
-    public void createProject(String name){
-        project = new Project(name);
+    public void openProject(Project project){
+        this.project = project;
         controller = new ProjectController(project);
     }
 }

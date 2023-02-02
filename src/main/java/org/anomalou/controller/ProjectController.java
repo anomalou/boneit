@@ -24,7 +24,7 @@ public class ProjectController {
 
     public Layer createLayer(){
         Layer layer = new Layer();
-        project.getNameCache().registerName(layer.getUuid(), "NewLayer");
+//        project.getNameCache().registerName(layer.getUuid(), "NewLayer");
         project.getObjectCache().registerObject(layer.getUuid(), layer);
         //TODO make here check for exception if something won't registered, if so invoke dialog window with description
         project.getCanvas().getLayersHierarchy().add(layer.getUuid());
@@ -33,7 +33,7 @@ public class ProjectController {
 
     public Bone createSkeleton(){
         Bone bone = new Bone();
-        project.getNameCache().registerName(bone.getUuid(), "NewSkeleton");
+//        project.getNameCache().registerName(bone.getUuid(), "NewSkeleton");
         project.getObjectCache().registerObject(bone.getUuid(), bone);
         //TODO make here check for exception if something won't registered, if so invoke dialog window with description
         project.getCanvas().getLayersHierarchy().add(bone.getUuid());
@@ -42,7 +42,7 @@ public class ProjectController {
 
     public Bone extrudeBone(Bone bone){
         Bone newBone = new Bone();
-        project.getNameCache().registerName(newBone.getUuid(), "NewBone");
+//        project.getNameCache().registerName(newBone.getUuid(), "NewBone");
         project.getObjectCache().registerObject(newBone.getUuid(), newBone);
         //TODO make here check for exception if something won't registered, if so invoke dialog window with description
         bone.getChildren().add(newBone.getUuid());

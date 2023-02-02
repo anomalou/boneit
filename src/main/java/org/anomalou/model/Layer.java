@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class Layer implements Serializable { //a base class for layers or bones
+public class Layer implements Serializable, Comparable<Layer> { //a base class for layers or bones
     protected transient final Logger logger = Logger.getLogger(Layer.class.getName());
 
     @Getter
     protected final UUID uuid = UUID.randomUUID();
-
+    @Getter
+    @Setter
+    protected String name;
     /**
      * Just image of the layer, its shape MUST be 1x1 or more! <br>
      * Do not try to transform this image, its just raw pixel information for future transformation!
@@ -36,12 +38,21 @@ public class Layer implements Serializable { //a base class for layers or bones
      */
     @Getter
     @Setter
-    protected int priority;
+    protected Integer priority;
+    /**
+     * Visibility og the bitmap.
+     */
+    @Getter
+    @Setter
+    protected boolean isVisible;
 
     public Layer(){
+        name = "NewLayer";
         position = new Point(0, 0);
         baseBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         logger.info(String.format("Entity (%s) created!", getUuid().toString()));
+        priority = 0;
+        isVisible = true;
     }
 
     public void reshape(int w, int h){
@@ -70,5 +81,11 @@ public class Layer implements Serializable { //a base class for layers or bones
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
         in.defaultReadObject();
         baseBitmap = ImageIO.read(in);
+    }
+
+    @Override
+    public int compareTo(Layer o) {
+        int result = this.priority.compareTo(o.priority);
+        return result;
     }
 }
