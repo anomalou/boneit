@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="reorganization of scene hierarchy">
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/anomalou/model/NameCacheTest.java" afterDir="false" />
+    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="added render order, mouse control initiation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Application.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ProjectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Canvas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Canvas.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Layer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Layer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/NameCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/NameCache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Project.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/view/CanvasPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/view/CanvasPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -166,7 +157,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675248521532</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="added render order, mouse control initiation">
+      <created>1675338704382</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1675338704382</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <option name="createBranch" value="false" />
     <servers />
   </component>
@@ -191,6 +189,7 @@
     <MESSAGE value="canvas panel tests" />
     <MESSAGE value="canvas panel test bones and its rotation" />
     <MESSAGE value="reorganization of scene hierarchy" />
-    <option name="LAST_COMMIT_MESSAGE" value="reorganization of scene hierarchy" />
+    <MESSAGE value="added render order, mouse control initiation" />
+    <option name="LAST_COMMIT_MESSAGE" value="added render order, mouse control initiation" />
   </component>
 </project>

@@ -20,19 +20,16 @@ public class Main {
 
         JFrame frame = makeFrame();
 
-//        Bone bone = new Bone();
-
         BufferedImage img = null;
         try{
             img = ImageIO.read(new File("test.png"));
-//            bone.setBaseBitmap(img);
         }catch (IOException ex){
             ex.printStackTrace();
         }
 
         Application application = new Application();
         Project project = application.createProject();
-        project.getCanvas().reshape(100, 100);
+        project.getCanvas().reshape(400, 400);
         Layer layer = application.getController().createLayer();
         layer.setBaseBitmap(img);
         layer.setPosition(new Point(50, 50));
@@ -45,22 +42,6 @@ public class Main {
         bone.applyRotation();
 
         CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getProject().getObjectCache());
-
-//        bone.setRootBasePosition(new Point(70, 70));
-//        bone.setRootDirectionPosition(new Point(75, 70));
-//        bone.setDirection(new FPoint(1, 0));
-//
-//        logger.info(String.valueOf(bone.getAngle()));
-//
-//        bone.applyRotation();
-
-//        JPanel panel = new JPanel(){
-//            @Override
-//            protected void paintComponent(Graphics g){
-//                super.paintComponent(g);
-//                g.drawImage(bone.getTransformBitmap(), 0, 0, 400, 400, null);
-//            }
-//        };
 
         frame.add(canvasPanel);
         frame.revalidate();

@@ -11,9 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.UUID;
 
 public class CanvasPanel extends JPanel {
 
@@ -49,23 +47,54 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawInterface(Graphics g){
-        //Draw frame on the canvas
+        g.setColor(Color.gray);
+
+        //Draw ruler
+        //LU corner
+        g.drawString("0", offset.x + 1, 10); //TODO MAGIC numbers!!!
+        g.drawString("0", 0, offset.y + 10);
+        g.drawLine(offset.x, 0, offset.x, getHeight());
+        g.drawLine(0, offset.y, getWidth(), offset.y);
+
+        //RD corner
+        g.drawString(String.format("%d", canvas.getWidth()), offset.x + 1 + canvas.getWidth(), 10);
+        g.drawString(String.format("%d", canvas.getHeight()), 0, offset.y + 10 + canvas.getHeight());
+        g.drawLine(offset.x + canvas.getWidth(), 0, offset.x + canvas.getWidth(), getHeight());
+        g.drawLine(0, offset.y + canvas.getHeight(), getWidth(), offset.y + canvas.getHeight());
+
+        //Pixel in corners
+        g.drawString(String.format("%d", -offset.x), 10, 10);
+        g.drawString(String.format("%d", -offset.y), 1, 20);
+        g.drawString(String.format("%d", getWidth() - offset.x), getWidth() - 30, 10);
+        g.drawString(String.format("%d", getHeight() - offset.y), 1, getHeight() - 10);
+
         g.setColor(Color.black);
-        g.drawRect(offset.x, offset.y, canvas.getWidth(), canvas.getHeight());
     }
 
     private void createMouseListener(){
         this.addMouseMotionListener(new MouseMotionListener() {
+            Point oldPos = new Point(0, 0);
+            Point direction = new Point(0, 0);
             @Override
             public void mouseDragged(MouseEvent e) {
+                calculateDirection(e.getPoint());
                 if(isScrollPressed){
-                    System.out.print(String.format("%d - %d\n", e.getPoint().x, e.getPoint().y));
+                    offset.x += direction.x;
+                    offset.y += direction.y;
+                    getParent().repaint();
                 }
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
+                calculateDirection(e.getPoint());
+            }
 
+            private void calculateDirection(Point pos){
+                direction.x = pos.x - oldPos.x;
+                direction.y = pos.y - oldPos.y;
+
+                oldPos = pos;
             }
         });
 
