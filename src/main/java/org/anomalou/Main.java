@@ -21,8 +21,10 @@ public class Main {
         JFrame frame = makeFrame();
 
         BufferedImage img = null;
+        BufferedImage arrow = null;
         try{
             img = ImageIO.read(new File("test.png"));
+            arrow = ImageIO.read(new File("arrow.png"));
         }catch (IOException ex){
             ex.printStackTrace();
         }
@@ -34,12 +36,25 @@ public class Main {
         layer.setBaseBitmap(img);
         layer.setPosition(new Point(50, 50));
         Bone bone = application.getController().createSkeleton();
-        bone.setBaseBitmap(img);
-        bone.setPosition(new Point(70 ,70));
-        bone.setRootBasePosition(new Point(10, 10));
-        bone.setRootDirectionPosition(new Point(10,20));
-        bone.setDirection(new FPoint(-1, -0.5));
-        bone.applyRotation();
+        bone.setBaseBitmap(arrow);
+        bone.setPosition(new Point(50 ,50));
+        bone.setRootBasePosition(new Point(50, 50));
+        bone.setRootDirectionPosition(new Point(100,50));
+        bone.setDirection(new FPoint(1, -0.5));
+
+        Bone childBone = application.getController().extrudeBone(bone);
+        childBone.setBaseBitmap(arrow);
+        childBone.setRootBasePosition(new Point(50, 50));
+        childBone.setRootDirectionPosition(new Point(100,50));
+        childBone.setDirection(new FPoint(-1, 1));
+
+        Bone childBone2 = application.getController().extrudeBone(childBone);
+        childBone2.setBaseBitmap(arrow);
+        childBone2.setRootBasePosition(new Point(50, 50));
+        childBone2.setRootDirectionPosition(new Point(100,50));
+        childBone2.setDirection(new FPoint(0, 0));
+
+        application.getController().applySkeletonPosition(bone);
 
         CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getProject().getObjectCache());
 

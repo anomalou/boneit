@@ -47,10 +47,15 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
         children = new ArrayList<>();
     }
 
+    public void setDirection(FPoint direction) {
+        this.direction = direction;
+        applyRotation();
+    }
+
     // its WORKS!
     //get angle between direction and rootDirectionPosition vectors, as it began in (0, 0)
     public double getAngle(){
-        FPoint normalizedRootDirectionVector = new FPoint(rootDirectionPosition.x - rootBasePosition.x, (rootDirectionPosition.y - rootBasePosition.y) * -1);
+        FPoint normalizedRootDirectionVector = getNormalizedRootVector();
 
         double side = (direction.x) * (normalizedRootDirectionVector.y) - (direction.y) * (normalizedRootDirectionVector.x);
 
@@ -60,7 +65,15 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
                      (Math.sqrt(Math.pow(direction.x, 2) + Math.pow(direction.y, 2)) * Math.sqrt(Math.pow(normalizedRootDirectionVector.x, 2) + Math.pow(normalizedRootDirectionVector.y, 2)));
         cos = Math.abs(cos) > 1d ? 1d : cos;
 
-        return Math.acos(cos) * side;
+        Double resultAngle =  Math.acos(cos) * side;
+        if(resultAngle.isNaN())
+            return 0;
+        else
+            return resultAngle;
+    }
+
+    public FPoint getNormalizedRootVector(){
+        return new FPoint(rootDirectionPosition.x - rootBasePosition.x, (rootDirectionPosition.y - rootBasePosition.y) * -1);
     }
 
     //TODO maybe it should be in controller. I will try move it later
@@ -103,9 +116,12 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
         if(transformBitmap.getWidth() != baseBitmap.getWidth() || transformBitmap.getHeight() != baseBitmap.getHeight())
             transformBitmap = new BufferedImage(baseBitmap.getWidth(), baseBitmap.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = transformBitmap.createGraphics();
-        g2d.rotate(getAngle(), rootBasePosition.x, rootBasePosition.y);
+        Double angle = getAngle();
+        g2d.rotate(angle, rootBasePosition.x, rootBasePosition.y);
         g2d.drawImage(baseBitmap, null, 0, 0);
         g2d.dispose();
+
+        logger.info(String.format("Bone %s rotated to %f angle!", getUuid().toString(), angle));
     }
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES

@@ -65,8 +65,8 @@ public class CanvasPanel extends JPanel {
         //Pixel in corners
         g.drawString(String.format("%d", -offset.x), 10, 10);
         g.drawString(String.format("%d", -offset.y), 1, 20);
-        g.drawString(String.format("%d", getWidth() - offset.x), getWidth() - 30, 10);
-        g.drawString(String.format("%d", getHeight() - offset.y), 1, getHeight() - 10);
+        g.drawString(String.format("%d", getWidth() - offset.x - canvas.getWidth()), getWidth() - 30, 10);
+        g.drawString(String.format("%d", getHeight() - offset.y - canvas.getHeight()), 1, getHeight() - 10);
 
         g.setColor(Color.black);
     }

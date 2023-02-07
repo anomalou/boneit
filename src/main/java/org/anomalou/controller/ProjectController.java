@@ -1,10 +1,10 @@
 package org.anomalou.controller;
 
-import org.anomalou.model.Bone;
+import org.anomalou.Main;
+import org.anomalou.model.*;
 import org.anomalou.model.Canvas;
-import org.anomalou.model.Layer;
-import org.anomalou.model.Project;
 
+import java.awt.*;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -46,7 +46,7 @@ public class ProjectController {
         project.getObjectCache().registerObject(newBone.getUuid(), newBone);
         //TODO make here check for exception if something won't registered, if so invoke dialog window with description
         bone.getChildren().add(newBone.getUuid());
-        return bone;
+        return newBone;
     }
 
     public Bone extrudeBone(UUID uuid){
@@ -56,6 +56,33 @@ public class ProjectController {
         }else{
             logger.warning(String.format("Object with uuid %s is not a bone!", uuid.toString()));
             return null;
+        }
+    }
+
+    public void applySkeletonPosition(Bone bone){
+        double angle = -bone.getAngle();
+        FPoint normalizedVector = bone.getNormalizedRootVector();
+        FPoint rotatedVector = new FPoint(normalizedVector.x * Math.cos(angle) - normalizedVector.y * Math.sin(angle),
+                                          normalizedVector.x * Math.sin(angle) + normalizedVector.y * Math.cos(angle));
+
+        FPoint childrenPosition = new FPoint(bone.getPosition().x + rotatedVector.x, bone.getPosition().y + -1 * rotatedVector.y);
+
+        bone.getChildren().forEach(uuid -> {
+            Layer l = project.getObjectCache().getLayers().get(uuid);
+            if(l.getClass().equals(Bone.class)){
+                Bone b = (Bone) l;
+                b.setPosition(new Point((int)Math.round(childrenPosition.x), (int)Math.round(childrenPosition.y)));
+                applySkeletonPosition(b);
+            }
+        });
+
+        logger.info(String.format("Bone %s position applied!", bone.getUuid()));
+    }
+
+    public void applySkeletonPosition(UUID uuid){
+        Layer l = project.getObjectCache().getLayers().get(uuid);
+        if(l.getClass().equals(Bone.class)){
+            applySkeletonPosition((Bone) l);
         }
     }
 }
