@@ -59,7 +59,7 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
 
         double side = (direction.x) * (normalizedRootDirectionVector.y) - (direction.y) * (normalizedRootDirectionVector.x);
 
-        side = side <= 0 ? -1 : 1;
+        side = side <= 0 ? 1 : -1;
 
         double cos = (direction.x * normalizedRootDirectionVector.x + direction.y * normalizedRootDirectionVector.y) /
                      (Math.sqrt(Math.pow(direction.x, 2) + Math.pow(direction.y, 2)) * Math.sqrt(Math.pow(normalizedRootDirectionVector.x, 2) + Math.pow(normalizedRootDirectionVector.y, 2)));
@@ -116,7 +116,7 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
         if(transformBitmap.getWidth() != baseBitmap.getWidth() || transformBitmap.getHeight() != baseBitmap.getHeight())
             transformBitmap = new BufferedImage(baseBitmap.getWidth(), baseBitmap.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = transformBitmap.createGraphics();
-        Double angle = getAngle();
+        Double angle = getAngle() * -1;
         g2d.rotate(angle, rootBasePosition.x, rootBasePosition.y);
         g2d.drawImage(baseBitmap, null, 0, 0);
         g2d.dispose();

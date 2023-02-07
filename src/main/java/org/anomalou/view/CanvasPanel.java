@@ -7,9 +7,7 @@ import org.anomalou.model.ObjectCache;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -18,7 +16,14 @@ public class CanvasPanel extends JPanel {
     private Canvas canvas;
     private ObjectCache objectCache;
 
+    /**
+     * Offset of the canvas on the workspace
+     */
     private Point offset;
+    /**
+     * Scale of one pixel of canvas in screen pixels
+     */
+    private int scale;
 
     private boolean isScrollPressed;
 
@@ -26,6 +31,7 @@ public class CanvasPanel extends JPanel {
         this.canvas = canvas;
         this.objectCache = objectCache;
         offset = new Point(0, 0);
+        scale = 1;
 
         isScrollPressed = false;
 
@@ -39,10 +45,12 @@ public class CanvasPanel extends JPanel {
         ArrayList<Layer> layers = sortLayers();
 
         layers.forEach(layer -> {
-            if(layer.getClass().equals(Bone.class))
-                drawBone((Bone) layer, g);
-            else
-                drawLayer(layer, g);
+            if(layer.isVisible()){
+                if(layer.getClass().equals(Bone.class))
+                    drawBone((Bone) layer, g);
+                else
+                    drawLayer(layer, g);
+            }
         });
     }
 
@@ -51,53 +59,27 @@ public class CanvasPanel extends JPanel {
 
         //Draw ruler
         //LU corner
-        g.drawString("0", offset.x + 1, 10); //TODO MAGIC numbers!!!
-        g.drawString("0", 0, offset.y + 10);
-        g.drawLine(offset.x, 0, offset.x, getHeight());
-        g.drawLine(0, offset.y, getWidth(), offset.y);
+        g.drawString("0", scale * offset.x + 1, 10); //TODO MAGIC numbers!!!
+        g.drawString("0", 0, scale * offset.y + 10);
+        g.drawLine(scale * offset.x, 0, scale * offset.x, getHeight());
+        g.drawLine(0, scale * offset.y, getWidth(), scale * offset.y);
 
         //RD corner
-        g.drawString(String.format("%d", canvas.getWidth()), offset.x + 1 + canvas.getWidth(), 10);
-        g.drawString(String.format("%d", canvas.getHeight()), 0, offset.y + 10 + canvas.getHeight());
-        g.drawLine(offset.x + canvas.getWidth(), 0, offset.x + canvas.getWidth(), getHeight());
-        g.drawLine(0, offset.y + canvas.getHeight(), getWidth(), offset.y + canvas.getHeight());
+        g.drawString(String.format("%d", canvas.getWidth()), scale * (offset.x + 1 + canvas.getWidth()), 10);
+        g.drawString(String.format("%d", canvas.getHeight()), 0, scale * (offset.y + 10 + canvas.getHeight()));
+        g.drawLine(scale * (offset.x + canvas.getWidth()), 0, scale * (offset.x + canvas.getWidth()), getHeight());
+        g.drawLine(0, scale * (offset.y + canvas.getHeight()), getWidth(), scale * (offset.y + canvas.getHeight()));
 
         //Pixel in corners
-        g.drawString(String.format("%d", -offset.x), 10, 10);
+        g.drawString(String.format("%d", -offset.x), 10, 10); //TODO magic numbers!
         g.drawString(String.format("%d", -offset.y), 1, 20);
-        g.drawString(String.format("%d", getWidth() - offset.x - canvas.getWidth()), getWidth() - 30, 10);
-        g.drawString(String.format("%d", getHeight() - offset.y - canvas.getHeight()), 1, getHeight() - 10);
+        g.drawString(String.format("%d", getWidth() / scale - offset.x - canvas.getWidth()), getWidth() - 30, 10);
+        g.drawString(String.format("%d", getHeight() / scale - offset.y - canvas.getHeight()), 1, getHeight() - 10);
 
         g.setColor(Color.black);
     }
 
     private void createMouseListener(){
-        this.addMouseMotionListener(new MouseMotionListener() {
-            Point oldPos = new Point(0, 0);
-            Point direction = new Point(0, 0);
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                calculateDirection(e.getPoint());
-                if(isScrollPressed){
-                    offset.x += direction.x;
-                    offset.y += direction.y;
-                    getParent().repaint();
-                }
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                calculateDirection(e.getPoint());
-            }
-
-            private void calculateDirection(Point pos){
-                direction.x = pos.x - oldPos.x;
-                direction.y = pos.y - oldPos.y;
-
-                oldPos = pos;
-            }
-        });
-
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -126,6 +108,51 @@ public class CanvasPanel extends JPanel {
             @Override
             public void mouseExited(MouseEvent e) {
 
+            }
+        });
+
+        this.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                scale = Math.max(1, scale - e.getWheelRotation());
+                scale = Math.min(50, scale); //TODO magic number!
+                getParent().repaint();
+            }
+        });
+
+        this.addMouseMotionListener(new MouseMotionListener() {
+            Point oldPos = new Point(0, 0);
+            Point direction = new Point(0, 0);
+
+            int pixelsPassed = 0;
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                calculateDirection(e.getPoint());
+                if(isScrollPressed){
+                    pixelsPassed += 1;
+                }
+                if(pixelsPassed >= scale){
+                    pixelsPassed = 0;
+                    offset.x += direction.x;
+                    offset.y += direction.y;
+                    getParent().repaint();
+                }
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                calculateDirection(e.getPoint());
+            }
+
+            private int calculateDirection(Point pos){
+                direction.x = pos.x - oldPos.x;
+                direction.y = pos.y - oldPos.y;
+
+                Point temp = oldPos;
+
+                oldPos = pos;
+
+                return (int) temp.distance(pos);
             }
         });
     }
@@ -171,10 +198,10 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawLayer(Layer layer, Graphics g){
-        g.drawImage(layer.getBaseBitmap(), offset.x + layer.getPosition().x, offset.y + layer.getPosition().y, null);
+        g.drawImage(layer.getBaseBitmap(), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y), scale * layer.getBaseBitmap().getWidth(), scale * layer.getBaseBitmap().getHeight(), null);
     }
 
     private void drawBone(Bone bone, Graphics g){
-        g.drawImage(bone.getTransformBitmap(), offset.x + bone.getPosition().x - bone.getRootBasePosition().x, offset.y + bone.getPosition().y - bone.getRootBasePosition().y, null);
+        g.drawImage(bone.getTransformBitmap(), scale * (offset.x + bone.getPosition().x - bone.getRootBasePosition().x), scale * (offset.y + bone.getPosition().y - bone.getRootBasePosition().y), scale * bone.getTransformBitmap().getWidth(), scale * bone.getTransformBitmap().getHeight(), null);
     }
 }

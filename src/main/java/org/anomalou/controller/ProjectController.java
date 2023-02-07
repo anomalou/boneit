@@ -60,7 +60,7 @@ public class ProjectController {
     }
 
     public void applySkeletonPosition(Bone bone){
-        double angle = -bone.getAngle();
+        double angle = bone.getAngle();
         FPoint normalizedVector = bone.getNormalizedRootVector();
         FPoint rotatedVector = new FPoint(normalizedVector.x * Math.cos(angle) - normalizedVector.y * Math.sin(angle),
                                           normalizedVector.x * Math.sin(angle) + normalizedVector.y * Math.cos(angle));

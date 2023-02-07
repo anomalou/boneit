@@ -35,18 +35,19 @@ public class Main {
         Layer layer = application.getController().createLayer();
         layer.setBaseBitmap(img);
         layer.setPosition(new Point(50, 50));
+        layer.setVisible(false);
         Bone bone = application.getController().createSkeleton();
         bone.setBaseBitmap(arrow);
         bone.setPosition(new Point(50 ,50));
         bone.setRootBasePosition(new Point(50, 50));
         bone.setRootDirectionPosition(new Point(100,50));
-        bone.setDirection(new FPoint(1, -0.5));
+        bone.setDirection(new FPoint(1, -1));
 
         Bone childBone = application.getController().extrudeBone(bone);
         childBone.setBaseBitmap(arrow);
         childBone.setRootBasePosition(new Point(50, 50));
         childBone.setRootDirectionPosition(new Point(100,50));
-        childBone.setDirection(new FPoint(-1, 1));
+        childBone.setDirection(new FPoint(0, 1));
 
         Bone childBone2 = application.getController().extrudeBone(childBone);
         childBone2.setBaseBitmap(arrow);
