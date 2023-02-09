@@ -1,5 +1,6 @@
 package org.anomalou.view;
 
+import org.anomalou.controller.PropertiesController;
 import org.anomalou.model.Bone;
 import org.anomalou.model.Canvas;
 import org.anomalou.model.Layer;
@@ -16,6 +17,14 @@ public class CanvasPanel extends JPanel {
 
     private Canvas canvas;
     private ObjectCache objectCache;
+    private PropertiesController propertiesController;
+
+    private int rulerCornerOffsetLX;
+    private int rulerCornerOffsetLY;
+    private int rulerCornerOffsetUX;
+    private int rulerCornerOffsetUY;
+    private int rulerOffsetX;
+    private int rulerOffsetY;
 
     /**
      * Offset of the canvas on the workspace
@@ -28,14 +37,16 @@ public class CanvasPanel extends JPanel {
 
     private boolean isScrollPressed;
 
-    public CanvasPanel(Canvas canvas, ObjectCache objectCache){
+    public CanvasPanel(Canvas canvas, ObjectCache objectCache, PropertiesController propertiesController){
         this.canvas = canvas;
         this.objectCache = objectCache;
+        this.propertiesController = propertiesController;
         offset = new Point(0, 0);
         scale = 1;
 
         isScrollPressed = false;
 
+        loadProperties();
         createMouseListener();
     }
 
@@ -57,27 +68,36 @@ public class CanvasPanel extends JPanel {
         });
     }
 
+    private void loadProperties(){
+        rulerCornerOffsetLX = propertiesController.getInt("ruler.corner.l.offset.x");
+        rulerCornerOffsetLY = propertiesController.getInt("ruler.corner.l.offset.y");
+        rulerCornerOffsetUX = propertiesController.getInt("ruler.corner.u.offset.x");
+        rulerCornerOffsetUY = propertiesController.getInt("ruler.corner.u.offset.y");
+        rulerOffsetX = propertiesController.getInt("ruler.offset.x");
+        rulerOffsetY = propertiesController.getInt("ruler.offset.y");
+    }
+
     private void drawInterface(Graphics g){
         g.setColor(Color.gray);
 
         //Draw ruler
         //LU corner
-        g.drawString("0", scale * offset.x + 1, 10); //TODO MAGIC numbers!!!
-        g.drawString("0", 0, scale * offset.y + 10);
+        g.drawString("0", scale * offset.x + rulerOffsetX, rulerOffsetY); //TODO MAGIC numbers!!!
+        g.drawString("0", 0, scale * offset.y + rulerOffsetY);
         g.drawLine(scale * offset.x, 0, scale * offset.x, getHeight());
         g.drawLine(0, scale * offset.y, getWidth(), scale * offset.y);
 
         //RD corner
-        g.drawString(String.format("%d", canvas.getWidth()), scale * (offset.x + 1 + canvas.getWidth()), 10);
-        g.drawString(String.format("%d", canvas.getHeight()), 0, scale * (offset.y + 10 + canvas.getHeight()));
+        g.drawString(String.format("%d", canvas.getWidth()), scale * (offset.x + 1 + canvas.getWidth()), rulerOffsetY);
+        g.drawString(String.format("%d", canvas.getHeight()), rulerOffsetX, scale * (offset.y + rulerOffsetY + canvas.getHeight()));
         g.drawLine(scale * (offset.x + canvas.getWidth()), 0, scale * (offset.x + canvas.getWidth()), getHeight());
         g.drawLine(0, scale * (offset.y + canvas.getHeight()), getWidth(), scale * (offset.y + canvas.getHeight()));
 
         //Pixel in corners
-        g.drawString(String.format("%d", -offset.x), 10, 10); //TODO magic numbers!
-        g.drawString(String.format("%d", -offset.y), 1, 20);
-        g.drawString(String.format("%d", getWidth() / scale - offset.x - canvas.getWidth()), getWidth() - 30, 10);
-        g.drawString(String.format("%d", getHeight() / scale - offset.y - canvas.getHeight()), 1, getHeight() - 10);
+        g.drawString(String.format("%d", -offset.x), rulerCornerOffsetUX, rulerCornerOffsetUY); //TODO magic numbers!
+        g.drawString(String.format("%d", -offset.y), rulerCornerOffsetLX, rulerCornerOffsetLY);
+        g.drawString(String.format("%d", getWidth() / scale - offset.x - canvas.getWidth()), getWidth() - rulerCornerOffsetUX, rulerCornerOffsetUY);
+        g.drawString(String.format("%d", getHeight() / scale - offset.y - canvas.getHeight()), rulerCornerOffsetLX, getHeight() - rulerCornerOffsetLY);
 
         g.setColor(Color.black);
     }

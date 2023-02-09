@@ -18,7 +18,7 @@ public class PropertiesController extends Controller{
     public int getInt(String property){
         String value = properties.getProperty(property);
 
-        if(!value.equals(null)){
+        if(value != null){
             logger.info(String.format("Property [%s=%s] was loaded!", property, value));
             return Integer.valueOf(value);
         }
@@ -31,7 +31,7 @@ public class PropertiesController extends Controller{
     public String getString(String property){
         String value = properties.getProperty(property);
 
-        if(!value.equals(null)){
+        if(value != null){
             logger.info(String.format("Property [%s=%s] was loaded!", property, value));
             return value;
         }
@@ -42,9 +42,11 @@ public class PropertiesController extends Controller{
     }
 
     private void writeDefaultProperties(FileOutputStream fileOutputStream) throws IOException{
-        properties.put("ruler.corner.offset.x", "10");
-        properties.put("ruler.corner.offset.y", "10");
-        properties.put("ruler.offset.x", "30");
+        properties.put("ruler.corner.l.offset.x", "30");
+        properties.put("ruler.corner.l.offset.y", "10");
+        properties.put("ruler.corner.u.offset.x", "1");
+        properties.put("ruler.corner.u.offset.y", "10");
+        properties.put("ruler.offset.x", "1");
         properties.put("ruler.offset.y", "10");
         properties.store(fileOutputStream, "Bone-it configuration file");
         fileOutputStream.close();

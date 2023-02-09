@@ -36,19 +36,20 @@ public class Main {
         layer.setBaseBitmap(img);
         layer.setPosition(new Point(50, 50));
         layer.setVisible(false);
+
         Bone bone = application.getProjectController().createSkeleton();
         bone.setBaseBitmap(arrow);
         bone.setPosition(new Point(50 ,50));
         bone.setRootBasePosition(new Point(50, 50));
         bone.setRootDirectionPosition(new Point(100,50));
-        bone.setDirection(new FPoint(1, -1));
+        bone.setDirection(new FPoint(1, 0.5));
         application.getLayerController().applyRotation(bone);
 
         Bone childBone = application.getLayerController().extrudeBone(bone);
         childBone.setBaseBitmap(arrow);
         childBone.setRootBasePosition(new Point(50, 50));
         childBone.setRootDirectionPosition(new Point(100,50));
-        childBone.setDirection(new FPoint(0, 1));
+        childBone.setDirection(new FPoint(0.5, 1));
         application.getLayerController().applyRotation(childBone);
 
         Bone childBone2 = application.getLayerController().extrudeBone(childBone);
@@ -60,7 +61,7 @@ public class Main {
 
         application.getLayerController().applySkeletonPosition(bone);
 
-        CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getProject().getObjectCache());
+        CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getProject().getObjectCache(), application.getPropertiesController());
 
         frame.add(canvasPanel);
         frame.revalidate();

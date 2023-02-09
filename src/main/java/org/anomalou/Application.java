@@ -11,6 +11,7 @@ public class Application {
     @Getter //TODO set it for TEST only!
     private Project project;
 
+    @Getter
     private PropertiesController propertiesController;
 
     //TODO all controller should be temp classes, that created only for UI!
