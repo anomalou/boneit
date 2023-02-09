@@ -17,14 +17,14 @@ public class ObjectCache implements Serializable {
         layers = new HashMap<>();
     }
 
-    public void registerObject(UUID uuid, Layer layer){
+    public void registerObject(UUID uuid, Layer layer){ //TODO create exception if registration was failed
         if(layers.containsKey(uuid)){
             logger.warning(String.format("Object with uuid %s already registered!", uuid.toString()));
             return;
         }
 
         layers.put(uuid, layer);
-        logger.info(String.format("Object with uuid %s registered!", uuid.toString()));
+        logger.info(String.format("Object with uuid %s registered! [%s|%s]", uuid.toString(), uuid.toString(), layer.getName()));
     }
 
     public void unregister(UUID uuid){

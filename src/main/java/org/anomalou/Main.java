@@ -32,30 +32,33 @@ public class Main {
         Application application = new Application();
         Project project = application.createProject();
         project.getCanvas().reshape(400, 400);
-        Layer layer = application.getController().createLayer();
+        Layer layer = application.getProjectController().createLayer();
         layer.setBaseBitmap(img);
         layer.setPosition(new Point(50, 50));
         layer.setVisible(false);
-        Bone bone = application.getController().createSkeleton();
+        Bone bone = application.getProjectController().createSkeleton();
         bone.setBaseBitmap(arrow);
         bone.setPosition(new Point(50 ,50));
         bone.setRootBasePosition(new Point(50, 50));
         bone.setRootDirectionPosition(new Point(100,50));
         bone.setDirection(new FPoint(1, -1));
+        application.getLayerController().applyRotation(bone);
 
-        Bone childBone = application.getController().extrudeBone(bone);
+        Bone childBone = application.getLayerController().extrudeBone(bone);
         childBone.setBaseBitmap(arrow);
         childBone.setRootBasePosition(new Point(50, 50));
         childBone.setRootDirectionPosition(new Point(100,50));
         childBone.setDirection(new FPoint(0, 1));
+        application.getLayerController().applyRotation(childBone);
 
-        Bone childBone2 = application.getController().extrudeBone(childBone);
+        Bone childBone2 = application.getLayerController().extrudeBone(childBone);
         childBone2.setBaseBitmap(arrow);
         childBone2.setRootBasePosition(new Point(50, 50));
         childBone2.setRootDirectionPosition(new Point(100,50));
         childBone2.setDirection(new FPoint(0, 0));
+        application.getLayerController().applyRotation(childBone2);
 
-        application.getController().applySkeletonPosition(bone);
+        application.getLayerController().applySkeletonPosition(bone);
 
         CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getProject().getObjectCache());
 

@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.UUID;
 
 public class CanvasPanel extends JPanel {
 
@@ -40,9 +41,11 @@ public class CanvasPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g){
+        super.paintComponent(g);
+
         drawInterface(g);
 
-        ArrayList<Layer> layers = sortLayers();
+        ArrayList<Layer> layers = sort(canvas.getLayersHierarchy());
 
         layers.forEach(layer -> {
             if(layer.isVisible()){
@@ -116,7 +119,7 @@ public class CanvasPanel extends JPanel {
             public void mouseWheelMoved(MouseWheelEvent e) {
                 scale = Math.max(1, scale - e.getWheelRotation());
                 scale = Math.min(50, scale); //TODO magic number!
-                getParent().repaint();
+                repaint();
             }
         });
 
@@ -135,7 +138,7 @@ public class CanvasPanel extends JPanel {
                     pixelsPassed = 0;
                     offset.x += direction.x;
                     offset.y += direction.y;
-                    getParent().repaint();
+                    repaint();
                 }
             }
 
@@ -157,45 +160,66 @@ public class CanvasPanel extends JPanel {
         });
     }
 
-    private ArrayList<Layer> sortLayers(){
-        ArrayList<Layer> result = new ArrayList<>();
-        ArrayList<Layer> tempLayers = new ArrayList<>();
+    private ArrayList<Layer> sort(ArrayList<UUID> iArray){
+        ArrayList<Layer> oArray = new ArrayList<>();
+        ArrayList<Layer> tempArray = new ArrayList<>();
 
-        canvas.getLayersHierarchy().forEach(uuid -> {
-            tempLayers.add(objectCache.getLayers().get(uuid));
+        iArray.forEach(uuid -> {
+            tempArray.add(objectCache.getLayers().get(uuid));
         });
 
-        Collections.sort(tempLayers);
+        Collections.sort(tempArray);
 
-        tempLayers.forEach(layer -> {
-            result.add(layer);
-            if(layer.getClass().equals(Bone.class)){
-                result.addAll(sortBone((Bone) layer));
+        tempArray.forEach(element -> {
+            oArray.add(element);
+            if(element.getClass().equals(Bone.class)){
+                oArray.addAll(sort(((Bone) element).getChildren()));
             }
         });
 
-        return result;
+        return oArray;
     }
 
-    private ArrayList<Layer> sortBone(Bone bone){ //TODO make it to draw also a layers
-        ArrayList<Layer> result = new ArrayList<>();
-        ArrayList<Layer> tempBones = new ArrayList<>();
-
-        bone.getChildren().forEach(uuid -> {
-            tempBones.add(objectCache.getLayers().get(uuid));
-        });
-
-        Collections.sort(tempBones);
-
-        tempBones.forEach(layer -> {
-            result.add(layer);
-            if(layer.getClass().equals(Bone.class)){
-                result.addAll(sortBone((Bone) layer));
-            }
-        });
-
-        return result;
-    }
+    //TODO remove useless shitcode
+//    private ArrayList<Layer> sortLayers(){
+//        ArrayList<Layer> result = new ArrayList<>();
+//        ArrayList<Layer> tempLayers = new ArrayList<>();
+//
+//        canvas.getLayersHierarchy().forEach(uuid -> {
+//            tempLayers.add(objectCache.getLayers().get(uuid));
+//        });
+//
+//        Collections.sort(tempLayers);
+//
+//        tempLayers.forEach(layer -> {
+//            result.add(layer);
+//            if(layer.getClass().equals(Bone.class)){
+//                result.addAll(sortBone((Bone) layer));
+//            }
+//        });
+//
+//        return result;
+//    }
+//
+//    private ArrayList<Layer> sortBone(Bone bone){
+//        ArrayList<Layer> result = new ArrayList<>();
+//        ArrayList<Layer> tempBones = new ArrayList<>();
+//
+//        bone.getChildren().forEach(uuid -> {
+//            tempBones.add(objectCache.getLayers().get(uuid));
+//        });
+//
+//        Collections.sort(tempBones);
+//
+//        tempBones.forEach(layer -> {
+//            result.add(layer);
+//            if(layer.getClass().equals(Bone.class)){
+//                result.addAll(sortBone((Bone) layer));
+//            }
+//        });
+//
+//        return result;
+//    }
 
     private void drawLayer(Layer layer, Graphics g){
         g.drawImage(layer.getBaseBitmap(), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y), scale * layer.getBaseBitmap().getWidth(), scale * layer.getBaseBitmap().getHeight(), null);
