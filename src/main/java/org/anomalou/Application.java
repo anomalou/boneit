@@ -3,12 +3,15 @@ package org.anomalou;
 import lombok.Getter;
 import org.anomalou.controller.LayerController;
 import org.anomalou.controller.ProjectController;
+import org.anomalou.controller.PropertiesController;
 import org.anomalou.model.Project;
 
 public class Application {
 
     @Getter //TODO set it for TEST only!
     private Project project;
+
+    private PropertiesController propertiesController;
 
     //TODO all controller should be temp classes, that created only for UI!
     @Getter
@@ -20,7 +23,7 @@ public class Application {
     //TODO here will be view, shortcut controller and etc
 
     public Application(){
-
+        propertiesController = new PropertiesController();
     }
 
     public Project createProject(){

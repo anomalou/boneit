@@ -4,17 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="skeleton alignment done">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/Controller.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/LayerController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/PropertiesController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ProjectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/ObjectCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/ObjectCache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/view/CanvasPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/view/CanvasPanel.java" afterDir="false" />
+    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="properties controller">
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/PropertiesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/PropertiesController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +176,21 @@
       <option name="project" value="LOCAL" />
       <updated>1675778199813</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="TODO resolves">
+      <created>1675941347899</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1675941347899</updated>
+    </task>
+    <task id="LOCAL-00016" summary="properties controller">
+      <created>1675972922224</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1675972922224</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <option name="createBranch" value="false" />
     <servers />
   </component>
@@ -213,7 +218,9 @@
     <MESSAGE value="added render order, mouse control initiation" />
     <MESSAGE value="draggable canvas, ruler" />
     <MESSAGE value="skeleton alignment done" />
-    <option name="LAST_COMMIT_MESSAGE" value="skeleton alignment done" />
+    <MESSAGE value="TODO resolves" />
+    <MESSAGE value="properties controller" />
+    <option name="LAST_COMMIT_MESSAGE" value="properties controller" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
