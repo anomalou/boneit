@@ -24,7 +24,7 @@ public class Main {
         BufferedImage arrow = null;
         try{
             img = ImageIO.read(new File("test.png"));
-            arrow = ImageIO.read(new File("arrow.png"));
+            arrow = ImageIO.read(new File("low_arrow.png"));
         }catch (IOException ex){
             ex.printStackTrace();
         }
@@ -35,27 +35,27 @@ public class Main {
         Layer layer = application.getProjectController().createLayer();
         layer.setBaseBitmap(img);
         layer.setPosition(new Point(50, 50));
-        layer.setVisible(false);
+        layer.setVisible(true);
 
         Bone bone = application.getProjectController().createSkeleton();
         bone.setBaseBitmap(arrow);
         bone.setPosition(new Point(50 ,50));
-        bone.setRootBasePosition(new Point(50, 50));
-        bone.setRootDirectionPosition(new Point(100,50));
+        bone.setRootBasePosition(new Point(5, 5));
+        bone.setRootDirectionPosition(new Point(11,5));
         bone.setDirection(new FPoint(1, 0.5));
         application.getLayerController().applyRotation(bone);
 
         Bone childBone = application.getLayerController().extrudeBone(bone);
         childBone.setBaseBitmap(arrow);
-        childBone.setRootBasePosition(new Point(50, 50));
-        childBone.setRootDirectionPosition(new Point(100,50));
+        childBone.setRootBasePosition(new Point(5, 5));
+        childBone.setRootDirectionPosition(new Point(11,5));
         childBone.setDirection(new FPoint(0.5, 1));
         application.getLayerController().applyRotation(childBone);
 
         Bone childBone2 = application.getLayerController().extrudeBone(childBone);
         childBone2.setBaseBitmap(arrow);
-        childBone2.setRootBasePosition(new Point(50, 50));
-        childBone2.setRootDirectionPosition(new Point(100,50));
+        childBone2.setRootBasePosition(new Point(5, 5));
+        childBone2.setRootDirectionPosition(new Point(11,5));
         childBone2.setDirection(new FPoint(0, 0));
         application.getLayerController().applyRotation(childBone2);
 

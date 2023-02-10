@@ -6,9 +6,13 @@ import org.anomalou.model.Canvas;
 import org.anomalou.model.Layer;
 import org.anomalou.model.ObjectCache;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
@@ -19,12 +23,18 @@ public class CanvasPanel extends JPanel {
     private ObjectCache objectCache;
     private PropertiesController propertiesController;
 
+    private BufferedImage rulerImage;
+
+    private int rulerWidth;
+    private int rulerHeight;
     private int rulerCornerOffsetLX;
     private int rulerCornerOffsetLY;
     private int rulerCornerOffsetUX;
     private int rulerCornerOffsetUY;
     private int rulerOffsetX;
     private int rulerOffsetY;
+    private int scaleMin;
+    private int scaleMax;
 
     /**
      * Offset of the canvas on the workspace
@@ -46,6 +56,7 @@ public class CanvasPanel extends JPanel {
 
         isScrollPressed = false;
 
+        loadGraphics();
         loadProperties();
         createMouseListener();
     }
@@ -68,21 +79,39 @@ public class CanvasPanel extends JPanel {
         });
     }
 
+    private void loadGraphics(){//TODO something with textures
+        try{
+            rulerImage = ImageIO.read(new File("ruler.png"));
+        }catch (IOException exception){
+            //TODO temporary
+        }
+    }
+
     private void loadProperties(){
+        rulerWidth = propertiesController.getInt("ruler.width");
+        rulerHeight = propertiesController.getInt("ruler.height");
         rulerCornerOffsetLX = propertiesController.getInt("ruler.corner.l.offset.x");
         rulerCornerOffsetLY = propertiesController.getInt("ruler.corner.l.offset.y");
         rulerCornerOffsetUX = propertiesController.getInt("ruler.corner.u.offset.x");
         rulerCornerOffsetUY = propertiesController.getInt("ruler.corner.u.offset.y");
         rulerOffsetX = propertiesController.getInt("ruler.offset.x");
         rulerOffsetY = propertiesController.getInt("ruler.offset.y");
+        scaleMin = propertiesController.getInt("scale.min");
+        scaleMax = propertiesController.getInt("scale.max");
     }
 
     private void drawInterface(Graphics g){
         g.setColor(Color.gray);
 
         //Draw ruler
+        Point mousePosition = this.getMousePosition();
+        if(mousePosition != null){
+            g.drawImage(rulerImage, mousePosition.x - rulerWidth / 2, 0, rulerWidth, rulerHeight, null);
+            g.drawImage(rulerImage, 0, mousePosition.y - rulerHeight / 2, rulerWidth, rulerHeight, null);
+        }
+
         //LU corner
-        g.drawString("0", scale * offset.x + rulerOffsetX, rulerOffsetY); //TODO MAGIC numbers!!!
+        g.drawString("0", scale * offset.x + rulerOffsetX, rulerOffsetY);
         g.drawString("0", 0, scale * offset.y + rulerOffsetY);
         g.drawLine(scale * offset.x, 0, scale * offset.x, getHeight());
         g.drawLine(0, scale * offset.y, getWidth(), scale * offset.y);
@@ -94,7 +123,7 @@ public class CanvasPanel extends JPanel {
         g.drawLine(0, scale * (offset.y + canvas.getHeight()), getWidth(), scale * (offset.y + canvas.getHeight()));
 
         //Pixel in corners
-        g.drawString(String.format("%d", -offset.x), rulerCornerOffsetUX, rulerCornerOffsetUY); //TODO magic numbers!
+        g.drawString(String.format("%d", -offset.x), rulerCornerOffsetUX, rulerCornerOffsetUY);
         g.drawString(String.format("%d", -offset.y), rulerCornerOffsetLX, rulerCornerOffsetLY);
         g.drawString(String.format("%d", getWidth() / scale - offset.x - canvas.getWidth()), getWidth() - rulerCornerOffsetUX, rulerCornerOffsetUY);
         g.drawString(String.format("%d", getHeight() / scale - offset.y - canvas.getHeight()), rulerCornerOffsetLX, getHeight() - rulerCornerOffsetLY);
@@ -137,8 +166,8 @@ public class CanvasPanel extends JPanel {
         this.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                scale = Math.max(1, scale - e.getWheelRotation());
-                scale = Math.min(50, scale); //TODO magic number!
+                scale = Math.max(scaleMin, scale - e.getWheelRotation());
+                scale = Math.min(scaleMax, scale);
                 repaint();
             }
         });
@@ -165,6 +194,7 @@ public class CanvasPanel extends JPanel {
             @Override
             public void mouseMoved(MouseEvent e) {
                 calculateDirection(e.getPoint());
+                repaint();
             }
 
             private int calculateDirection(Point pos){
@@ -192,9 +222,7 @@ public class CanvasPanel extends JPanel {
 
         tempArray.forEach(element -> {
             oArray.add(element);
-            if(element.getClass().equals(Bone.class)){
-                oArray.addAll(sort(((Bone) element).getChildren()));
-            }
+            oArray.addAll(sort((element).getChildren()));
         });
 
         return oArray;
