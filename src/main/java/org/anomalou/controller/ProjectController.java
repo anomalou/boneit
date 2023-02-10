@@ -26,7 +26,7 @@ public class ProjectController extends Controller{
         project.getObjectCache().registerObject(layer.getUuid(), layer);
         //TODO make here check for exception if something won't registered, if so invoke dialog window with description
         project.getCanvas().getLayersHierarchy().add(layer.getUuid());
-        logger.info(String.format("Layer %s created!", layer.getUuid()));
+        logger.fine(String.format("Layer %s created!", layer.getUuid()));
         return layer;
     }
 
@@ -36,7 +36,7 @@ public class ProjectController extends Controller{
         project.getObjectCache().registerObject(bone.getUuid(), bone);
         //TODO make here check for exception if something won't registered, if so invoke dialog window with description
         project.getCanvas().getLayersHierarchy().add(bone.getUuid());
-        logger.info(String.format("Skeleton %s created!", bone.getUuid()));
+        logger.fine(String.format("Skeleton %s created!", bone.getUuid()));
         return bone;
     }
 }

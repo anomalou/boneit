@@ -45,6 +45,11 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
     @Getter
     @Setter
     protected boolean isVisible;
+    /**
+     * Children of the layer, follows for its parent
+     */
+    @Getter
+    private ArrayList<UUID> children;
 
     public Layer(){
         name = "NewLayer";
@@ -53,6 +58,7 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
         logger.info(String.format("Entity (%s) created!", getUuid().toString()));
         priority = 0;
         isVisible = true;
+        children = new ArrayList<>();
     }
 
     public void reshape(int w, int h){

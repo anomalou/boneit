@@ -13,7 +13,7 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Bone extends Layer{ //is a bone, like a rig in blender
+public class Bone extends Layer{
     @Getter
     @Setter
     private transient BufferedImage transformBitmap;
@@ -32,8 +32,6 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
     @Getter
     @Setter
     private boolean isBoneVisible;
-    @Getter
-    private ArrayList<UUID> children; //TODO now can be only bones, not else!
 
     public Bone(){
         super();
@@ -44,7 +42,6 @@ public class Bone extends Layer{ //is a bone, like a rig in blender
         rootDirectionPosition = new Point(0, 0);
         direction = new FPoint(0, 0);
         isBoneVisible = false;
-        children = new ArrayList<>();
     }
 
     public void setDirection(FPoint direction) {

@@ -21,7 +21,7 @@ public class LayerController extends Controller{
         objectCache.registerObject(newBone.getUuid(), newBone);
         //TODO make here check for exception if something won't registered, if so invoke dialog window with description
         bone.getChildren().add(newBone.getUuid());
-        logger.info(String.format("Bone %s created! Now it parent is %s!", newBone.getUuid(), bone.getUuid()));
+        logger.fine(String.format("Bone %s created! Now it parent is %s!", newBone.getUuid(), bone.getUuid()));
         return newBone;
     }
 
@@ -52,7 +52,7 @@ public class LayerController extends Controller{
             }
         });
 
-        logger.info(String.format("Bone %s position applied!", bone.getUuid()));
+        logger.fine(String.format("Bone %s position applied!", bone.getUuid()));
     }
 
     public void applySkeletonPosition(UUID uuid){
@@ -72,6 +72,6 @@ public class LayerController extends Controller{
         g2d.drawImage(bone.getBaseBitmap(), null, 0, 0);
         g2d.dispose();
 
-        logger.info(String.format("Bone %s rotated to %f angle!", bone.getUuid().toString(), angle));
+        logger.fine(String.format("Bone %s rotated to %f angle!", bone.getUuid().toString(), angle));
     }
 }
