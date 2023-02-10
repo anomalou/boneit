@@ -1,5 +1,6 @@
 package org.anomalou.controller;
 
+import org.anomalou.exception.RegistrationException;
 import org.anomalou.model.Bone;
 import org.anomalou.model.FPoint;
 import org.anomalou.model.Layer;
@@ -18,9 +19,18 @@ public class LayerController extends Controller{
 
     public Bone extrudeBone(Bone bone){
         Bone newBone = new Bone();
-        objectCache.registerObject(newBone.getUuid(), newBone);
-        //TODO make here check for exception if something won't registered, if so invoke dialog window with description
-        bone.getChildren().add(newBone.getUuid());
+        try{
+            bone.getChildren().add(newBone.getUuid());
+        }catch (NullPointerException exception){
+            logger.severe(String.format("Parent bone not exist! Null pointer exception!"));
+            return null;
+        }
+        try{
+            objectCache.registerObject(newBone.getUuid(), newBone);
+        }catch (RegistrationException exception){
+            logger.severe(String.format("Bone %s not found! Error: %s",newBone.getUuid(), exception.getMessage()));
+            return null;
+        }
         logger.fine(String.format("Bone %s created! Now it parent is %s!", newBone.getUuid(), bone.getUuid()));
         return newBone;
     }
@@ -30,12 +40,12 @@ public class LayerController extends Controller{
             Bone bone = (Bone) objectCache.getLayers().get(uuid);
             return extrudeBone(bone);
         }else{
-            logger.warning(String.format("Object with uuid %s is not a bone!", uuid.toString()));
+            logger.severe(String.format("Object with uuid %s is not a bone!", uuid.toString()));
             return null;
         }
     }
 
-    public void applySkeletonPosition(Bone bone){
+    public void applySkeletonPosition(Bone bone){ //TODO also for layers
         double angle = bone.getAngle();
         FPoint normalizedVector = bone.getNormalizedRootVector();
         FPoint rotatedVector = new FPoint(normalizedVector.x * Math.cos(angle) - normalizedVector.y * Math.sin(angle),

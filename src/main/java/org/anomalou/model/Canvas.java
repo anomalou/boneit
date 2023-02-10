@@ -26,7 +26,7 @@ public class Canvas implements Serializable {
         height = 1;
         layersHierarchy = new ArrayList<>();
 
-        logger.info("Workspace is created!");
+        logger.fine("Workspace is created!");
     }
 
     public Canvas(int width, int height){

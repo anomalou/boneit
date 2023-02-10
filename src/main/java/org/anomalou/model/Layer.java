@@ -14,8 +14,14 @@ import java.util.logging.Logger;
 public class Layer implements Serializable, Comparable<Layer> { //a base class for layers or bones
     protected transient final Logger logger = Logger.getLogger(Layer.class.getName());
 
+    /**
+     * Unique ID of the layer object
+     */
     @Getter
     protected final UUID uuid = UUID.randomUUID();
+    /**
+     * Name of the layer. Human friendly
+     */
     @Getter
     @Setter
     protected String name;
@@ -55,7 +61,7 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
         name = "NewLayer";
         position = new Point(0, 0);
         baseBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        logger.info(String.format("Entity (%s) created!", getUuid().toString()));
+        logger.fine(String.format("Entity (%s) created!", getUuid().toString()));
         priority = 0;
         isVisible = true;
         children = new ArrayList<>();

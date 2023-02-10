@@ -1,6 +1,7 @@
 package org.anomalou.model;
 
 import lombok.Getter;
+import org.anomalou.exception.RegistrationException;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -17,23 +18,23 @@ public class ObjectCache implements Serializable {
         layers = new HashMap<>();
     }
 
-    public void registerObject(UUID uuid, Layer layer){ //TODO create exception if registration was failed
+    public void registerObject(UUID uuid, Layer layer) throws RegistrationException { //TODO create exception if registration was failed
         if(layers.containsKey(uuid)){
             logger.warning(String.format("Object with uuid %s already registered!", uuid.toString()));
             return;
         }
 
         layers.put(uuid, layer);
-        logger.info(String.format("Object with uuid %s registered! [%s|%s]", uuid.toString(), uuid.toString(), layer.getName()));
+        logger.fine(String.format("Object with uuid %s registered! [%s|%s]", uuid.toString(), uuid.toString(), layer.getName()));
     }
 
-    public void unregister(UUID uuid){
+    public void unregister(UUID uuid) throws RegistrationException{
         if(!layers.containsKey(uuid)){
             logger.warning(String.format("Cache do not contain object with uuid %s!", uuid.toString()));
             return;
         }
 
         layers.remove(uuid);
-        logger.info(String.format("Object with uuid %s successfully unregistered!", uuid.toString()));
+        logger.fine(String.format("Object with uuid %s successfully unregistered!", uuid.toString()));
     }
 }

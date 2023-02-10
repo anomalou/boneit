@@ -1,6 +1,7 @@
 package org.anomalou.controller;
 
 import org.anomalou.Main;
+import org.anomalou.exception.RegistrationException;
 import org.anomalou.model.*;
 import org.anomalou.model.Canvas;
 
@@ -22,9 +23,11 @@ public class ProjectController extends Controller{
 
     public Layer createLayer(){
         Layer layer = new Layer();
-//        project.getNameCache().registerName(layer.getUuid(), "NewLayer");
-        project.getObjectCache().registerObject(layer.getUuid(), layer);
-        //TODO make here check for exception if something won't registered, if so invoke dialog window with description
+        try{
+            project.getObjectCache().registerObject(layer.getUuid(), layer);
+        }catch (RegistrationException exception){
+            logger.severe(String.format("Can't register new layer! Error: %s", exception.getMessage()));
+        }
         project.getCanvas().getLayersHierarchy().add(layer.getUuid());
         logger.fine(String.format("Layer %s created!", layer.getUuid()));
         return layer;
@@ -32,9 +35,11 @@ public class ProjectController extends Controller{
 
     public Bone createSkeleton(){
         Bone bone = new Bone();
-//        project.getNameCache().registerName(bone.getUuid(), "NewSkeleton");
-        project.getObjectCache().registerObject(bone.getUuid(), bone);
-        //TODO make here check for exception if something won't registered, if so invoke dialog window with description
+        try{
+            project.getObjectCache().registerObject(bone.getUuid(), bone);
+        }catch (RegistrationException exception){
+            logger.severe(String.format("Can't register new skeleton! Error: %s", exception.getMessage()));
+        }
         project.getCanvas().getLayersHierarchy().add(bone.getUuid());
         logger.fine(String.format("Skeleton %s created!", bone.getUuid()));
         return bone;
