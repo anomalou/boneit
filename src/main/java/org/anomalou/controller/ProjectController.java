@@ -44,4 +44,16 @@ public class ProjectController extends Controller{
         logger.fine(String.format("Skeleton %s created!", bone.getUuid()));
         return bone;
     }
+
+    public Layer selectObject(UUID uuid){
+        Layer layer = null;
+        try{
+            layer = project.getObjectCache().getLayers().get(uuid);
+            project.getCanvas().setSelection(uuid);
+        }catch (Exception exception){
+            logger.severe(String.format("Object not found! Error:\n%s", exception.getMessage()));
+        }
+
+        return layer;
+    }
 }

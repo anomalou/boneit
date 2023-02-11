@@ -18,7 +18,7 @@ public class ObjectCache implements Serializable {
         layers = new HashMap<>();
     }
 
-    public void registerObject(UUID uuid, Layer layer) throws RegistrationException { //TODO create exception if registration was failed
+    public void registerObject(UUID uuid, Layer layer) throws RegistrationException {
         if(layers.containsKey(uuid)){
             logger.warning(String.format("Object with uuid %s already registered!", uuid.toString()));
             return;

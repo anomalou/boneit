@@ -48,8 +48,10 @@ public class Bone extends Layer{
         this.direction = direction;
     }
 
-    // its WORKS!
-    //get angle between direction and rootDirectionPosition vectors, as it began in (0, 0)
+    /**
+     * get angle between direction and rootDirectionPosition vectors, as it began in (0, 0)
+     * @return double
+     */
     public double getAngle(){
         FPoint normalizedRootDirectionVector = getNormalizedRootVector();
 
@@ -70,23 +72,6 @@ public class Bone extends Layer{
 
     public FPoint getNormalizedRootVector(){
         return new FPoint(rootDirectionPosition.x - rootBasePosition.x, (rootDirectionPosition.y - rootBasePosition.y) * -1);
-    }
-
-    @Override
-    public void reshape(int w, int h){
-        super.reshape(w, h);
-
-        if(transformBitmap.getWidth() == 0 || transformBitmap.getHeight() == 0)
-            transformBitmap = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        else{
-            Image tmp = transformBitmap.getSubimage(0, 0, transformBitmap.getWidth(), transformBitmap.getHeight());
-            BufferedImage nBaseBitmap = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
-            Graphics2D g2d = nBaseBitmap.createGraphics();
-            g2d.drawImage(tmp, 0, 0, null);
-            g2d.dispose();
-            transformBitmap = nBaseBitmap;
-        }
     }
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES

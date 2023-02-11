@@ -15,16 +15,22 @@ public class Canvas implements Serializable {
     private final Logger logger = Logger.getLogger(Canvas.class.getName());
 
     @Getter
+    @Setter
     private int width;
     @Getter
+    @Setter
     private int height;
     @Getter
     private ArrayList<UUID> layersHierarchy;
+    @Getter
+    @Setter
+    private UUID selection; //TODO not safe, invent something else
 
     public Canvas(){
         width = 1;
         height = 1;
         layersHierarchy = new ArrayList<>();
+        selection = null;
 
         logger.fine("Workspace is created!");
     }

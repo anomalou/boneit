@@ -42,26 +42,28 @@ public class Main {
         bone.setPosition(new Point(50 ,50));
         bone.setRootBasePosition(new Point(5, 5));
         bone.setRootDirectionPosition(new Point(11,5));
-        bone.setDirection(new FPoint(1, 0.5));
-        application.getLayerController().applyRotation(bone);
+        bone.setDirection(new FPoint(1, -0.5));
+        application.getObjectController().applyRotation(bone);
 
-        Bone childBone = application.getLayerController().extrudeBone(bone);
+        Bone childBone = application.getObjectController().extrudeBone(bone);
         childBone.setBaseBitmap(arrow);
         childBone.setRootBasePosition(new Point(5, 5));
         childBone.setRootDirectionPosition(new Point(11,5));
-        childBone.setDirection(new FPoint(0.5, 1));
-        application.getLayerController().applyRotation(childBone);
+        childBone.setDirection(new FPoint(1, 1));
+        application.getObjectController().applyRotation(childBone);
 
-        Bone childBone2 = application.getLayerController().extrudeBone(childBone);
+        Bone childBone2 = application.getObjectController().extrudeBone(childBone);
         childBone2.setBaseBitmap(arrow);
         childBone2.setRootBasePosition(new Point(5, 5));
         childBone2.setRootDirectionPosition(new Point(11,5));
-        childBone2.setDirection(new FPoint(0, 0));
-        application.getLayerController().applyRotation(childBone2);
+        childBone2.setDirection(new FPoint(1, 1));
+        application.getObjectController().applyRotation(childBone2);
 
-        application.getLayerController().applySkeletonPosition(bone);
+        application.getObjectController().applySkeletonPosition(bone);
 
-        CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getProject().getObjectCache(), application.getPropertiesController());
+        application.getProject().getCanvas().setSelection(bone.getUuid());
+
+        CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getObjectController(), application.getPropertiesController());
 
         frame.add(canvasPanel);
         frame.revalidate();

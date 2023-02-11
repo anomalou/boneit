@@ -4,15 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="workspace mouse pointer">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/exception/RegistrationException.java" afterDir="false" />
+    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="registration exception processing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/LayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/LayerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/LayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ObjectController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ProjectController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Canvas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Canvas.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Layer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Layer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/ObjectCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/ObjectCache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/view/CanvasPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/view/CanvasPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,8 +56,8 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.Unnamed">
-    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+  <component name="RunManager" selected="Application.Build project">
+    <configuration name="Build project" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="org.anomalou.Main" />
       <module name="boneit" />
       <method v="2">
@@ -78,6 +80,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Build project" />
+      <item itemvalue="JUnit.NameCacheTest.test" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.NameCacheTest.test" />
@@ -226,7 +232,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676021688165</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="registration exception processing">
+      <created>1676022762951</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1676022762951</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <option name="createBranch" value="false" />
     <servers />
   </component>
@@ -259,7 +272,8 @@
     <MESSAGE value="properties injection" />
     <MESSAGE value="logger messages correction" />
     <MESSAGE value="workspace mouse pointer" />
-    <option name="LAST_COMMIT_MESSAGE" value="workspace mouse pointer" />
+    <MESSAGE value="registration exception processing" />
+    <option name="LAST_COMMIT_MESSAGE" value="registration exception processing" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

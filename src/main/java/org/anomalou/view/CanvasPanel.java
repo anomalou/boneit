@@ -1,5 +1,6 @@
 package org.anomalou.view;
 
+import org.anomalou.controller.ObjectController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.model.Bone;
 import org.anomalou.model.Canvas;
@@ -15,12 +16,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class CanvasPanel extends JPanel {
 
     private Canvas canvas;
-    private ObjectCache objectCache;
+    private ObjectController objectController;
     private PropertiesController propertiesController;
 
     private BufferedImage rulerImage;
@@ -47,9 +49,9 @@ public class CanvasPanel extends JPanel {
 
     private boolean isScrollPressed;
 
-    public CanvasPanel(Canvas canvas, ObjectCache objectCache, PropertiesController propertiesController){
+    public CanvasPanel(Canvas canvas, ObjectController objectController, PropertiesController propertiesController){
         this.canvas = canvas;
-        this.objectCache = objectCache;
+        this.objectController = objectController;
         this.propertiesController = propertiesController;
         offset = new Point(0, 0);
         scale = 1;
@@ -65,18 +67,9 @@ public class CanvasPanel extends JPanel {
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
 
+        drawScene(g);
+        drawSelection(g);
         drawInterface(g);
-
-        ArrayList<Layer> layers = sort(canvas.getLayersHierarchy());
-
-        layers.forEach(layer -> {
-            if(layer.isVisible()){
-                if(layer.getClass().equals(Bone.class))
-                    drawBone((Bone) layer, g);
-                else
-                    drawLayer(layer, g);
-            }
-        });
     }
 
     private void loadGraphics(){//TODO something with textures
@@ -98,6 +91,19 @@ public class CanvasPanel extends JPanel {
         rulerOffsetY = propertiesController.getInt("ruler.offset.y");
         scaleMin = propertiesController.getInt("scale.min");
         scaleMax = propertiesController.getInt("scale.max");
+    }
+
+    private void drawScene(Graphics g){
+        ArrayList<Layer> layers = sort(canvas.getLayersHierarchy());
+
+        layers.forEach(layer -> {
+            if(layer.isVisible()){
+                if(layer.getClass().equals(Bone.class))
+                    drawBone((Bone) layer, g);
+                else
+                    drawLayer(layer, g);
+            }
+        });
     }
 
     private void drawInterface(Graphics g){
@@ -131,11 +137,85 @@ public class CanvasPanel extends JPanel {
         g.setColor(Color.black);
     }
 
+    private void drawSelection(Graphics g){
+        Layer layer = objectController.getObject(canvas.getSelection());
+
+        if(layer == null)
+            return;
+
+        g.setColor(Color.black);
+
+        if(layer.getClass().equals(Bone.class)){
+            Point bonePosition = new Point(offset.x + layer.getPosition().x - ((Bone) layer).getRootBasePosition().x, offset.y + layer.getPosition().y - ((Bone) layer).getRootBasePosition().y);
+            g.drawRect(scale * (bonePosition.x),
+                    scale * (bonePosition.y),
+                    scale * (layer.getBaseBitmap().getWidth()), scale * (layer.getBaseBitmap().getHeight()));
+
+            g.setColor(Color.red);
+
+            g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y - 2), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y + 2));
+            g.drawLine(scale * (offset.x + layer.getPosition().x - 2), scale * (offset.y + layer.getPosition().y), scale * (offset.x + layer.getPosition().x + 2), scale * (offset.y + layer.getPosition().y));
+            g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
+                    scale * (offset.x + layer.getPosition().x + (((Bone) layer).getRootDirectionPosition().x - ((Bone) layer).getRootBasePosition().x)),
+                    scale * (offset.y + layer.getPosition().y + (((Bone) layer).getRootDirectionPosition().y - ((Bone) layer).getRootBasePosition().y)));
+        }else{
+            g.drawRect(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
+                    scale * layer.getBaseBitmap().getWidth(), scale * layer.getBaseBitmap().getHeight());
+        }
+    }
+
+    private void select(Point clickPosition){
+        final Point onCanvasPosition = screenToCanvas(clickPosition);
+
+        sort(canvas.getLayersHierarchy()).forEach(layer -> {
+            if(isClickInBound(layer, onCanvasPosition))
+                canvas.setSelection(layer.getUuid());
+        });
+    }
+
+    private boolean isClickInBound(Layer layer, Point clickPosition){
+        Point position = new Point(0, 0);
+        int width = 0;
+        int height = 0;
+
+        if(layer.getClass().equals(Bone.class)){
+            position.x = layer.getPosition().x - ((Bone) layer).getRootBasePosition().x;
+            position.y = layer.getPosition().y - ((Bone) layer).getRootBasePosition().y;
+        }else{
+            position.x = layer.getPosition().x;
+            position.y = layer.getPosition().y;
+        }
+
+        width = layer.getBaseBitmap().getWidth();
+        height = layer.getBaseBitmap().getHeight();
+
+        if(clickPosition.x >= position.x && clickPosition.x <= (position.x + width)){
+            if(clickPosition.y >= position.y && clickPosition.y <= (position.y + height)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Convert mouse screen coordinates to canvas coordinates
+     * @param screen mouse coordinates on screen
+     * @return Point
+     */
+    private Point screenToCanvas(Point screen){
+        screen.x = screen.x / scale - offset.x;
+        screen.y = screen.y / scale - offset.y;
+
+        return screen;
+    }
+
     private void createMouseListener(){
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                select(e.getPoint());
+                repaint();
             }
 
             @Override
@@ -215,7 +295,7 @@ public class CanvasPanel extends JPanel {
         ArrayList<Layer> tempArray = new ArrayList<>();
 
         iArray.forEach(uuid -> {
-            tempArray.add(objectCache.getLayers().get(uuid));
+            tempArray.add(objectController.getObject(uuid));
         });
 
         Collections.sort(tempArray);
@@ -227,47 +307,6 @@ public class CanvasPanel extends JPanel {
 
         return oArray;
     }
-
-    //TODO remove useless shitcode
-//    private ArrayList<Layer> sortLayers(){
-//        ArrayList<Layer> result = new ArrayList<>();
-//        ArrayList<Layer> tempLayers = new ArrayList<>();
-//
-//        canvas.getLayersHierarchy().forEach(uuid -> {
-//            tempLayers.add(objectCache.getLayers().get(uuid));
-//        });
-//
-//        Collections.sort(tempLayers);
-//
-//        tempLayers.forEach(layer -> {
-//            result.add(layer);
-//            if(layer.getClass().equals(Bone.class)){
-//                result.addAll(sortBone((Bone) layer));
-//            }
-//        });
-//
-//        return result;
-//    }
-//
-//    private ArrayList<Layer> sortBone(Bone bone){
-//        ArrayList<Layer> result = new ArrayList<>();
-//        ArrayList<Layer> tempBones = new ArrayList<>();
-//
-//        bone.getChildren().forEach(uuid -> {
-//            tempBones.add(objectCache.getLayers().get(uuid));
-//        });
-//
-//        Collections.sort(tempBones);
-//
-//        tempBones.forEach(layer -> {
-//            result.add(layer);
-//            if(layer.getClass().equals(Bone.class)){
-//                result.addAll(sortBone((Bone) layer));
-//            }
-//        });
-//
-//        return result;
-//    }
 
     private void drawLayer(Layer layer, Graphics g){
         g.drawImage(layer.getBaseBitmap(), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y), scale * layer.getBaseBitmap().getWidth(), scale * layer.getBaseBitmap().getHeight(), null);

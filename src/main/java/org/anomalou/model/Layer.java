@@ -67,20 +67,6 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
         children = new ArrayList<>();
     }
 
-    public void reshape(int w, int h){
-        if(baseBitmap.getWidth() == 0 || baseBitmap.getHeight() == 0)
-            baseBitmap = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        else{
-            Image tmp = baseBitmap.getSubimage(0, 0, baseBitmap.getWidth(), baseBitmap.getHeight());
-            BufferedImage nBaseBitmap = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
-            Graphics2D g2d = nBaseBitmap.createGraphics();
-            g2d.drawImage(tmp, 0, 0, null);
-            g2d.dispose();
-            baseBitmap = nBaseBitmap;
-        }
-    }
-
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES
 
     @Serial
