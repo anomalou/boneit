@@ -67,6 +67,12 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
         children = new ArrayList<>();
     }
 
+    //------ OVERRIDES TO STRING METHOD
+    @Override
+    public String toString(){
+        return name;
+    }
+
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES
 
     @Serial

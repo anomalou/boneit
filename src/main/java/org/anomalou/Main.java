@@ -5,9 +5,11 @@ import org.anomalou.model.FPoint;
 import org.anomalou.model.Layer;
 import org.anomalou.model.Project;
 import org.anomalou.view.CanvasPanel;
+import org.anomalou.view.ObjectTreePanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -65,7 +67,13 @@ public class Main {
 
         CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getObjectController(), application.getPropertiesController());
 
-        frame.add(canvasPanel);
+        ObjectTreePanel treePanel = new ObjectTreePanel(application.getProject().getCanvas(), application.getObjectController());
+
+        JSplitPane splitPane = new JSplitPane(SwingConstants.VERTICAL, canvasPanel, treePanel);
+
+//        frame.add(canvasPanel, BorderLayout.CENTER);
+//        frame.add(treePanel, BorderLayout.EAST);
+        frame.add(splitPane);
         frame.revalidate();
     }
 
@@ -74,6 +82,7 @@ public class Main {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
         frame.setVisible(true);
+        frame.setTitle("Bone-it");
         return frame;
     }
 }
