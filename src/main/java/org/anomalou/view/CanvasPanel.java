@@ -4,6 +4,7 @@ import org.anomalou.controller.ObjectController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.model.Bone;
 import org.anomalou.model.Canvas;
+import org.anomalou.model.FPoint;
 import org.anomalou.model.Layer;
 
 import javax.imageio.ImageIO;
@@ -151,11 +152,24 @@ public class CanvasPanel extends JPanel {
 
             g.setColor(Color.green);
 
+            //Cross in the rootBasePosition
             g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y - 1), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y + 1));
             g.drawLine(scale * (offset.x + layer.getPosition().x - 1), scale * (offset.y + layer.getPosition().y), scale * (offset.x + layer.getPosition().x + 1), scale * (offset.y + layer.getPosition().y));
+
+            //Vectors
+            //rootDirection
             g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
                     scale * (offset.x + layer.getPosition().x + (((Bone) layer).getRootDirectionPosition().x - ((Bone) layer).getRootBasePosition().x)),
                     scale * (offset.y + layer.getPosition().y + (((Bone) layer).getRootDirectionPosition().y - ((Bone) layer).getRootBasePosition().y)));
+
+            //rotation vector
+            g.setColor(Color.cyan);
+
+            FPoint rotationVector = ((Bone) layer).getRotationVector();
+            g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
+                    (int) Math.round(scale * (offset.x + layer.getPosition().x + rotationVector.x)),
+                    (int) Math.round(scale * (offset.y + layer.getPosition().y + rotationVector.y)));
+
         }else{
             g.drawRect(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
                     scale * layer.getBaseBitmap().getWidth(), scale * layer.getBaseBitmap().getHeight());
@@ -222,7 +236,6 @@ public class CanvasPanel extends JPanel {
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.print(screenToCanvas(e.getPoint()) + "\n");
                 if(isClickInBound(objectController.getObject(canvas.getSelection()), screenToCanvas(e.getPoint())))
                     return;//TODO draw process
 
