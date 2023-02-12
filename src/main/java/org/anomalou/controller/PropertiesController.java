@@ -52,6 +52,8 @@ public class PropertiesController extends Controller{
         properties.put("ruler.offset.y", "10");
         properties.put("scale.min", "1");
         properties.put("scale.max", "50");
+        properties.put("preview.width", "10");
+        properties.put("preview.height", "10");
         properties.store(fileOutputStream, "Bone-it configuration file");
         fileOutputStream.close();
     }

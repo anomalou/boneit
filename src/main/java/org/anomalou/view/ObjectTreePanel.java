@@ -1,6 +1,7 @@
 package org.anomalou.view;
 
 import org.anomalou.controller.ObjectController;
+import org.anomalou.controller.PropertiesController;
 import org.anomalou.model.Canvas;
 import org.anomalou.model.Layer;
 
@@ -17,20 +18,28 @@ public class ObjectTreePanel extends JPanel {
 
     private Canvas canvas;
     private ObjectController objectController;
+    private PropertiesController propertiesController;
 
     private JTree tree;
 
-    public ObjectTreePanel(Canvas canvas, ObjectController objectController) {
+    //Properties
+    private int iconWidth;
+    private int iconHeight;
+
+    public ObjectTreePanel(Canvas canvas, ObjectController objectController, PropertiesController propertiesController) {
         super();
         this.canvas = canvas;
         this.objectController = objectController;
+        this.propertiesController = propertiesController;
 
+        loadProperties();
         createTree();
         createListeners();
     }
 
     private void createTree(){
         tree = new JTree(createNode("Scene", canvas.getLayersHierarchy()));
+        tree.setCellRenderer(new ObjectTreeCellRenderer(iconWidth, iconHeight));
         setLayout(new BorderLayout());
         add(new JLabel("Scene tree"), BorderLayout.PAGE_START);
         add(new JScrollPane(tree), BorderLayout.CENTER);
@@ -70,5 +79,10 @@ public class ObjectTreePanel extends JPanel {
                 }
             }
         });
+    }
+
+    private void loadProperties(){
+        iconWidth = propertiesController.getInt("preview.width");
+        iconHeight = propertiesController.getInt("preview.height");
     }
 }

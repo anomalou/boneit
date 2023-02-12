@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="scene hierarchy visualization">
+    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="scene object selection by tree">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/view/ObjectTreeCellRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/PropertiesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/PropertiesController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/view/ObjectTreePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/view/ObjectTreePanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -260,7 +262,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676204612565</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="scene object selection by tree">
+      <created>1676206257127</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1676206257127</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <option name="createBranch" value="false" />
     <servers />
   </component>
@@ -298,7 +307,8 @@
     <MESSAGE value="selection visualization enhancement, some auto docs" />
     <MESSAGE value="selection visualization enhancement" />
     <MESSAGE value="scene hierarchy visualization" />
-    <option name="LAST_COMMIT_MESSAGE" value="scene hierarchy visualization" />
+    <MESSAGE value="scene object selection by tree" />
+    <option name="LAST_COMMIT_MESSAGE" value="scene object selection by tree" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

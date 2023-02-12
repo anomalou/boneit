@@ -68,7 +68,7 @@ public class Main {
 
         CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getObjectController(), application.getPropertiesController());
 
-        ObjectTreePanel treePanel = new ObjectTreePanel(application.getProject().getCanvas(), application.getObjectController());
+        ObjectTreePanel treePanel = new ObjectTreePanel(application.getProject().getCanvas(), application.getObjectController(), application.getPropertiesController());
 
         //TODO move to Application
         JSplitPane splitPane = new JSplitPane(SwingConstants.VERTICAL, canvasPanel, treePanel);
@@ -76,7 +76,8 @@ public class Main {
 
         frame.setLayout(new BorderLayout());
 
-        frame.add(splitPane);
+        frame.add(splitPane, BorderLayout.CENTER);
+        frame.add(new JLabel("Info panel"), BorderLayout.PAGE_END);
         frame.revalidate();
     }
 
