@@ -5,7 +5,6 @@ import org.anomalou.controller.PropertiesController;
 import org.anomalou.model.Bone;
 import org.anomalou.model.Canvas;
 import org.anomalou.model.Layer;
-import org.anomalou.model.ObjectCache;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class CanvasPanel extends JPanel {
@@ -60,7 +58,7 @@ public class CanvasPanel extends JPanel {
 
         loadGraphics();
         loadProperties();
-        createMouseListener();
+        createMouseListeners();
     }
 
     @Override
@@ -68,8 +66,8 @@ public class CanvasPanel extends JPanel {
         super.paintComponent(g);
 
         drawScene(g);
-        drawSelection(g);
         drawInterface(g);
+        drawSelection(g);
     }
 
     private void loadGraphics(){//TODO something with textures
@@ -151,10 +149,10 @@ public class CanvasPanel extends JPanel {
                     scale * (bonePosition.y),
                     scale * (layer.getBaseBitmap().getWidth()), scale * (layer.getBaseBitmap().getHeight()));
 
-            g.setColor(Color.red);
+            g.setColor(Color.green);
 
-            g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y - 2), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y + 2));
-            g.drawLine(scale * (offset.x + layer.getPosition().x - 2), scale * (offset.y + layer.getPosition().y), scale * (offset.x + layer.getPosition().x + 2), scale * (offset.y + layer.getPosition().y));
+            g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y - 1), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y + 1));
+            g.drawLine(scale * (offset.x + layer.getPosition().x - 1), scale * (offset.y + layer.getPosition().y), scale * (offset.x + layer.getPosition().x + 1), scale * (offset.y + layer.getPosition().y));
             g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
                     scale * (offset.x + layer.getPosition().x + (((Bone) layer).getRootDirectionPosition().x - ((Bone) layer).getRootBasePosition().x)),
                     scale * (offset.y + layer.getPosition().y + (((Bone) layer).getRootDirectionPosition().y - ((Bone) layer).getRootBasePosition().y)));
@@ -164,6 +162,10 @@ public class CanvasPanel extends JPanel {
         }
     }
 
+    /**
+     * Check all objects in cache, that can be in mouse pointer hit area.
+     * @param clickPosition mouse click position in screen coordinates (raw position)
+     */
     private void select(Point clickPosition){
         final Point onCanvasPosition = screenToCanvas(clickPosition);
 
@@ -173,6 +175,12 @@ public class CanvasPanel extends JPanel {
         });
     }
 
+    /**
+     * Check if mouse pointer is hit in bound of object (layer, bone etc)
+     * @param layer layer to check
+     * @param clickPosition mouse click position in canvas coordinates (use screenToCanvas to convert!)
+     * @return boolean
+     */
     private boolean isClickInBound(Layer layer, Point clickPosition){
         Point position = new Point(0, 0);
         int width = 0;
@@ -189,8 +197,8 @@ public class CanvasPanel extends JPanel {
         width = layer.getBaseBitmap().getWidth();
         height = layer.getBaseBitmap().getHeight();
 
-        if(clickPosition.x >= position.x && clickPosition.x <= (position.x + width)){
-            if(clickPosition.y >= position.y && clickPosition.y <= (position.y + height)){
+        if(clickPosition.x >= position.x && clickPosition.x < (position.x + width)){
+            if(clickPosition.y >= position.y && clickPosition.y < (position.y + height)){
                 return true;
             }
         }
@@ -210,10 +218,14 @@ public class CanvasPanel extends JPanel {
         return screen;
     }
 
-    private void createMouseListener(){
+    private void createMouseListeners(){
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                System.out.print(screenToCanvas(e.getPoint()) + "\n");
+                if(isClickInBound(objectController.getObject(canvas.getSelection()), screenToCanvas(e.getPoint())))
+                    return;//TODO draw process
+
                 select(e.getPoint());
                 repaint();
             }

@@ -34,28 +34,28 @@ public class Main {
         project.getCanvas().reshape(400, 400);
         Layer layer = application.getProjectController().createLayer();
         layer.setBaseBitmap(img);
-        layer.setPosition(new Point(50, 50));
+        layer.setPosition(new Point(0, 0));
         layer.setVisible(true);
 
         Bone bone = application.getProjectController().createSkeleton();
         bone.setBaseBitmap(arrow);
-        bone.setPosition(new Point(50 ,50));
+        bone.setPosition(new Point(0 ,0));
         bone.setRootBasePosition(new Point(5, 5));
-        bone.setRootDirectionPosition(new Point(11,5));
+        bone.setRootDirectionPosition(new Point(10,5));
         bone.setDirection(new FPoint(1, -0.5));
         application.getObjectController().applyRotation(bone);
 
         Bone childBone = application.getObjectController().extrudeBone(bone);
         childBone.setBaseBitmap(arrow);
         childBone.setRootBasePosition(new Point(5, 5));
-        childBone.setRootDirectionPosition(new Point(11,5));
+        childBone.setRootDirectionPosition(new Point(10,5));
         childBone.setDirection(new FPoint(1, 1));
         application.getObjectController().applyRotation(childBone);
 
         Bone childBone2 = application.getObjectController().extrudeBone(childBone);
         childBone2.setBaseBitmap(arrow);
         childBone2.setRootBasePosition(new Point(5, 5));
-        childBone2.setRootDirectionPosition(new Point(11,5));
+        childBone2.setRootDirectionPosition(new Point(10,5));
         childBone2.setDirection(new FPoint(1, 1));
         application.getObjectController().applyRotation(childBone2);
 

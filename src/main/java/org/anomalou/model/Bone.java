@@ -44,9 +44,7 @@ public class Bone extends Layer{
         isBoneVisible = false;
     }
 
-    public void setDirection(FPoint direction) {
-        this.direction = direction;
-    }
+    //Right down some logic that for usability should be here. NOT IN CONTROLLERS!
 
     /**
      * get angle between direction and rootDirectionPosition vectors, as it began in (0, 0)
@@ -70,8 +68,27 @@ public class Bone extends Layer{
             return resultAngle;
     }
 
+    /**
+     * Normalize rootDirection vector. Move it to (0; 0) coordinates.
+     * @return FPoint normalized vector
+     */
     public FPoint getNormalizedRootVector(){
         return new FPoint(rootDirectionPosition.x - rootBasePosition.x, (rootDirectionPosition.y - rootBasePosition.y) * -1);
+    }
+
+    /**
+     * New vector, result of rotation rootDirection vector. Returns vector that start from (0; 0) coordinates.
+     * @return FPoint vector
+     */
+    public FPoint getRotationVector(){
+        double angle = getAngle();
+        FPoint normalizedVector = getNormalizedRootVector();
+        FPoint rotatedVector = new FPoint(normalizedVector.x * Math.cos(angle) - normalizedVector.y * Math.sin(angle),
+                normalizedVector.x * Math.sin(angle) + normalizedVector.y * Math.cos(angle));
+
+        rotatedVector.y *= -1;
+
+        return rotatedVector;
     }
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES

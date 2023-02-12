@@ -47,12 +47,9 @@ public class ObjectController extends Controller{
     }
 
     public void applySkeletonPosition(Bone bone){ //TODO also for layers
-        double angle = bone.getAngle();
-        FPoint normalizedVector = bone.getNormalizedRootVector();
-        FPoint rotatedVector = new FPoint(normalizedVector.x * Math.cos(angle) - normalizedVector.y * Math.sin(angle),
-                normalizedVector.x * Math.sin(angle) + normalizedVector.y * Math.cos(angle));
+        FPoint rotatedVector = bone.getRotationVector();
 
-        FPoint childrenPosition = new FPoint(bone.getPosition().x + rotatedVector.x, bone.getPosition().y + -1 * rotatedVector.y);
+        FPoint childrenPosition = new FPoint(bone.getPosition().x + rotatedVector.x, bone.getPosition().y + rotatedVector.y);
 
         bone.getChildren().forEach(uuid -> {
             Layer l = objectCache.getLayers().get(uuid);
