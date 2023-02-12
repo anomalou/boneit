@@ -5,6 +5,8 @@ import org.anomalou.model.Canvas;
 import org.anomalou.model.Layer;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.util.ArrayList;
@@ -24,11 +26,14 @@ public class ObjectTreePanel extends JPanel {
         this.objectController = objectController;
 
         createTree();
+        createListeners();
     }
 
     private void createTree(){
         tree = new JTree(createNode("Scene", canvas.getLayersHierarchy()));
-        add(new JScrollPane(tree), BorderLayout.PAGE_END);
+        setLayout(new BorderLayout());
+        add(new JLabel("Scene tree"), BorderLayout.PAGE_START);
+        add(new JScrollPane(tree), BorderLayout.CENTER);
     }
 
     private DefaultMutableTreeNode createNode(Object nodeObject, ArrayList<UUID> objects){
@@ -48,5 +53,22 @@ public class ObjectTreePanel extends JPanel {
         });
 
         return node;
+    }
+
+    private void createListeners(){
+        tree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+
+                if(node == null)
+                    return;
+
+                Object object = node.getUserObject();
+                if(object instanceof Layer){
+                    canvas.setSelection(((Layer) object).getUuid());
+                }
+            }
+        });
     }
 }

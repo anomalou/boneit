@@ -9,6 +9,7 @@ import org.anomalou.view.ObjectTreePanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -69,10 +70,12 @@ public class Main {
 
         ObjectTreePanel treePanel = new ObjectTreePanel(application.getProject().getCanvas(), application.getObjectController());
 
+        //TODO move to Application
         JSplitPane splitPane = new JSplitPane(SwingConstants.VERTICAL, canvasPanel, treePanel);
+        splitPane.setResizeWeight(0.9);
 
-//        frame.add(canvasPanel, BorderLayout.CENTER);
-//        frame.add(treePanel, BorderLayout.EAST);
+        frame.setLayout(new BorderLayout());
+
         frame.add(splitPane);
         frame.revalidate();
     }
