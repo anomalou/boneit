@@ -46,8 +46,8 @@ public class ObjectController extends Controller{
         }
     }
 
-    public void applySkeletonPosition(Bone bone){ //TODO also for layers
-        FPoint rotatedVector = bone.getRotationVector();
+    public void applyTransform(Bone bone, Double additionalAngle){ //TODO also for layers
+        FPoint rotatedVector = bone.getFullRotationVector();
 
         FPoint childrenPosition = new FPoint(bone.getPosition().x + rotatedVector.x, bone.getPosition().y + rotatedVector.y);
 
@@ -56,26 +56,31 @@ public class ObjectController extends Controller{
             if(l.getClass().equals(Bone.class)){
                 Bone b = (Bone) l;
                 b.setPosition(new Point((int)Math.round(childrenPosition.x), (int)Math.round(childrenPosition.y)));
-                applySkeletonPosition(b);
+                b.setParentRotationAngle(additionalAngle);
+                applyRotation(b, additionalAngle + b.getAngle());
+                applyTransform(b, additionalAngle + b.getAngle());
             }
         });
 
         logger.fine(String.format("Bone %s position applied!", bone.getUuid()));
     }
 
-    public void applySkeletonPosition(UUID uuid){
+    public void applyTransform(UUID uuid, Double additionalAngle){
         Layer l = objectCache.getLayers().get(uuid);
         if(l.getClass().equals(Bone.class)){
-            applySkeletonPosition((Bone) l);
+            applyTransform((Bone) l, additionalAngle);
         }
     }
 
     //TODO maybe, in future, if i have time, make transformBitmap adaptation to rotation of the image
-    public void applyRotation(Bone bone){
+    public void applyRotation(Bone bone, Double angle){
         if(bone.getTransformBitmap().getWidth() != bone.getBaseBitmap().getWidth() || bone.getTransformBitmap().getHeight() != bone.getBaseBitmap().getHeight())
             bone.setTransformBitmap(new BufferedImage(bone.getBaseBitmap().getWidth(), bone.getBaseBitmap().getHeight(), BufferedImage.TYPE_INT_ARGB));
         Graphics2D g2d = bone.getTransformBitmap().createGraphics();
-        Double angle = bone.getAngle() * -1;
+        angle *= -1;
+        g2d.setComposite(AlphaComposite.Clear);
+        g2d.fillRect(0, 0, bone.getTransformBitmap().getWidth(), bone.getTransformBitmap().getHeight());
+        g2d.setComposite(AlphaComposite.Src);
         g2d.rotate(angle, bone.getRootBasePosition().x, bone.getRootBasePosition().y);
         g2d.drawImage(bone.getBaseBitmap(), null, 0, 0);
         g2d.dispose();

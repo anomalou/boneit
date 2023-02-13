@@ -158,14 +158,15 @@ public class CanvasPanel extends JPanel {
 
             //Vectors
             //rootDirection
+            FPoint parentRotationVector = ((Bone) layer).getParentRotationVector();
             g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
-                    scale * (offset.x + layer.getPosition().x + (((Bone) layer).getRootDirectionPosition().x - ((Bone) layer).getRootBasePosition().x)),
-                    scale * (offset.y + layer.getPosition().y + (((Bone) layer).getRootDirectionPosition().y - ((Bone) layer).getRootBasePosition().y)));
+                    (int) Math.round(scale * (offset.x + layer.getPosition().x + parentRotationVector.x)),
+                    (int) Math.round(scale * (offset.y + layer.getPosition().y + parentRotationVector.y)));
 
             //rotation vector
             g.setColor(Color.cyan);
 
-            FPoint rotationVector = ((Bone) layer).getRotationVector();
+            FPoint rotationVector = ((Bone) layer).getFullRotationVector();
             g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
                     (int) Math.round(scale * (offset.x + layer.getPosition().x + rotationVector.x)),
                     (int) Math.round(scale * (offset.y + layer.getPosition().y + rotationVector.y)));

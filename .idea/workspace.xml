@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="scene object selection by tree">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/view/ObjectTreeCellRenderer.java" afterDir="false" />
+    <list default="true" id="785a9ec6-6803-4eb9-9cf5-6d5ab222df24" name="Changes" comment="object in tree visualization">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/PropertiesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/PropertiesController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/view/ObjectTreePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/view/ObjectTreePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ObjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/controller/ObjectController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/model/Bone.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/anomalou/view/CanvasPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/anomalou/view/CanvasPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -269,7 +269,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676206257127</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="object in tree visualization">
+      <created>1676214648034</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1676214648034</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <option name="createBranch" value="false" />
     <servers />
   </component>
@@ -308,7 +315,8 @@
     <MESSAGE value="selection visualization enhancement" />
     <MESSAGE value="scene hierarchy visualization" />
     <MESSAGE value="scene object selection by tree" />
-    <option name="LAST_COMMIT_MESSAGE" value="scene object selection by tree" />
+    <MESSAGE value="object in tree visualization" />
+    <option name="LAST_COMMIT_MESSAGE" value="object in tree visualization" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

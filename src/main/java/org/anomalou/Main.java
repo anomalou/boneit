@@ -9,8 +9,6 @@ import org.anomalou.view.ObjectTreePanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -45,26 +43,26 @@ public class Main {
         bone.setPosition(new Point(0 ,0));
         bone.setRootBasePosition(new Point(5, 5));
         bone.setRootDirectionPosition(new Point(10,5));
-        bone.setDirection(new FPoint(1, -0.5));
-        application.getObjectController().applyRotation(bone);
+        bone.setDirection(new FPoint(1, 0));
+        application.getObjectController().applyRotation(bone, bone.getAngle());
 
         Bone childBone = application.getObjectController().extrudeBone(bone);
         childBone.setBaseBitmap(arrow);
         childBone.setRootBasePosition(new Point(5, 5));
         childBone.setRootDirectionPosition(new Point(10,5));
-        childBone.setDirection(new FPoint(1, 1));
-        application.getObjectController().applyRotation(childBone);
+        childBone.setDirection(new FPoint(1, -1));
+        application.getObjectController().applyRotation(childBone, childBone.getAngle());
 
         Bone childBone2 = application.getObjectController().extrudeBone(childBone);
         childBone2.setBaseBitmap(arrow);
         childBone2.setRootBasePosition(new Point(5, 5));
         childBone2.setRootDirectionPosition(new Point(10,5));
         childBone2.setDirection(new FPoint(1, 1));
-        application.getObjectController().applyRotation(childBone2);
+        application.getObjectController().applyRotation(childBone2, childBone2.getAngle());
 
-        application.getObjectController().applySkeletonPosition(bone);
+        application.getObjectController().applyTransform(bone, bone.getAngle());
 
-        application.getProject().getCanvas().setSelection(bone.getUuid());
+        application.getProject().getCanvas().setSelection(childBone2.getUuid());
 
         CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getObjectController(), application.getPropertiesController());
 

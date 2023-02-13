@@ -26,6 +26,9 @@ public class Bone extends Layer{
     @Getter
     @Setter
     private FPoint direction; //direction in unit circle
+    @Getter
+    @Setter
+    private Double parentRotationAngle;
     /**
      * Visibility of the bone rig.
      */
@@ -41,6 +44,7 @@ public class Bone extends Layer{
         rootBasePosition = new Point(0, 0);
         rootDirectionPosition = new Point(0, 0);
         direction = new FPoint(0, 0);
+        parentRotationAngle = 0d;
         isBoneVisible = false;
     }
 
@@ -80,8 +84,15 @@ public class Bone extends Layer{
      * New vector, result of rotation rootDirection vector. Returns vector that start from (0; 0) coordinates.
      * @return FPoint vector
      */
-    public FPoint getRotationVector(){
-        double angle = getAngle();
+    public FPoint getParentRotationVector(){
+        return getRotationVector(parentRotationAngle);
+    }
+
+    public FPoint getFullRotationVector(){
+        return getRotationVector(getAngle() + parentRotationAngle);
+    }
+
+    private FPoint getRotationVector(Double angle){
         FPoint normalizedVector = getNormalizedRootVector();
         FPoint rotatedVector = new FPoint(normalizedVector.x * Math.cos(angle) - normalizedVector.y * Math.sin(angle),
                 normalizedVector.x * Math.sin(angle) + normalizedVector.y * Math.cos(angle));
