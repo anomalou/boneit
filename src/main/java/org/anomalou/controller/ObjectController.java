@@ -123,17 +123,22 @@ public class ObjectController extends Controller{
      * @return FPoint vector
      */
     public FPoint getParentRotationVector(Bone bone){
-        return getRotationVector(bone, bone.getParentRotationAngle());
+        return getRotatedVector(getNormalizedRootVector(bone), bone.getParentRotationAngle());
     }
 
     public FPoint getFullRotationVector(Bone bone){
-        return getRotationVector(bone,getRotationAngle(bone) + bone.getParentRotationAngle());
+        return getRotatedVector(getNormalizedRootVector(bone),getRotationAngle(bone) + bone.getParentRotationAngle());
     }
 
-    private FPoint getRotationVector(Bone bone, Double angle){
-        FPoint normalizedVector = getNormalizedRootVector(bone);
-        FPoint rotatedVector = new FPoint(normalizedVector.x * Math.cos(angle) - normalizedVector.y * Math.sin(angle),
-                normalizedVector.x * Math.sin(angle) + normalizedVector.y * Math.cos(angle));
+    /**
+     * Calculate new vector like if zeroVector (begins in (0, 0)) would be rotated to some angle
+     * @param zeroVector vector to rotate (source in (0,0))
+     * @param angle angle to rotate
+     * @return FPoint
+     */
+    public FPoint getRotatedVector(FPoint zeroVector, Double angle){
+        FPoint rotatedVector = new FPoint(zeroVector.x * Math.cos(angle) - zeroVector.y * Math.sin(angle),
+                zeroVector.x * Math.sin(angle) + zeroVector.y * Math.cos(angle));
 
         rotatedVector.y *= -1;
 

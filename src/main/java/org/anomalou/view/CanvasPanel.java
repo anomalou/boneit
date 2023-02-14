@@ -48,6 +48,8 @@ public class CanvasPanel extends JPanel {
 
     private boolean isScrollPressed;
 
+    private boolean isRotationTool = false; //TODO temp, for future should be moved into tools controller
+
     public CanvasPanel(Canvas canvas, ObjectController objectController, PropertiesController propertiesController){
         this.canvas = canvas;
         this.objectController = objectController;
@@ -237,8 +239,14 @@ public class CanvasPanel extends JPanel {
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(isClickInBound(objectController.getObject(canvas.getSelection()), screenToCanvas(e.getPoint())))
+                if(isClickInBound(objectController.getObject(canvas.getSelection()), screenToCanvas(e.getPoint()))){
+                    //Rotation tests! :3
+                    if(!objectController.getObject(canvas.getSelection()).getClass().equals(Bone.class))
+                        return;
+
+
                     return;//TODO draw process
+                }
 
                 select(e.getPoint());
                 repaint();
@@ -249,12 +257,19 @@ public class CanvasPanel extends JPanel {
                 if(e.getButton() == MouseEvent.BUTTON2){
                     isScrollPressed = true;
                 }
+                if(e.getButton() == MouseEvent.BUTTON1){
+                    if(objectController.getObject(canvas.getSelection()).getClass().equals(Bone.class))
+                        isRotationTool = true;
+                }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 if(e.getButton() == MouseEvent.BUTTON2){
                     isScrollPressed = false;
+                }
+                if(e.getButton() == MouseEvent.BUTTON1){
+                    isRotationTool = false;
                 }
             }
 
@@ -293,6 +308,23 @@ public class CanvasPanel extends JPanel {
                     pixelsPassed = 0;
                     offset.x += direction.x;
                     offset.y += direction.y;
+                    repaint();
+                }
+
+                if(isRotationTool){
+                    Bone bone = (Bone) objectController.getObject(canvas.getSelection());
+                    Point objectPos = bone.getPosition();
+                    Point mousePos = screenToCanvas(e.getPoint());
+                    FPoint rotation = new FPoint(mousePos.x, mousePos.y);
+                    rotation.x -= objectPos.x;
+                    rotation.y -= objectPos.y;
+//                    rotation.y *= -1;
+//                    System.out.print("Old " + rotation + "\n");
+                    rotation = objectController.getRotatedVector(rotation, bone.getParentRotationAngle());
+//                    System.out.print("New " + rotation + "\n");
+                    bone.setDirectionVector(rotation);
+                    objectController.applyRotation(bone, bone.getParentRotationAngle() + objectController.getRotationAngle(bone));
+                    objectController.applyTransform(bone, objectController.getRotationAngle(bone) + bone.getParentRotationAngle());
                     repaint();
                 }
             }

@@ -18,4 +18,8 @@ public class FPoint implements Serializable {
         this.x = x;
         this.y = y;
     }
+
+    public String toString(){
+        return String.format("[%f:%f]", x, y);
+    }
 }

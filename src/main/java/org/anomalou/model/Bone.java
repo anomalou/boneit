@@ -48,6 +48,11 @@ public class Bone extends Layer{
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES
 
+    @Override
+    public String toString(){
+        return String.format("%s - %f", name, parentRotationAngle);
+    }
+
     @Serial
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();

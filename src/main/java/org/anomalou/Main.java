@@ -40,11 +40,11 @@ public class Main {
 
         Bone bone = application.getProjectController().createSkeleton();
         bone.setBaseBitmap(arrow);
-        bone.setPosition(new Point(0 ,0));
+        bone.setPosition(new Point(10 ,5));
         bone.setRootVectorOrigin(new Point(5, 5));
         bone.setRootVectorDirection(new Point(10,5));
-        bone.setDirectionVector(new FPoint(1, 0));
-//        application.getObjectController().applyRotation(bone, bone.getRotationAngle());
+        bone.setDirectionVector(new FPoint(0, -1));
+        application.getObjectController().applyRotation(bone, application.getObjectController().getRotationAngle(bone));
 
         Bone childBone = application.getObjectController().extrudeBone(bone);
         childBone.setBaseBitmap(arrow);
@@ -57,7 +57,7 @@ public class Main {
         childBone2.setBaseBitmap(arrow);
         childBone2.setRootVectorOrigin(new Point(5, 5));
         childBone2.setRootVectorDirection(new Point(10,5));
-        childBone2.setDirectionVector(new FPoint(1, 1));
+        childBone2.setDirectionVector(new FPoint(0, 1));
 //        application.getObjectController().applyRotation(childBone2, childBone2.getRotationAngle());
 
         application.getObjectController().applyTransform(bone, application.getObjectController().getRotationAngle(bone));
