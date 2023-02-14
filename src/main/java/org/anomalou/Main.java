@@ -41,26 +41,26 @@ public class Main {
         Bone bone = application.getProjectController().createSkeleton();
         bone.setBaseBitmap(arrow);
         bone.setPosition(new Point(0 ,0));
-        bone.setRootBasePosition(new Point(5, 5));
-        bone.setRootDirectionPosition(new Point(10,5));
-        bone.setDirection(new FPoint(1, 0));
-        application.getObjectController().applyRotation(bone, bone.getAngle());
+        bone.setRootVectorOrigin(new Point(5, 5));
+        bone.setRootVectorDirection(new Point(10,5));
+        bone.setDirectionVector(new FPoint(1, 0));
+//        application.getObjectController().applyRotation(bone, bone.getRotationAngle());
 
         Bone childBone = application.getObjectController().extrudeBone(bone);
         childBone.setBaseBitmap(arrow);
-        childBone.setRootBasePosition(new Point(5, 5));
-        childBone.setRootDirectionPosition(new Point(10,5));
-        childBone.setDirection(new FPoint(1, -1));
-        application.getObjectController().applyRotation(childBone, childBone.getAngle());
+        childBone.setRootVectorOrigin(new Point(5, 5));
+        childBone.setRootVectorDirection(new Point(10,5));
+        childBone.setDirectionVector(new FPoint(1, -1));
+//        application.getObjectController().applyRotation(childBone, childBone.getRotationAngle());
 
         Bone childBone2 = application.getObjectController().extrudeBone(childBone);
         childBone2.setBaseBitmap(arrow);
-        childBone2.setRootBasePosition(new Point(5, 5));
-        childBone2.setRootDirectionPosition(new Point(10,5));
-        childBone2.setDirection(new FPoint(1, 1));
-        application.getObjectController().applyRotation(childBone2, childBone2.getAngle());
+        childBone2.setRootVectorOrigin(new Point(5, 5));
+        childBone2.setRootVectorDirection(new Point(10,5));
+        childBone2.setDirectionVector(new FPoint(1, 1));
+//        application.getObjectController().applyRotation(childBone2, childBone2.getRotationAngle());
 
-        application.getObjectController().applyTransform(bone, bone.getAngle());
+        application.getObjectController().applyTransform(bone, application.getObjectController().getRotationAngle(bone));
 
         application.getProject().getCanvas().setSelection(childBone2.getUuid());
 

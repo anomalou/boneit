@@ -145,7 +145,7 @@ public class CanvasPanel extends JPanel {
         g.setColor(Color.black);
 
         if(layer.getClass().equals(Bone.class)){
-            Point bonePosition = new Point(offset.x + layer.getPosition().x - ((Bone) layer).getRootBasePosition().x, offset.y + layer.getPosition().y - ((Bone) layer).getRootBasePosition().y);
+            Point bonePosition = new Point(offset.x + layer.getPosition().x - ((Bone) layer).getRootVectorOrigin().x, offset.y + layer.getPosition().y - ((Bone) layer).getRootVectorOrigin().y);
             g.drawRect(scale * (bonePosition.x),
                     scale * (bonePosition.y),
                     scale * (layer.getBaseBitmap().getWidth()), scale * (layer.getBaseBitmap().getHeight()));
@@ -158,7 +158,7 @@ public class CanvasPanel extends JPanel {
 
             //Vectors
             //rootDirection
-            FPoint parentRotationVector = ((Bone) layer).getParentRotationVector();
+            FPoint parentRotationVector = objectController.getParentRotationVector((Bone) layer);
             g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
                     (int) Math.round(scale * (offset.x + layer.getPosition().x + parentRotationVector.x)),
                     (int) Math.round(scale * (offset.y + layer.getPosition().y + parentRotationVector.y)));
@@ -166,7 +166,7 @@ public class CanvasPanel extends JPanel {
             //rotation vector
             g.setColor(Color.cyan);
 
-            FPoint rotationVector = ((Bone) layer).getFullRotationVector();
+            FPoint rotationVector = objectController.getFullRotationVector((Bone) layer);
             g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
                     (int) Math.round(scale * (offset.x + layer.getPosition().x + rotationVector.x)),
                     (int) Math.round(scale * (offset.y + layer.getPosition().y + rotationVector.y)));
@@ -202,8 +202,8 @@ public class CanvasPanel extends JPanel {
         int height = 0;
 
         if(layer.getClass().equals(Bone.class)){
-            position.x = layer.getPosition().x - ((Bone) layer).getRootBasePosition().x;
-            position.y = layer.getPosition().y - ((Bone) layer).getRootBasePosition().y;
+            position.x = layer.getPosition().x - ((Bone) layer).getRootVectorOrigin().x;
+            position.y = layer.getPosition().y - ((Bone) layer).getRootVectorOrigin().y;
         }else{
             position.x = layer.getPosition().x;
             position.y = layer.getPosition().y;
@@ -339,6 +339,6 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawBone(Bone bone, Graphics g){
-        g.drawImage(bone.getTransformBitmap(), scale * (offset.x + bone.getPosition().x - bone.getRootBasePosition().x), scale * (offset.y + bone.getPosition().y - bone.getRootBasePosition().y), scale * bone.getTransformBitmap().getWidth(), scale * bone.getTransformBitmap().getHeight(), null);
+        g.drawImage(bone.getTransformBitmap(), scale * (offset.x + bone.getPosition().x - bone.getRootVectorOrigin().x), scale * (offset.y + bone.getPosition().y - bone.getRootVectorOrigin().y), scale * bone.getTransformBitmap().getWidth(), scale * bone.getTransformBitmap().getHeight(), null);
     }
 }

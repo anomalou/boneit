@@ -47,7 +47,7 @@ public class ObjectController extends Controller{
     }
 
     public void applyTransform(Bone bone, Double additionalAngle){ //TODO also for layers
-        FPoint rotatedVector = bone.getFullRotationVector();
+        FPoint rotatedVector = getFullRotationVector(bone);
 
         FPoint childrenPosition = new FPoint(bone.getPosition().x + rotatedVector.x, bone.getPosition().y + rotatedVector.y);
 
@@ -57,8 +57,8 @@ public class ObjectController extends Controller{
                 Bone b = (Bone) l;
                 b.setPosition(new Point((int)Math.round(childrenPosition.x), (int)Math.round(childrenPosition.y)));
                 b.setParentRotationAngle(additionalAngle);
-                applyRotation(b, additionalAngle + b.getAngle());
-                applyTransform(b, additionalAngle + b.getAngle());
+                applyRotation(b, additionalAngle + getRotationAngle(b));
+                applyTransform(b, additionalAngle + getRotationAngle(b));
             }
         });
 
@@ -81,11 +81,63 @@ public class ObjectController extends Controller{
         g2d.setComposite(AlphaComposite.Clear);
         g2d.fillRect(0, 0, bone.getTransformBitmap().getWidth(), bone.getTransformBitmap().getHeight());
         g2d.setComposite(AlphaComposite.Src);
-        g2d.rotate(angle, bone.getRootBasePosition().x, bone.getRootBasePosition().y);
+        g2d.rotate(angle, bone.getRootVectorOrigin().x, bone.getRootVectorOrigin().y);
         g2d.drawImage(bone.getBaseBitmap(), null, 0, 0);
         g2d.dispose();
 
         logger.fine(String.format("Bone %s rotated to %f angle!", bone.getUuid().toString(), angle));
+    }
+
+    /**
+     * get angle between direction and rootDirectionPosition vectors, as it began in (0, 0)
+     * @return double
+     */
+    public double getRotationAngle(Bone bone){
+        FPoint normalizedRootDirectionVector = getNormalizedRootVector(bone);
+
+        double side = (bone.getDirectionVector().x) * (normalizedRootDirectionVector.y) - (bone.getDirectionVector().y) * (normalizedRootDirectionVector.x);
+
+        side = side <= 0 ? 1 : -1;
+
+        double cos = (bone.getDirectionVector().x * normalizedRootDirectionVector.x + bone.getDirectionVector().y * normalizedRootDirectionVector.y) /
+                (Math.sqrt(Math.pow(bone.getDirectionVector().x, 2) + Math.pow(bone.getDirectionVector().y, 2)) * Math.sqrt(Math.pow(normalizedRootDirectionVector.x, 2) + Math.pow(normalizedRootDirectionVector.y, 2)));
+        cos = Math.abs(cos) > 1d ? 1d : cos;
+
+        Double resultAngle =  Math.acos(cos) * side;
+        if(resultAngle.isNaN())
+            return 0;
+        else
+            return resultAngle;
+    }
+
+    /**
+     * Normalize rootDirection vector. Move it to (0; 0) coordinates.
+     * @return FPoint normalized vector
+     */
+    public FPoint getNormalizedRootVector(Bone bone){
+        return new FPoint(bone.getRootVectorDirection().x - bone.getRootVectorOrigin().x, (bone.getRootVectorDirection().y - bone.getRootVectorOrigin().y) * -1);
+    }
+
+    /**
+     * New vector, result of rotation rootDirection vector. Returns vector that start from (0; 0) coordinates.
+     * @return FPoint vector
+     */
+    public FPoint getParentRotationVector(Bone bone){
+        return getRotationVector(bone, bone.getParentRotationAngle());
+    }
+
+    public FPoint getFullRotationVector(Bone bone){
+        return getRotationVector(bone,getRotationAngle(bone) + bone.getParentRotationAngle());
+    }
+
+    private FPoint getRotationVector(Bone bone, Double angle){
+        FPoint normalizedVector = getNormalizedRootVector(bone);
+        FPoint rotatedVector = new FPoint(normalizedVector.x * Math.cos(angle) - normalizedVector.y * Math.sin(angle),
+                normalizedVector.x * Math.sin(angle) + normalizedVector.y * Math.cos(angle));
+
+        rotatedVector.y *= -1;
+
+        return rotatedVector;
     }
 
     public void reshape(Layer layer, int w, int h){
