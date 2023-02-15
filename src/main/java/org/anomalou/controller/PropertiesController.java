@@ -60,6 +60,7 @@ public class PropertiesController extends Controller{
 
     private void loadPropertiesFile(){
         File file = new File(propertiesPath);
+        System.out.print(propertiesPath);
 
         if(!file.exists()){
             try{

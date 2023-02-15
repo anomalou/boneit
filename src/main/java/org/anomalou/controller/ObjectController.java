@@ -74,13 +74,13 @@ public class ObjectController extends Controller{
 
     //TODO maybe, in future, if i have time, make transformBitmap adaptation to rotation of the image
     public void applyRotation(Bone bone, Double angle){
-        if(bone.getTransformBitmap().getWidth() != bone.getBaseBitmap().getWidth() || bone.getTransformBitmap().getHeight() != bone.getBaseBitmap().getHeight())
+//        if(bone.getTransformBitmap().getWidth() != bone.getBaseBitmap().getWidth() || bone.getTransformBitmap().getHeight() != bone.getBaseBitmap().getHeight())
             bone.setTransformBitmap(new BufferedImage(bone.getBaseBitmap().getWidth(), bone.getBaseBitmap().getHeight(), BufferedImage.TYPE_INT_ARGB));
         Graphics2D g2d = bone.getTransformBitmap().createGraphics();
         angle *= -1;
-        g2d.setComposite(AlphaComposite.Clear);
-        g2d.fillRect(0, 0, bone.getTransformBitmap().getWidth(), bone.getTransformBitmap().getHeight());
-        g2d.setComposite(AlphaComposite.Src);
+//        g2d.setComposite(AlphaComposite.Clear);
+//        g2d.fillRect(0, 0, bone.getTransformBitmap().getWidth(), bone.getTransformBitmap().getHeight());
+//        g2d.setComposite(AlphaComposite.Src);
         g2d.rotate(angle, bone.getRootVectorOrigin().x, bone.getRootVectorOrigin().y);
         g2d.drawImage(bone.getBaseBitmap(), null, 0, 0);
         g2d.dispose();

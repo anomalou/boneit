@@ -320,15 +320,6 @@ public class CanvasPanel extends JPanel {
             @Override
             public void mouseDragged(MouseEvent e) {
                 calculateDirection(e.getPoint());
-                if(isScrollPressed){
-                    pixelsPassed += 1;
-                }
-                if(pixelsPassed >= scale){
-                    pixelsPassed = 0;
-                    offset.x += direction.x;
-                    offset.y += direction.y;
-                    repaint();
-                }
 
                 if(isRotationMode){ //TODO rewrite
                     Bone bone = (Bone) objectController.getObject(canvas.getSelection());
@@ -345,6 +336,17 @@ public class CanvasPanel extends JPanel {
                     objectController.applyRotation(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
                     objectController.applyTransform(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
                     getParent().repaint();
+//                    repaint();
+                }
+
+                pixelsPassed += 1;
+
+                if(pixelsPassed >= scale){
+                    if(isScrollPressed){
+                        offset.x += direction.x;
+                        offset.y += direction.y;
+                    }
+                    pixelsPassed = 0;
                     repaint();
                 }
             }
@@ -352,7 +354,7 @@ public class CanvasPanel extends JPanel {
             @Override
             public void mouseMoved(MouseEvent e) {
                 calculateDirection(e.getPoint());
-                repaint();
+//                repaint();
             }
 
             private int calculateDirection(Point pos){

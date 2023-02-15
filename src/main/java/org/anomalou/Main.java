@@ -58,6 +58,11 @@ public class Main {
         stem.setBaseBitmap(stem_img);
         stem.setRootVectorOrigin(new Point(15, 15));
         stem.setRootVectorDirection(new Point(15,30));
+
+        Bone stem2 = application.getObjectController().extrudeBone(root);
+        stem2.setBaseBitmap(stem_img);
+        stem2.setRootVectorOrigin(new Point(15, 15));
+        stem2.setRootVectorDirection(new Point(15,30));
 //        objectController.calculateRotationAngleFor(stem, new FPoint(1, -1));
 //        application.getObjectController().applyRotation(childBone, childBone.getRotationAngle());
 

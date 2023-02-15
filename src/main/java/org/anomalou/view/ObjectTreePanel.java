@@ -77,6 +77,8 @@ public class ObjectTreePanel extends JPanel {
                 if(object instanceof Layer){
                     canvas.setSelection(((Layer) object).getUuid());
                 }
+
+                getParent().repaint();
             }
         });
     }
