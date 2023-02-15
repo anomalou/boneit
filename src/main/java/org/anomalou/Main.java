@@ -24,9 +24,13 @@ public class Main {
 
         BufferedImage img = null;
         BufferedImage arrow = null;
+        BufferedImage sunflower_img = null;
+        BufferedImage stem_img = null;
         try{
             img = ImageIO.read(new File("test.png"));
             arrow = ImageIO.read(new File("low_arrow.png"));
+            sunflower_img = ImageIO.read(new File("sunflower.png"));
+            stem_img = ImageIO.read(new File("stem.png"));
         }catch (IOException ex){
             ex.printStackTrace();
         }
@@ -42,31 +46,29 @@ public class Main {
         layer.setPosition(new Point(0, 0));
         layer.setVisible(true);
 
-        Bone bone = application.getProjectController().createSkeleton();
-        bone.setBaseBitmap(arrow);
-        bone.setPosition(new Point(10 ,5));
-        bone.setRootVectorOrigin(new Point(5, 5));
-        bone.setRootVectorDirection(new Point(10,5));
-        objectController.calculateRotationAngleFor(bone, new FPoint(0, -1));
-        application.getObjectController().applyRotation(bone, bone.getRotationAngle());
+        Bone root = application.getProjectController().createSkeleton();
+        root.setBaseBitmap(stem_img);
+        root.setPosition(new Point(30 ,80));
+        root.setRootVectorOrigin(new Point(15, 15));
+        root.setRootVectorDirection(new Point(15,30));
+//        objectController.calculateRotationAngleFor(root, new FPoint(0, -1));
+        application.getObjectController().applyRotation(root, root.getRotationAngle());
 
-        Bone childBone = application.getObjectController().extrudeBone(bone);
-        childBone.setBaseBitmap(arrow);
-        childBone.setRootVectorOrigin(new Point(5, 5));
-        childBone.setRootVectorDirection(new Point(10,5));
-        objectController.calculateRotationAngleFor(childBone, new FPoint(1, -1));
+        Bone stem = application.getObjectController().extrudeBone(root);
+        stem.setBaseBitmap(stem_img);
+        stem.setRootVectorOrigin(new Point(15, 15));
+        stem.setRootVectorDirection(new Point(15,30));
+//        objectController.calculateRotationAngleFor(stem, new FPoint(1, -1));
 //        application.getObjectController().applyRotation(childBone, childBone.getRotationAngle());
 
-        Bone childBone2 = application.getObjectController().extrudeBone(childBone);
-        childBone2.setBaseBitmap(arrow);
-        childBone2.setRootVectorOrigin(new Point(5, 5));
-        childBone2.setRootVectorDirection(new Point(10,5));
-        objectController.calculateRotationAngleFor(childBone2, new FPoint(0, 1));
+        Bone sunflower = application.getObjectController().extrudeBone(stem);
+        sunflower.setBaseBitmap(sunflower_img);
+        sunflower.setRootVectorOrigin(new Point(15, 15));
+        sunflower.setRootVectorDirection(new Point(30,15));
+//        objectController.calculateRotationAngleFor(sunflower, new FPoint(0, 1));
 //        application.getObjectController().applyRotation(childBone2, childBone2.getRotationAngle());
 
-        application.getObjectController().applyTransform(bone, bone.getRotationAngle());
-
-        application.getProject().getCanvas().setSelection(childBone2.getUuid());
+        application.getObjectController().applyTransform(root, root.getRotationAngle());
 
         CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getObjectController(), application.getPropertiesController());
 
