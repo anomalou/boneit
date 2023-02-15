@@ -57,8 +57,8 @@ public class ObjectController extends Controller{
                 Bone b = (Bone) l;
                 b.setPosition(new Point((int)Math.round(childrenPosition.x), (int)Math.round(childrenPosition.y)));
                 b.setParentRotationAngle(additionalAngle);
-                applyRotation(b, additionalAngle + getRotationAngle(b));
-                applyTransform(b, additionalAngle + getRotationAngle(b));
+                applyRotation(b, additionalAngle + b.getRotationAngle());
+                applyTransform(b, additionalAngle + b.getRotationAngle());
             }
         });
 
@@ -92,22 +92,24 @@ public class ObjectController extends Controller{
      * get angle between direction and rootDirectionPosition vectors, as it began in (0, 0)
      * @return double
      */
-    public double getRotationAngle(Bone bone){
+    public double calculateRotationAngleFor(Bone bone, FPoint directionVector){
         FPoint normalizedRootDirectionVector = getNormalizedRootVector(bone);
 
-        double side = (bone.getDirectionVector().x) * (normalizedRootDirectionVector.y) - (bone.getDirectionVector().y) * (normalizedRootDirectionVector.x);
+        double side = (directionVector.x) * (normalizedRootDirectionVector.y) - (directionVector.y) * (normalizedRootDirectionVector.x);
 
         side = side <= 0 ? 1 : -1;
 
-        double cos = (bone.getDirectionVector().x * normalizedRootDirectionVector.x + bone.getDirectionVector().y * normalizedRootDirectionVector.y) /
-                (Math.sqrt(Math.pow(bone.getDirectionVector().x, 2) + Math.pow(bone.getDirectionVector().y, 2)) * Math.sqrt(Math.pow(normalizedRootDirectionVector.x, 2) + Math.pow(normalizedRootDirectionVector.y, 2)));
+        double cos = (directionVector.x * normalizedRootDirectionVector.x + directionVector.y * normalizedRootDirectionVector.y) /
+                (Math.sqrt(Math.pow(directionVector.x, 2) + Math.pow(directionVector.y, 2)) * Math.sqrt(Math.pow(normalizedRootDirectionVector.x, 2) + Math.pow(normalizedRootDirectionVector.y, 2)));
         cos = Math.abs(cos) > 1d ? 1d : cos;
 
         Double resultAngle =  Math.acos(cos) * side;
         if(resultAngle.isNaN())
-            return 0;
-        else
-            return resultAngle;
+            resultAngle = 0d;
+
+        bone.setRotationAngle(resultAngle);
+
+        return resultAngle;
     }
 
     /**
@@ -127,7 +129,7 @@ public class ObjectController extends Controller{
     }
 
     public FPoint getFullRotationVector(Bone bone){
-        return getRotatedVector(getNormalizedRootVector(bone),getRotationAngle(bone) + bone.getParentRotationAngle());
+        return getRotatedVector(getNormalizedRootVector(bone), bone.getRotationAngle() + bone.getParentRotationAngle());
     }
 
     /**

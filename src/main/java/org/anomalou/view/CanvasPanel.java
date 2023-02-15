@@ -148,37 +148,55 @@ public class CanvasPanel extends JPanel {
         g.setColor(Color.black);
 
         if(layer.getClass().equals(Bone.class)){
-            Point bonePosition = new Point(offset.x + layer.getPosition().x - ((Bone) layer).getRootVectorOrigin().x, offset.y + layer.getPosition().y - ((Bone) layer).getRootVectorOrigin().y);
-            g.drawRect(scale * (bonePosition.x),
-                    scale * (bonePosition.y),
-                    scale * (layer.getBaseBitmap().getWidth()), scale * (layer.getBaseBitmap().getHeight()));
-
-            g.setColor(Color.green);
-
-            //Cross in the rootBasePosition
-            g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y - 1), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y + 1));
-            g.drawLine(scale * (offset.x + layer.getPosition().x - 1), scale * (offset.y + layer.getPosition().y), scale * (offset.x + layer.getPosition().x + 1), scale * (offset.y + layer.getPosition().y));
-
-            //Vectors
-            //rootDirection
-            FPoint parentRotationVector = objectController.getParentRotationVector((Bone) layer);
-            g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
-                    (int) Math.round(scale * (offset.x + layer.getPosition().x + parentRotationVector.x)),
-                    (int) Math.round(scale * (offset.y + layer.getPosition().y + parentRotationVector.y)));
-
-            //rotation vector
-            g.setColor(Color.cyan);
-
-            FPoint rotationVector = objectController.getFullRotationVector((Bone) layer);
-            g.drawLine(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
-                    (int) Math.round(scale * (offset.x + layer.getPosition().x + rotationVector.x)),
-                    (int) Math.round(scale * (offset.y + layer.getPosition().y + rotationVector.y)));
-
+            drawSelectedSkeleton(g, (Bone) layer);
         }else{
-            g.drawRect(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
-                    scale * layer.getBaseBitmap().getWidth(), scale * layer.getBaseBitmap().getHeight());
+            drawSelectedLayer(g, layer);
         }
     }
+
+    private void drawSelectedLayer(Graphics g, Layer layer){
+        g.drawRect(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
+                scale * layer.getBaseBitmap().getWidth(), scale * layer.getBaseBitmap().getHeight());
+    }
+
+    private void drawSelectedSkeleton(Graphics g, Bone bone){
+        Point bonePosition = new Point(offset.x + bone.getPosition().x - bone.getRootVectorOrigin().x, offset.y + bone.getPosition().y - bone.getRootVectorOrigin().y);
+        g.drawRect(scale * (bonePosition.x),
+                scale * (bonePosition.y),
+                scale * (bone.getBaseBitmap().getWidth()), scale * (bone.getBaseBitmap().getHeight()));
+
+        drawSelectedBone(g, bone);
+    }
+
+    private void drawSelectedBone(Graphics g, Bone bone){
+        bone.getChildren().forEach(uuid -> {
+            if(objectController.getObject(uuid).getClass().equals(Bone.class))
+                drawSelectedBone(g, (Bone) objectController.getObject(uuid));
+        });
+
+        g.setColor(Color.green);
+
+        //Cross in the rootBasePosition
+        g.drawLine(scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y - 1), scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y + 1));
+        g.drawLine(scale * (offset.x + bone.getPosition().x - 1), scale * (offset.y + bone.getPosition().y), scale * (offset.x + bone.getPosition().x + 1), scale * (offset.y + bone.getPosition().y));
+
+        //Vectors
+        //rootDirection
+        FPoint parentRotationVector = objectController.getParentRotationVector(bone);
+        g.drawLine(scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y),
+                (int) Math.round(scale * (offset.x + bone.getPosition().x + parentRotationVector.x)),
+                (int) Math.round(scale * (offset.y + bone.getPosition().y + parentRotationVector.y)));
+
+        //rotation vector
+        g.setColor(Color.cyan);
+
+        FPoint rotationVector = objectController.getFullRotationVector(bone);
+        g.drawLine(scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y),
+                (int) Math.round(scale * (offset.x + bone.getPosition().x + rotationVector.x)),
+                (int) Math.round(scale * (offset.y + bone.getPosition().y + rotationVector.y)));
+
+    }
+
 
     /**
      * Check all objects in cache, that can be in mouse pointer hit area.
@@ -323,9 +341,10 @@ public class CanvasPanel extends JPanel {
 //                    System.out.print("Old " + rotation + "\n");
                     rotation = objectController.getRotatedVector(rotation, bone.getParentRotationAngle());
 //                    System.out.print("New " + rotation + "\n");
-                    bone.setDirectionVector(rotation);
-                    objectController.applyRotation(bone, bone.getParentRotationAngle() + objectController.getRotationAngle(bone));
-                    objectController.applyTransform(bone, objectController.getRotationAngle(bone) + bone.getParentRotationAngle());
+                    bone.setRotationAngle(objectController.calculateRotationAngleFor(bone, rotation));
+                    objectController.applyRotation(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
+                    objectController.applyTransform(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
+                    getParent().repaint();
                     repaint();
                 }
             }

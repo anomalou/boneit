@@ -15,15 +15,27 @@ public class Bone extends Layer{
     @Getter
     @Setter
     private transient BufferedImage transformBitmap;
+    /**
+     * Source of normal vector of the bone.
+     */
     @Getter
     @Setter
-    private Point rootVectorOrigin; //position of root of the bone on its layer, not the same as "position"
+    private Point rootVectorOrigin;
+    /**
+     * Direction of normal vector of the bone.
+     */
     @Getter
     @Setter
-    private Point rootVectorDirection; //position of the direction of the bone on its layer
+    private Point rootVectorDirection;
+    /**
+     * Angle of the bone in radian.
+     */
     @Getter
     @Setter
-    private FPoint directionVector; //direction in unit circle
+    private Double rotationAngle;
+    /**
+     * Sum of angles of all parents of the bone in radian.
+     */
     @Getter
     @Setter
     private Double parentRotationAngle;
@@ -41,17 +53,12 @@ public class Bone extends Layer{
         transformBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         rootVectorOrigin = new Point(0, 0);
         rootVectorDirection = new Point(0, 0);
-        directionVector = new FPoint(0, 0);
+        rotationAngle = 0d;
         parentRotationAngle = 0d;
         isBoneVisible = false;
     }
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES
-
-    @Override
-    public String toString(){
-        return String.format("%s - %f", name, parentRotationAngle);
-    }
 
     @Serial
     private void writeObject(ObjectOutputStream out) throws IOException {

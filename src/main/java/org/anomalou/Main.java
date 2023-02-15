@@ -1,5 +1,6 @@
 package org.anomalou;
 
+import org.anomalou.controller.ObjectController;
 import org.anomalou.model.Bone;
 import org.anomalou.model.FPoint;
 import org.anomalou.model.Layer;
@@ -33,6 +34,9 @@ public class Main {
         Application application = new Application();
         Project project = application.createProject();
         project.getCanvas().reshape(400, 400);
+
+        ObjectController objectController = application.getObjectController();
+
         Layer layer = application.getProjectController().createLayer();
         layer.setBaseBitmap(img);
         layer.setPosition(new Point(0, 0));
@@ -43,24 +47,24 @@ public class Main {
         bone.setPosition(new Point(10 ,5));
         bone.setRootVectorOrigin(new Point(5, 5));
         bone.setRootVectorDirection(new Point(10,5));
-        bone.setDirectionVector(new FPoint(0, -1));
-        application.getObjectController().applyRotation(bone, application.getObjectController().getRotationAngle(bone));
+        objectController.calculateRotationAngleFor(bone, new FPoint(0, -1));
+        application.getObjectController().applyRotation(bone, bone.getRotationAngle());
 
         Bone childBone = application.getObjectController().extrudeBone(bone);
         childBone.setBaseBitmap(arrow);
         childBone.setRootVectorOrigin(new Point(5, 5));
         childBone.setRootVectorDirection(new Point(10,5));
-        childBone.setDirectionVector(new FPoint(1, -1));
+        objectController.calculateRotationAngleFor(childBone, new FPoint(1, -1));
 //        application.getObjectController().applyRotation(childBone, childBone.getRotationAngle());
 
         Bone childBone2 = application.getObjectController().extrudeBone(childBone);
         childBone2.setBaseBitmap(arrow);
         childBone2.setRootVectorOrigin(new Point(5, 5));
         childBone2.setRootVectorDirection(new Point(10,5));
-        childBone2.setDirectionVector(new FPoint(0, 1));
+        objectController.calculateRotationAngleFor(childBone2, new FPoint(0, 1));
 //        application.getObjectController().applyRotation(childBone2, childBone2.getRotationAngle());
 
-        application.getObjectController().applyTransform(bone, application.getObjectController().getRotationAngle(bone));
+        application.getObjectController().applyTransform(bone, bone.getRotationAngle());
 
         application.getProject().getCanvas().setSelection(childBone2.getUuid());
 
