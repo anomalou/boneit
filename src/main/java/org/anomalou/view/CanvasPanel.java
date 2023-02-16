@@ -63,6 +63,8 @@ public class CanvasPanel extends JPanel {
         loadGraphics();
         loadProperties();
         createMouseListeners();
+
+        linkKeyShortcuts();
     }
 
     @Override
@@ -254,10 +256,22 @@ public class CanvasPanel extends JPanel {
         return screen;
     }
 
+    private void linkKeyShortcuts(){ //TODO replace to KeyBinds
+        Action action = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.print("Key pressed!\n");
+            }
+        };
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("pressed K"), "key K");
+        getActionMap().put("key K", action);
+    }
+
     private void createMouseListeners(){
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                //wrap into draw method
                 if(isClickInBound(objectController.getObject(canvas.getSelection()), screenToCanvas(e.getPoint()))){
                     //Rotation tests! :3
                     if(!objectController.getObject(canvas.getSelection()).getClass().equals(Bone.class))
@@ -266,6 +280,7 @@ public class CanvasPanel extends JPanel {
 
                     return;//TODO draw process
                 }
+                // ^^^ it is
 
                 select(e.getPoint());
                 repaint();
@@ -328,15 +343,11 @@ public class CanvasPanel extends JPanel {
                     FPoint rotation = new FPoint(mousePos.x, mousePos.y);
                     rotation.x -= objectPos.x;
                     rotation.y -= objectPos.y;
-//                    rotation.y *= -1;
-//                    System.out.print("Old " + rotation + "\n");
                     rotation = objectController.getRotatedVector(rotation, bone.getParentRotationAngle());
-//                    System.out.print("New " + rotation + "\n");
                     bone.setRotationAngle(objectController.calculateRotationAngleFor(bone, rotation));
                     objectController.applyRotation(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
                     objectController.applyTransform(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
                     getParent().repaint();
-//                    repaint();
                 }
 
                 pixelsPassed += 1;
@@ -354,7 +365,6 @@ public class CanvasPanel extends JPanel {
             @Override
             public void mouseMoved(MouseEvent e) {
                 calculateDirection(e.getPoint());
-//                repaint();
             }
 
             private int calculateDirection(Point pos){
