@@ -232,7 +232,6 @@ public class CanvasPanel extends JPanel {
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
                 toolPanelController.click(getGraphics(), screenToCanvas(e.getPoint()), e.getButton());
                 //wrap into draw method
 //                if(isClickInBound(objectController.getObject(canvas.getSelection()), screenToCanvas(e.getPoint()))){
@@ -255,10 +254,8 @@ public class CanvasPanel extends JPanel {
                 if(e.getButton() == MouseEvent.BUTTON2){
                     isScrollPressed = true;
                 }
-//                if(e.getButton() == MouseEvent.BUTTON1){
-//                    if(objectController.getObject(canvas.getSelection()).getClass().equals(Bone.class))
-//                        isRotationMode = true;
-//                }
+
+                toolPanelController.press(getGraphics(), screenToCanvas(e.getPoint()), e.getButton(), false);
             }
 
             @Override
@@ -266,9 +263,8 @@ public class CanvasPanel extends JPanel {
                 if(e.getButton() == MouseEvent.BUTTON2){
                     isScrollPressed = false;
                 }
-//                if(e.getButton() == MouseEvent.BUTTON1){
-//                    isRotationMode = false;
-//                }
+
+                toolPanelController.press(getGraphics(), screenToCanvas(e.getPoint()), e.getButton(), true);
             }
 
             @Override
@@ -300,7 +296,7 @@ public class CanvasPanel extends JPanel {
             public void mouseDragged(MouseEvent e) {
                 calculateDirection(e.getPoint());
 
-                toolPanelController.drag(getGraphics(), screenToCanvas(e.getPoint()), e.getButton());
+                toolPanelController.drag(getGraphics(), screenToCanvas(e.getPoint()), e.getModifiersEx());
 
                 //LOCKED! CAN NOT BE IN TOOLS! IMPORTANT FUNCTION!
                 pixelsPassed += 1;

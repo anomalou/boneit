@@ -8,8 +8,16 @@ public class PointerTool implements Tool{
 
     private Canvas canvas;
 
+    private boolean isMoveMode;
+    private boolean isRotateMode;
+
+    private Point oldPosition;
+
     public PointerTool(Canvas canvas){
         this.canvas = canvas;
+
+        isMoveMode = false;
+        isRotateMode = false;
     }
 
     @Override
@@ -22,14 +30,24 @@ public class PointerTool implements Tool{
         return new Rectangle(position.x - 5, position.y - 5, 10, 10);
     }
 
+    public void press(Graphics g, Point position, int button, boolean released){
+        if(button == MouseEvent.BUTTON3)
+            isRotateMode = !released;
+        if(button == MouseEvent.BUTTON1){
+            isMoveMode = !released;
+            oldPosition = position;
+        }
+    }
+
     @Override
     public void click(Graphics g, Point position, int button) {
-        select(position);
+        if(button == MouseEvent.BUTTON1)
+            select(position);
     }
 
     @Override
     public void drag(Graphics g, Point position, int button) {
-        if(button == MouseEvent.BUTTON3){ //TODO rewrite
+        if(isRotateMode){ //TODO rewrite
             Bone bone = (Bone) canvas.getSelection();
             Point objectPos = bone.getPosition();
             FPoint rotation = new FPoint(position.x, position.y);
@@ -39,6 +57,17 @@ public class PointerTool implements Tool{
             bone.setRotationAngle(canvas.calculateRotationAngleFor(bone, rotation));
             canvas.applyBoneRotation(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
             canvas.applyBoneTransform(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
+        }
+        if(isMoveMode){
+            Point dragDirection = new Point(canvas.getSelection().getPosition().x + position.x - oldPosition.x, canvas.getSelection().getPosition().y + position.y - oldPosition.y);
+            oldPosition = position;
+            if(canvas.getSelection().getParent() != null)
+                return;
+
+            canvas.getSelection().setPosition(dragDirection);
+            if(canvas.getSelection().getClass().equals(Bone.class)){
+                    canvas.applyBoneTransform((Bone) canvas.getSelection(), ((Bone) canvas.getSelection()).getRotationAngle() + ((Bone) canvas.getSelection()).getParentRotationAngle());
+            }
         }
     }
 

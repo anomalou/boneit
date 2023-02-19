@@ -51,6 +51,9 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
     @Getter
     @Setter
     protected boolean isVisible;
+    @Getter
+    @Setter
+    private UUID parent;
     /**
      * Children of the layer, follows for its parent
      */
@@ -64,6 +67,7 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
         logger.fine(String.format("Entity (%s) created!", getUuid().toString()));
         priority = 0;
         isVisible = true;
+        parent = null;
         children = new ArrayList<>();
     }
 

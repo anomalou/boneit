@@ -21,6 +21,7 @@ public class CanvasController extends Controller{
         Bone newBone = new Bone();
         try{
             bone.getChildren().add(newBone.getUuid());
+            newBone.setParent(bone.getUuid());
         }catch (NullPointerException exception){
             logger.severe(String.format("Parent bone not exist! Null pointer exception!"));
             return null; //TODO check, controller can return nulls?

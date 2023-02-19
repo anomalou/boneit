@@ -62,7 +62,7 @@ public class Bone extends Layer{
 
     @Override
     public String toString(){
-        return String.format("%s - %f", name, parentRotationAngle);
+        return String.format("%s(%.2f deg)", name, Math.toDegrees(rotationAngle));
     }
 
     @Serial
