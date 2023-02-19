@@ -24,7 +24,7 @@ public class ProjectController extends Controller{
     public Layer createLayer(){
         Layer layer = new Layer();
         try{
-            project.getObjectCache().registerObject(layer.getUuid(), layer);
+            project.getCanvas().getObjectCache().registerObject(layer.getUuid(), layer);
         }catch (RegistrationException exception){
             logger.severe(String.format("Can't register new layer! Error: %s", exception.getMessage()));
         }
@@ -36,7 +36,7 @@ public class ProjectController extends Controller{
     public Bone createSkeleton(){
         Bone bone = new Bone();
         try{
-            project.getObjectCache().registerObject(bone.getUuid(), bone);
+            project.getCanvas().getObjectCache().registerObject(bone.getUuid(), bone);
         }catch (RegistrationException exception){
             logger.severe(String.format("Can't register new skeleton! Error: %s", exception.getMessage()));
         }
@@ -45,15 +45,15 @@ public class ProjectController extends Controller{
         return bone;
     }
 
-    public Layer selectObject(UUID uuid){
-        Layer layer = null;
-        try{
-            layer = project.getObjectCache().getLayers().get(uuid);
-            project.getCanvas().setSelection(uuid);
-        }catch (Exception exception){
-            logger.severe(String.format("Object not found! Error:\n%s", exception.getMessage()));
-        }
-
-        return layer;
-    }
+//    public Layer selectObject(UUID uuid){
+//        Layer layer = null;
+//        try{
+//            layer = project.getObjectCache().getLayers().get(uuid);
+//            project.getCanvas().setSelection(uuid);
+//        }catch (Exception exception){
+//            logger.severe(String.format("Object not found! Error:\n%s", exception.getMessage()));
+//        }
+//
+//        return layer;
+//    }
 }

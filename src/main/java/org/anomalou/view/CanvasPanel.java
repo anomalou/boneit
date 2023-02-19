@@ -1,7 +1,8 @@
 package org.anomalou.view;
 
-import org.anomalou.controller.ObjectController;
+import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
+import org.anomalou.controller.ToolPanelController;
 import org.anomalou.model.Bone;
 import org.anomalou.model.Canvas;
 import org.anomalou.model.FPoint;
@@ -15,14 +16,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.UUID;
 
 public class CanvasPanel extends JPanel {
 
     private Canvas canvas;
-    private ObjectController objectController;
+    private CanvasController canvasController;
     private PropertiesController propertiesController;
+    private ToolPanelController toolPanelController;
 
     private BufferedImage rulerImage;
 
@@ -48,17 +48,15 @@ public class CanvasPanel extends JPanel {
 
     private boolean isScrollPressed;
 
-    private boolean isRotationMode; //TODO temp, for future should be moved into tools controller
-
-    public CanvasPanel(Canvas canvas, ObjectController objectController, PropertiesController propertiesController){
+    public CanvasPanel(Canvas canvas, CanvasController canvasController, PropertiesController propertiesController, ToolPanelController toolPanelController){
         this.canvas = canvas;
-        this.objectController = objectController;
+        this.canvasController = canvasController;
         this.propertiesController = propertiesController;
+        this.toolPanelController = toolPanelController;
         offset = new Point(0, 0);
         scale = 1;
 
         isScrollPressed = false;
-        isRotationMode = false;
 
         loadGraphics();
         loadProperties();
@@ -98,7 +96,7 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawScene(Graphics g){
-        ArrayList<Layer> layers = sort(canvas.getLayersHierarchy());
+        ArrayList<Layer> layers = canvas.sort();
 
         layers.forEach(layer -> {
             if(layer.isVisible()){
@@ -142,7 +140,7 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawSelection(Graphics g){
-        Layer layer = objectController.getObject(canvas.getSelection());
+        Layer layer = canvas.getSelection();
 
         if(layer == null)
             return;
@@ -172,8 +170,8 @@ public class CanvasPanel extends JPanel {
 
     private void drawSelectedBone(Graphics g, Bone bone){
         bone.getChildren().forEach(uuid -> {
-            if(objectController.getObject(uuid).getClass().equals(Bone.class))
-                drawSelectedBone(g, (Bone) objectController.getObject(uuid));
+            if(canvasController.getObject(uuid).getClass().equals(Bone.class))
+                drawSelectedBone(g, (Bone) canvasController.getObject(uuid));
         });
 
         g.setColor(Color.green);
@@ -184,7 +182,7 @@ public class CanvasPanel extends JPanel {
 
         //Vectors
         //rootDirection
-        FPoint parentRotationVector = objectController.getParentRotationVector(bone);
+        FPoint parentRotationVector = canvas.calculateParentRotationVector(bone);
         g.drawLine(scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y),
                 (int) Math.round(scale * (offset.x + bone.getPosition().x + parentRotationVector.x)),
                 (int) Math.round(scale * (offset.y + bone.getPosition().y + parentRotationVector.y)));
@@ -192,56 +190,11 @@ public class CanvasPanel extends JPanel {
         //rotation vector
         g.setColor(Color.cyan);
 
-        FPoint rotationVector = objectController.getFullRotationVector(bone);
+        FPoint rotationVector = canvas.calculateFullRotationVector(bone);
         g.drawLine(scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y),
                 (int) Math.round(scale * (offset.x + bone.getPosition().x + rotationVector.x)),
                 (int) Math.round(scale * (offset.y + bone.getPosition().y + rotationVector.y)));
 
-    }
-
-
-    /**
-     * Check all objects in cache, that can be in mouse pointer hit area.
-     * @param clickPosition mouse click position in screen coordinates (raw position)
-     */
-    private void select(Point clickPosition){
-        final Point onCanvasPosition = screenToCanvas(clickPosition);
-
-        sort(canvas.getLayersHierarchy()).forEach(layer -> {
-            if(isClickInBound(layer, onCanvasPosition))
-                canvas.setSelection(layer.getUuid());
-        });
-    }
-
-    /**
-     * Check if mouse pointer is hit in bound of object (layer, bone etc)
-     * @param layer layer to check
-     * @param clickPosition mouse click position in canvas coordinates (use screenToCanvas to convert!)
-     * @return boolean
-     */
-    private boolean isClickInBound(Layer layer, Point clickPosition){
-        Point position = new Point(0, 0);
-        int width = 0;
-        int height = 0;
-
-        if(layer.getClass().equals(Bone.class)){
-            position.x = layer.getPosition().x - ((Bone) layer).getRootVectorOrigin().x;
-            position.y = layer.getPosition().y - ((Bone) layer).getRootVectorOrigin().y;
-        }else{
-            position.x = layer.getPosition().x;
-            position.y = layer.getPosition().y;
-        }
-
-        width = layer.getBaseBitmap().getWidth();
-        height = layer.getBaseBitmap().getHeight();
-
-        if(clickPosition.x >= position.x && clickPosition.x < (position.x + width)){
-            if(clickPosition.y >= position.y && clickPosition.y < (position.y + height)){
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -257,32 +210,43 @@ public class CanvasPanel extends JPanel {
     }
 
     private void linkKeyShortcuts(){ //TODO replace to KeyBinds
-        Action action = new AbstractAction() {
+        Action pressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.print("Key pressed!\n");
             }
         };
-        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("pressed K"), "key K");
-        getActionMap().put("key K", action);
+        Action released = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.print("Key released!\n");
+            }
+        };
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("pressed mmb"), "pressed BUTTON1");
+        getActionMap().put("pressed BUTTON1", pressed);
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("released mmb"), "released BUTTON1");
+        getActionMap().put("released BUTTON1", released);
     }
 
     private void createMouseListeners(){
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
+                toolPanelController.click(getGraphics(), screenToCanvas(e.getPoint()), e.getButton());
                 //wrap into draw method
-                if(isClickInBound(objectController.getObject(canvas.getSelection()), screenToCanvas(e.getPoint()))){
-                    //Rotation tests! :3
-                    if(!objectController.getObject(canvas.getSelection()).getClass().equals(Bone.class))
-                        return;
-
-
-                    return;//TODO draw process
-                }
+//                if(isClickInBound(objectController.getObject(canvas.getSelection()), screenToCanvas(e.getPoint()))){
+//                    //Rotation tests! :3
+//                    if(!objectController.getObject(canvas.getSelection()).getClass().equals(Bone.class))
+//                        return;
+//
+//
+//                    return;//TODO draw process
+//                }
                 // ^^^ it is
 
-                select(e.getPoint());
+//                select(e.getPoint());
+
                 repaint();
             }
 
@@ -291,10 +255,10 @@ public class CanvasPanel extends JPanel {
                 if(e.getButton() == MouseEvent.BUTTON2){
                     isScrollPressed = true;
                 }
-                if(e.getButton() == MouseEvent.BUTTON1){
-                    if(objectController.getObject(canvas.getSelection()).getClass().equals(Bone.class))
-                        isRotationMode = true;
-                }
+//                if(e.getButton() == MouseEvent.BUTTON1){
+//                    if(objectController.getObject(canvas.getSelection()).getClass().equals(Bone.class))
+//                        isRotationMode = true;
+//                }
             }
 
             @Override
@@ -302,9 +266,9 @@ public class CanvasPanel extends JPanel {
                 if(e.getButton() == MouseEvent.BUTTON2){
                     isScrollPressed = false;
                 }
-                if(e.getButton() == MouseEvent.BUTTON1){
-                    isRotationMode = false;
-                }
+//                if(e.getButton() == MouseEvent.BUTTON1){
+//                    isRotationMode = false;
+//                }
             }
 
             @Override
@@ -336,20 +300,9 @@ public class CanvasPanel extends JPanel {
             public void mouseDragged(MouseEvent e) {
                 calculateDirection(e.getPoint());
 
-                if(isRotationMode){ //TODO rewrite
-                    Bone bone = (Bone) objectController.getObject(canvas.getSelection());
-                    Point objectPos = bone.getPosition();
-                    Point mousePos = screenToCanvas(e.getPoint());
-                    FPoint rotation = new FPoint(mousePos.x, mousePos.y);
-                    rotation.x -= objectPos.x;
-                    rotation.y -= objectPos.y;
-                    rotation = objectController.getRotatedVector(rotation, bone.getParentRotationAngle());
-                    bone.setRotationAngle(objectController.calculateRotationAngleFor(bone, rotation));
-                    objectController.applyRotation(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
-                    objectController.applyTransform(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
-                    getParent().repaint();
-                }
+                toolPanelController.drag(getGraphics(), screenToCanvas(e.getPoint()), e.getButton());
 
+                //LOCKED! CAN NOT BE IN TOOLS! IMPORTANT FUNCTION!
                 pixelsPassed += 1;
 
                 if(pixelsPassed >= scale){
@@ -380,23 +333,7 @@ public class CanvasPanel extends JPanel {
         });
     }
 
-    private ArrayList<Layer> sort(ArrayList<UUID> iArray){
-        ArrayList<Layer> oArray = new ArrayList<>();
-        ArrayList<Layer> tempArray = new ArrayList<>();
 
-        iArray.forEach(uuid -> {
-            tempArray.add(objectController.getObject(uuid));
-        });
-
-        Collections.sort(tempArray);
-
-        tempArray.forEach(element -> {
-            oArray.add(element);
-            oArray.addAll(sort((element).getChildren()));
-        });
-
-        return oArray;
-    }
 
     private void drawLayer(Layer layer, Graphics g){
         g.drawImage(layer.getBaseBitmap(), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y), scale * layer.getBaseBitmap().getWidth(), scale * layer.getBaseBitmap().getHeight(), null);

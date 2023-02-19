@@ -1,6 +1,6 @@
 package org.anomalou.view;
 
-import org.anomalou.controller.ObjectController;
+import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.model.Canvas;
 import org.anomalou.model.Layer;
@@ -17,7 +17,7 @@ import java.util.UUID;
 public class ObjectTreePanel extends JPanel {
 
     private Canvas canvas;
-    private ObjectController objectController;
+    private CanvasController canvasController;
     private PropertiesController propertiesController;
 
     private JTree tree;
@@ -26,10 +26,10 @@ public class ObjectTreePanel extends JPanel {
     private int iconWidth;
     private int iconHeight;
 
-    public ObjectTreePanel(Canvas canvas, ObjectController objectController, PropertiesController propertiesController) {
+    public ObjectTreePanel(Canvas canvas, CanvasController canvasController, PropertiesController propertiesController) {
         super();
         this.canvas = canvas;
-        this.objectController = objectController;
+        this.canvasController = canvasController;
         this.propertiesController = propertiesController;
 
         loadProperties();
@@ -51,7 +51,7 @@ public class ObjectTreePanel extends JPanel {
         ArrayList<Layer> sortedObject = new ArrayList<>();
 
         objects.forEach(uuid -> {
-            Layer object = objectController.getObject(uuid);
+            Layer object = canvasController.getObject(uuid);
             sortedObject.add(object);
         });
 

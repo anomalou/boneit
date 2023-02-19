@@ -18,31 +18,19 @@ public class Project implements Serializable {
     @Getter
     @Setter
     private Canvas canvas;
-    /**
-     * Cache that stores every object on scene. This allows get needed object faster.
-     */
-    @Getter
-    private ObjectCache objectCache;
     //TODO here maybe something else, like history of changes or something like that
 
     public Project(){
-        name = "NewProject";
-        canvas = new Canvas();
-
-        objectCache = new ObjectCache();
+        this(1, 1);
     }
 
     public Project(int width, int height){
         name = "NewProject";
         canvas = new Canvas(width, height);
-
-        objectCache = new ObjectCache();
     }
 
     public Project(String name){
-        this();
-
-        this.name = name;
+        this(name, 1, 1);
     }
 
     public Project(String name, int width, int height){

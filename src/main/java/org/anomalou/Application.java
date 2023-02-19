@@ -1,9 +1,10 @@
 package org.anomalou;
 
 import lombok.Getter;
-import org.anomalou.controller.ObjectController;
+import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.ProjectController;
 import org.anomalou.controller.PropertiesController;
+import org.anomalou.controller.ToolPanelController;
 import org.anomalou.model.Project;
 
 public class Application {
@@ -18,7 +19,10 @@ public class Application {
     @Getter
     private ProjectController projectController;
     @Getter
-    private ObjectController objectController;
+    private CanvasController canvasController;
+
+    @Getter
+    private ToolPanelController toolPanelController;
 
 
     //TODO here will be view, shortcut controller and etc
@@ -30,7 +34,8 @@ public class Application {
     public Project createProject(){
         project = new Project();
         projectController = new ProjectController(project);
-        objectController = new ObjectController(project.getObjectCache());
+        canvasController = new CanvasController(project.getCanvas());
+        toolPanelController = new ToolPanelController(project.getCanvas(), project.getCanvas().getObjectCache());
         return project;
     }
 
