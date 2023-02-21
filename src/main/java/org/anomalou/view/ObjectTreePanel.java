@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +22,7 @@ public class ObjectTreePanel extends JPanel {
     private PropertiesController propertiesController;
 
     private JTree tree;
+    private JPopupMenu popupMenu;
 
     //Properties
     private int iconWidth;
@@ -33,6 +35,7 @@ public class ObjectTreePanel extends JPanel {
         this.propertiesController = propertiesController;
 
         loadProperties();
+        createPopupMenu();
         createTree();
         createListeners();
     }
@@ -81,6 +84,18 @@ public class ObjectTreePanel extends JPanel {
                 getParent().repaint();
             }
         });
+    }
+
+    private void createPopupMenu(){
+        popupMenu = new JPopupMenu();
+
+        JMenuItem newLayerItem = new JMenuItem("Create layer");
+        JMenuItem newSkeletonItem = new JMenuItem("Create skeleton");
+        popupMenu.add(newLayerItem);
+        popupMenu.add(newSkeletonItem);
+
+//        tree.setComponentPopupMenu(popupMenu);
+
     }
 
     private void loadProperties(){
