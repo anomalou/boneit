@@ -18,7 +18,7 @@ public class ObjectCache implements Serializable {
         layers = new HashMap<>();
     }
 
-    public void registerObject(UUID uuid, Layer layer) throws RegistrationException {
+    public void registerObject(UUID uuid, Layer layer){
         if(layers.containsKey(uuid)){
             logger.warning(String.format("Object with uuid %s already registered!", uuid.toString()));
             return;
@@ -28,7 +28,7 @@ public class ObjectCache implements Serializable {
         logger.fine(String.format("Object with uuid %s registered! [%s|%s]", uuid.toString(), uuid.toString(), layer.getName()));
     }
 
-    public void unregister(UUID uuid) throws RegistrationException{
+    public void unregister(UUID uuid){
         if(!layers.containsKey(uuid)){
             logger.warning(String.format("Cache do not contain object with uuid %s!", uuid.toString()));
             return;

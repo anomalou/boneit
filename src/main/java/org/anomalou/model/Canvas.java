@@ -1,7 +1,9 @@
 package org.anomalou.model;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
+import org.anomalou.exception.RegistrationException;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -51,6 +53,33 @@ public class Canvas implements Serializable {
 
     public Layer getSelection(){
         return objectCache.getLayers().get(selection);
+    }
+
+    public void registerObject(Layer parent, @NonNull Layer object){
+        getObjectCache().registerObject(object.getUuid(), object);
+//        logger.severe(String.format("Can't register new layer! Error: %s", exception.getMessage()));
+
+        if(parent == null){
+            layersHierarchy.add(object.getUuid());
+        }else{
+            object.setParent(parent.uuid);
+            parent.getChildren().add(object.uuid);
+        }
+        logger.fine(String.format("Object %s created!", object.getUuid()));
+    }
+
+    public void unregisterObject(Layer layer){
+        if(layer.isRoot())
+            layersHierarchy.remove(layer.getUuid());
+        else{
+            getObjectCache().getLayers().get(layer.getParent()).getChildren().remove(layer.getUuid());
+        }
+
+        getObjectCache().unregister(layer.getUuid());
+    }
+
+    public void registerObject(UUID parent, @NonNull Layer object){
+        registerObject(objectCache.getLayers().get(parent), object);
     }
 
     public ArrayList<Layer> sort(){

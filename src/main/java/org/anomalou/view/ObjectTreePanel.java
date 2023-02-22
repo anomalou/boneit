@@ -2,6 +2,7 @@ package org.anomalou.view;
 
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
+import org.anomalou.model.Bone;
 import org.anomalou.model.Canvas;
 import org.anomalou.model.Layer;
 
@@ -9,8 +10,11 @@ import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
@@ -35,17 +39,23 @@ public class ObjectTreePanel extends JPanel {
         this.propertiesController = propertiesController;
 
         loadProperties();
-        createPopupMenu();
         createTree();
+        createNodes();
         createListeners();
+        createPopupMenu();
     }
 
     private void createTree(){
-        tree = new JTree(createNode("Scene", canvas.getLayersHierarchy()));
+        tree = new JTree();
         tree.setCellRenderer(new ObjectTreeCellRenderer(iconWidth, iconHeight));
         setLayout(new BorderLayout());
         add(new JLabel("Scene tree"), BorderLayout.PAGE_START);
         add(new JScrollPane(tree), BorderLayout.CENTER);
+    }
+
+    private void createNodes(){
+        DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
+        treeModel.setRoot(createNode("Scene", canvas.getLayersHierarchy()));
     }
 
     private DefaultMutableTreeNode createNode(Object nodeObject, ArrayList<UUID> objects){
@@ -65,6 +75,32 @@ public class ObjectTreePanel extends JPanel {
         });
 
         return node;
+    }
+
+    private DefaultMutableTreeNode findNode(DefaultMutableTreeNode root, Object objectToCompare){
+        if(root == null)
+            return null;
+
+        if(root.getUserObject().equals(objectToCompare)){
+            return root;
+        }
+
+        DefaultMutableTreeNode node = null;
+
+        int i = 0;
+
+        while(node == null && i < root.getChildCount()){
+            node = findNode((DefaultMutableTreeNode) root.getChildAt(i), objectToCompare);
+            i++;
+        }
+
+        return node;
+    }
+
+    private void appendSelection(Object selection, Object object){
+        DefaultMutableTreeNode selectedNode = findNode((DefaultMutableTreeNode) tree.getLastSelectedPathComponent(), selection);
+        DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
+        treeModel.insertNodeInto(new DefaultMutableTreeNode(object), selectedNode, selectedNode == null ? selectedNode.getChildCount() : 0);
     }
 
     private void createListeners(){
@@ -90,12 +126,45 @@ public class ObjectTreePanel extends JPanel {
         popupMenu = new JPopupMenu();
 
         JMenuItem newLayerItem = new JMenuItem("Create layer");
-        JMenuItem newSkeletonItem = new JMenuItem("Create skeleton");
+        newLayerItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Layer selection = canvasController.getSelection();
+                Layer newLayer = new Layer();
+                canvasController.registerObject(selection, newLayer);
+                appendSelection(selection, newLayer);
+            }
+        });
+
+        JMenuItem newBoneItem = new JMenuItem("Create bone");
+        newBoneItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Layer selection = canvasController.getSelection();
+                Layer newBone = new Bone();
+                canvasController.registerObject(selection, newBone);
+                appendSelection(selection, newBone);
+            }
+        });
+
         popupMenu.add(newLayerItem);
-        popupMenu.add(newSkeletonItem);
+        popupMenu.add(newBoneItem);
+        popupMenu.add(new JToolBar.Separator());
+        JMenuItem deleteItem = new JMenuItem("Delete");
+        deleteItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
+                treeModel.removeNodeFromParent(findNode((DefaultMutableTreeNode) treeModel.getRoot(), canvasController.getSelection()));
 
-//        tree.setComponentPopupMenu(popupMenu);
+                canvasController.unregisterObject(canvasController.getSelection());
 
+                getParent().repaint();
+            }
+        });
+        popupMenu.add(deleteItem);
+
+        tree.setComponentPopupMenu(popupMenu);
     }
 
     private void loadProperties(){

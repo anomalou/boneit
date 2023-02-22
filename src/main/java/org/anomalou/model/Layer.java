@@ -71,6 +71,14 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
         children = new ArrayList<>();
     }
 
+    public boolean isRoot(){
+        return parent == null;
+    }
+
+    public boolean isLeaf(){
+        return children.isEmpty();
+    }
+
     //------ OVERRIDES TO STRING METHOD
     @Override
     public String toString(){

@@ -1,6 +1,5 @@
 package org.anomalou.controller;
 
-import org.anomalou.exception.RegistrationException;
 import org.anomalou.model.*;
 import org.anomalou.model.Canvas;
 
@@ -17,33 +16,16 @@ public class CanvasController extends Controller{
         this.canvas = canvas;
     }
 
-    public Bone extrudeBone(Bone bone){
-        Bone newBone = new Bone();
-        try{
-            bone.getChildren().add(newBone.getUuid());
-            newBone.setParent(bone.getUuid());
-        }catch (NullPointerException exception){
-            logger.severe(String.format("Parent bone not exist! Null pointer exception!"));
-            return null; //TODO check, controller can return nulls?
-        }
-        try{
-            canvas.getObjectCache().registerObject(newBone.getUuid(), newBone);
-        }catch (RegistrationException exception){
-            logger.severe(String.format("Bone %s not found! Error: %s",newBone.getUuid(), exception.getMessage()));
-            return null; //TODO check, controller can return nulls?
-        }
-        logger.fine(String.format("Bone %s created! Now it parent is %s!", newBone.getUuid(), bone.getUuid()));
-        return newBone;
+    public Layer getSelection(){
+        return canvas.getSelection();
     }
 
-    public Bone extrudeBone(UUID uuid){
-        if(canvas.getObjectCache().getLayers().get(uuid) instanceof Bone){
-            Bone bone = (Bone) canvas.getObjectCache().getLayers().get(uuid);
-            return extrudeBone(bone);
-        }else{
-            logger.severe(String.format("Object with uuid %s is not a bone!", uuid.toString()));
-            return null; //TODO check, controller can return nulls?
-        }
+    public void registerObject(Layer parent, Layer object){
+        canvas.registerObject(parent, object);
+    }
+
+    public void unregisterObject(Layer object){
+        canvas.unregisterObject(object);
     }
 
     public ArrayList<Layer> sort(){
