@@ -2,6 +2,9 @@ package org.anomalou.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.anomalou.annotation.Coordinates;
+import org.anomalou.annotation.Editable;
+import org.anomalou.annotation.Value;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,30 +21,40 @@ public class Bone extends Layer{
     /**
      * Source of normal vector of the bone.
      */
+    @Editable
+    @Coordinates(type = Integer.class)
     @Getter
     @Setter
     private Point rootVectorOrigin;
     /**
      * Direction of normal vector of the bone.
      */
+    @Editable
+    @Coordinates(type = Integer.class)
     @Getter
     @Setter
     private Point rootVectorDirection;
     /**
      * Angle of the bone in radian.
      */
+    @Editable
+    @Value
     @Getter
     @Setter
     private Double rotationAngle;
     /**
      * Sum of angles of all parents of the bone in radian.
      */
+    @Editable
+    @Value
     @Getter
     @Setter
     private Double parentRotationAngle;
     /**
      * Visibility of the bone rig.
      */
+    @Editable
+    @Value
     @Getter
     @Setter
     private boolean isBoneVisible;

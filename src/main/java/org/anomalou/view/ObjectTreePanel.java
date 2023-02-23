@@ -48,6 +48,7 @@ public class ObjectTreePanel extends JPanel {
     private void createTree(){
         tree = new JTree();
         tree.setCellRenderer(new ObjectTreeCellRenderer(iconWidth, iconHeight));
+        tree.setShowsRootHandles(true);
         setLayout(new BorderLayout());
         add(new JLabel("Scene tree"), BorderLayout.PAGE_START);
         add(new JScrollPane(tree), BorderLayout.CENTER);
@@ -100,7 +101,14 @@ public class ObjectTreePanel extends JPanel {
     private void appendSelection(Object selection, Object object){
         DefaultMutableTreeNode selectedNode = findNode((DefaultMutableTreeNode) tree.getLastSelectedPathComponent(), selection);
         DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
-        treeModel.insertNodeInto(new DefaultMutableTreeNode(object), selectedNode, selectedNode == null ? selectedNode.getChildCount() : 0);
+        DefaultMutableTreeNode root;
+        if(selection == null)
+            root = (DefaultMutableTreeNode) treeModel.getRoot();
+        else
+            root = selectedNode;
+
+        DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(object);
+        treeModel.insertNodeInto(newNode, root, 0);
     }
 
     private void createListeners(){

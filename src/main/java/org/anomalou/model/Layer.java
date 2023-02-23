@@ -2,6 +2,9 @@ package org.anomalou.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.anomalou.annotation.Coordinates;
+import org.anomalou.annotation.Editable;
+import org.anomalou.annotation.Value;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -22,6 +25,8 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
     /**
      * Name of the layer. Human friendly
      */
+    @Editable
+    @Value
     @Getter
     @Setter
     protected String name;
@@ -35,6 +40,8 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
     /**
      * Offset on canvas. Bones will ignore this parameter.
      */
+    @Editable
+    @Coordinates(type = Integer.class)
     @Getter
     @Setter
     protected Point position;
@@ -42,12 +49,16 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
      * Priority of the layer in render queue. <br>
      * Big number of priority, means early render, also work oppositely
      */
+    @Editable
+    @Value
     @Getter
     @Setter
     protected Integer priority;
     /**
      * Visibility og the bitmap.
      */
+    @Editable
+    @Value
     @Getter
     @Setter
     protected boolean isVisible;

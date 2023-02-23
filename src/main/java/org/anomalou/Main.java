@@ -5,6 +5,7 @@ import org.anomalou.model.Bone;
 import org.anomalou.model.Layer;
 import org.anomalou.model.Project;
 import org.anomalou.view.CanvasPanel;
+import org.anomalou.view.InspectorPanel;
 import org.anomalou.view.ObjectTreePanel;
 
 import javax.imageio.ImageIO;
@@ -97,13 +98,14 @@ public class Main {
         ObjectTreePanel treePanel = new ObjectTreePanel(application.getProject().getCanvas(), application.getCanvasController(), application.getPropertiesController());
 
         //TODO move to Application
-        JSplitPane splitPane = new JSplitPane(SwingConstants.VERTICAL, canvasPanel, treePanel);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, canvasPanel, treePanel);
         splitPane.setResizeWeight(0.9);
 
         frame.setLayout(new BorderLayout());
 
         frame.add(splitPane, BorderLayout.CENTER);
         frame.add(new JLabel("Info panel"), BorderLayout.PAGE_END);
+        frame.add(new InspectorPanel(application.getCanvasController()), BorderLayout.WEST);
         frame.revalidate();
     }
 
