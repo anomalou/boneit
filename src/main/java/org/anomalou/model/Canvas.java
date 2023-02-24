@@ -3,7 +3,6 @@ package org.anomalou.model;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.anomalou.exception.RegistrationException;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -23,12 +22,12 @@ public class Canvas implements Serializable {
     @Setter
     private int height;
     @Getter
-    private ArrayList<UUID> layersHierarchy;
+    private final ArrayList<UUID> layersHierarchy;
     /**
      * Cache that stores every object on scene. This allows get needed object faster.
      */
     @Getter
-    private ObjectCache objectCache;
+    private final ObjectCache objectCache;
     @Setter
     private UUID selection; //TODO not safe, invent something else
 
@@ -131,13 +130,9 @@ public class Canvas implements Serializable {
 
     //TODO maybe, in future, if i have time, make transformBitmap adaptation to rotation of the image
     public void applyBoneRotation(Bone bone, Double angle){
-//        if(bone.getTransformBitmap().getWidth() != bone.getBaseBitmap().getWidth() || bone.getTransformBitmap().getHeight() != bone.getBaseBitmap().getHeight())
         bone.setTransformBitmap(new BufferedImage(bone.getBaseBitmap().getWidth(), bone.getBaseBitmap().getHeight(), BufferedImage.TYPE_INT_ARGB));
         Graphics2D g2d = bone.getTransformBitmap().createGraphics();
         angle *= -1;
-//        g2d.setComposite(AlphaComposite.Clear);
-//        g2d.fillRect(0, 0, bone.getTransformBitmap().getWidth(), bone.getTransformBitmap().getHeight());
-//        g2d.setComposite(AlphaComposite.Src);
         g2d.rotate(angle, bone.getRootVectorOrigin().x, bone.getRootVectorOrigin().y);
         g2d.drawImage(bone.getBaseBitmap(), null, 0, 0);
         g2d.dispose();
@@ -160,8 +155,8 @@ public class Canvas implements Serializable {
                 (Math.sqrt(Math.pow(directionVector.x, 2) + Math.pow(directionVector.y, 2)) * Math.sqrt(Math.pow(normalizedRootDirectionVector.x, 2) + Math.pow(normalizedRootDirectionVector.y, 2)));
         cos = Math.abs(cos) > 1d ? 1d : cos;
 
-        Double resultAngle =  Math.acos(cos) * side;
-        if(resultAngle.isNaN())
+        double resultAngle =  Math.acos(cos) * side;
+        if(Double.isNaN(resultAngle))
             resultAngle = 0d;
 
         bone.setRotationAngle(resultAngle);

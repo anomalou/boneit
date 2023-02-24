@@ -1,36 +1,36 @@
 package org.anomalou.view;
 
-import org.anomalou.annotation.Coordinates;
 import org.anomalou.annotation.Editable;
-import org.anomalou.annotation.Value;
+import org.anomalou.annotation.EditorType;
 import org.anomalou.controller.CanvasController;
+import org.anomalou.model.Bone;
 import org.anomalou.model.Layer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class InspectorPanel extends JPanel {
-    private CanvasController canvasController;
+    private final CanvasController canvasController;
 
-    private JPanel container;
+    private final JPanel container;
 
     public InspectorPanel(CanvasController canvasController){
         this.canvasController = canvasController;
 
         container = new JPanel();
 
-        configurePanel();
+        initialize();
         debugButton();//TODO debug
     }
 
-    private void configurePanel(){
+    private void initialize(){
         setLayout(new BorderLayout());
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         add(new JScrollPane(container), BorderLayout.CENTER);
@@ -42,14 +42,14 @@ public class InspectorPanel extends JPanel {
         debugUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buildTuneElements();
+                buildFieldsEditor();
             }
         });
 
         add(debugUpdate, BorderLayout.PAGE_START);
     }
 
-    private void buildTuneElements(){
+    private void buildFieldsEditor(){
         container.removeAll();
 
         Layer selected = canvasController.getSelection();
@@ -58,13 +58,13 @@ public class InspectorPanel extends JPanel {
 
         for(Field f : fields){
             if(f.isAnnotationPresent(Editable.class))
-                buildFieldEditor(f);
+                selectFieldType(f, selected);
         }
 
         revalidate();
     }
 
-    private Field[] unpackFields(Class clazz){
+    private Field[] unpackFields(Class<?> clazz){
         if(clazz == null)
             return new Field[0];
 
@@ -74,34 +74,69 @@ public class InspectorPanel extends JPanel {
         return fields.toArray(new Field[]{});
     }
 
-    private void buildFieldEditor(Field field){
-        if(field.isAnnotationPresent(Value.class)){
-            createValueEditor(field);
+    private void selectFieldType(Field field, Object object){
+        if(field.getAnnotation(Editable.class).editorType() == EditorType.TEXT_FIELD){
+            createTextField(field, object);
         }
-        if(field.isAnnotationPresent(Coordinates.class)){
-            createCoordinateEditor(field);
+        if(field.getAnnotation(Editable.class).editorType() == EditorType.CHECK_BOX){
+            createCheckBox(field, object);
         }
     }
 
-    private void createValueEditor(Field field){
+    private void setFieldValue(Field field, Object object, Object newValue){
+        try{
+            field.setAccessible(true);
+            field.set(object, newValue);
+            field.setAccessible(false);
+        }catch (IllegalAccessException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    private Object getFieldValue(Field field, Object object){
+        try{
+            field.setAccessible(true);
+            Object value = field.get(object);
+            field.setAccessible(false);
+            return value;
+        }catch (IllegalAccessException ex){
+            ex.printStackTrace();
+        }
+
+        return -1;
+    }
+
+    private void createTextField(Field field, Object object){
         JLabel fieldName = new JLabel();
         JTextField textField = new JTextField();
 
-        try{
-            fieldName.setText(field.getName());
-            field.setAccessible(true);
-            Object value = field.get(canvasController.getSelection());
-            textField.setText(value.toString());
-            field.setAccessible(false);
-        }catch (IllegalAccessException ex){
-            //TODO
-        }
+        fieldName.setText(field.getAnnotation(Editable.class).name());
+        textField.setText(getFieldValue(field, object).toString());
 
+        textField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                textField.setText(getFieldValue(field, object).toString());
+            }
+        });
         textField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                field.setAccessible(true);
-//                field.set(canvasController.getSelection(), textField.getText());
+                try{
+                    if(field.getType() == String.class)
+                        setFieldValue(field, object, textField.getText());
+                    else if(field.getType() == Integer.class)
+                        setFieldValue(field, object, Integer.valueOf(textField.getText()));
+                    else if(field.getType() == Double.class)
+                        setFieldValue(field, object, Double.valueOf(textField.getText()));
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -109,7 +144,21 @@ public class InspectorPanel extends JPanel {
         container.add(textField);
     }
 
-    private void createCoordinateEditor(Field field){
+    private void createCheckBox(Field field, Object object){
+        JLabel fieldName = new JLabel();
+        JCheckBox checkBox = new JCheckBox("Enabled");
 
+        fieldName.setText(field.getAnnotation(Editable.class).name());
+        checkBox.setSelected((Boolean) getFieldValue(field, object));
+
+        checkBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setFieldValue(field, object, checkBox.isSelected());
+            }
+        });
+
+        container.add(fieldName);
+        container.add(checkBox);
     }
 }

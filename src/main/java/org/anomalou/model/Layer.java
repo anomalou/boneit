@@ -2,9 +2,8 @@ package org.anomalou.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.anomalou.annotation.Coordinates;
 import org.anomalou.annotation.Editable;
-import org.anomalou.annotation.Value;
+import org.anomalou.annotation.EditorType;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,8 +24,7 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
     /**
      * Name of the layer. Human friendly
      */
-    @Editable
-    @Value
+    @Editable(name = "Name", editorType = EditorType.TEXT_FIELD)
     @Getter
     @Setter
     protected String name;
@@ -40,8 +38,7 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
     /**
      * Offset on canvas. Bones will ignore this parameter.
      */
-    @Editable
-    @Coordinates(type = Integer.class)
+    @Editable(name = "Position", editorType = EditorType.VECTOR_EDITOR)
     @Getter
     @Setter
     protected Point position;
@@ -49,16 +46,14 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
      * Priority of the layer in render queue. <br>
      * Big number of priority, means early render, also work oppositely
      */
-    @Editable
-    @Value
+    @Editable(name = "Priority", editorType = EditorType.TEXT_FIELD)
     @Getter
     @Setter
     protected Integer priority;
     /**
      * Visibility og the bitmap.
      */
-    @Editable
-    @Value
+    @Editable(name = "Set visibility", editorType = EditorType.CHECK_BOX)
     @Getter
     @Setter
     protected boolean isVisible;
@@ -69,7 +64,7 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
      * Children of the layer, follows for its parent
      */
     @Getter
-    private ArrayList<UUID> children;
+    private final ArrayList<UUID> children;
 
     public Layer(){
         name = "NewLayer";
@@ -112,7 +107,6 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
 
     @Override
     public int compareTo(Layer o) {
-        int result = this.priority.compareTo(o.priority);
-        return result;
+        return this.priority.compareTo(o.priority);
     }
 }
