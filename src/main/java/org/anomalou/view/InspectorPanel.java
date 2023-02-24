@@ -3,7 +3,6 @@ package org.anomalou.view;
 import org.anomalou.annotation.Editable;
 import org.anomalou.annotation.EditorType;
 import org.anomalou.controller.CanvasController;
-import org.anomalou.model.Bone;
 import org.anomalou.model.Layer;
 
 import javax.swing.*;

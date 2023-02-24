@@ -20,7 +20,7 @@ public class PropertiesController extends Controller{
 
         if(value != null){
             logger.fine(String.format("Property [%s=%s] was loaded!", property, value));
-            return Integer.valueOf(value);
+            return Integer.parseInt(value);
         }
 
         logger.warning(String.format("Property [%s] was not found!", property));
@@ -64,8 +64,8 @@ public class PropertiesController extends Controller{
 
         if(!file.exists()){
             try{
-                file.createNewFile();
-                writeDefaultProperties(new FileOutputStream(file));
+                if(file.createNewFile())
+                    writeDefaultProperties(new FileOutputStream(file));
             }catch (FileNotFoundException exception){
                 logger.severe(String.format("File with path %s not founded!", propertiesPath));
             }catch (IOException exception){

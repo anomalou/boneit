@@ -14,13 +14,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.logging.Logger;
 
 public class Main {
     public static void main(String[] args) {
-        Logger logger = Logger.getLogger(Main.class.getName());
-
         JFrame frame = makeFrame();
 
         BufferedImage img = null;
@@ -54,7 +50,7 @@ public class Main {
         root.setPosition(new Point(30 ,80));
         root.setRootVectorOrigin(new Point(15, 15));
         root.setRootVectorDirection(new Point(15,30));
-        application.getCanvasController().applyBoneRotation(root, root.getRotationAngle());
+        canvasController.applyBoneRotation(root, root.getRotationAngle());
 
         Bone prev = root;
         for(int i = 0; i < 3; i++){

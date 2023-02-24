@@ -7,9 +7,9 @@ public interface Tool {
 
     /**
      * Return rect to redraw
-     * @param g
-     * @param position
-     * @return
+     * @param g graphic to draw tool interface
+     * @param position mouse position on screen
+     * @return rect to redraw
      */
     Rectangle drawInterface(Graphics g, Point position);
     void press(Graphics g, Point position, int button, boolean released);

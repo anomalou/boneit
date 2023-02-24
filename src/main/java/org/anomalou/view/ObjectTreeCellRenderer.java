@@ -3,16 +3,14 @@ package org.anomalou.view;
 import org.anomalou.model.Layer;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 
 public class ObjectTreeCellRenderer extends DefaultTreeCellRenderer {
 
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
 
     public ObjectTreeCellRenderer(int width, int height){
         this.width = width;

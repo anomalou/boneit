@@ -6,11 +6,10 @@ import org.anomalou.model.Canvas;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class CanvasController extends Controller{
-    private Canvas canvas;
+    private final Canvas canvas;
 
     public CanvasController(Canvas canvas) {
         this.canvas = canvas;
@@ -97,15 +96,11 @@ public class CanvasController extends Controller{
 
     public Layer getObject(UUID uuid){
         try{
-            return canvas.getObjectCache().getLayers().get(uuid);
+            return canvas.getObjectCache().getObjects().get(uuid);
         }catch (Exception exception){
             logger.severe(String.format("Object with UUID %s not exist! Error:\n%s", uuid, exception.getMessage()));
         }
 
         return null; //TODO check, controller can return nulls?
-    }
-
-    public HashMap<UUID, Layer> getObjectCache(){
-        return (HashMap<UUID, Layer>) canvas.getObjectCache().getLayers().clone();
     }
 }

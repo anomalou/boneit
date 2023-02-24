@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 public class PointerTool implements Tool{
     private final String name = "Pointer";
 
-    private Canvas canvas;
+    private final Canvas canvas;
 
     private boolean isMoveMode;
     private boolean isRotateMode;
@@ -105,9 +105,7 @@ public class PointerTool implements Tool{
         height = layer.getBaseBitmap().getHeight();
 
         if(clickPosition.x >= position.x && clickPosition.x < (position.x + width)){
-            if(clickPosition.y >= position.y && clickPosition.y < (position.y + height)){
-                return true;
-            }
+            return clickPosition.y >= position.y && clickPosition.y < (position.y + height);
         }
 
         return false;

@@ -19,10 +19,10 @@ import java.util.ArrayList;
 
 public class CanvasPanel extends JPanel {
 
-    private Canvas canvas;
-    private CanvasController canvasController;
-    private PropertiesController propertiesController;
-    private ToolPanelController toolPanelController;
+    private final Canvas canvas;
+    private final CanvasController canvasController;
+    private final PropertiesController propertiesController;
+    private final ToolPanelController toolPanelController;
 
     private BufferedImage rulerImage;
 
@@ -40,7 +40,7 @@ public class CanvasPanel extends JPanel {
     /**
      * Offset of the canvas on the workspace
      */
-    private Point offset;
+    private final Point offset;
     /**
      * Scale of one pixel of canvas in screen pixels
      */
@@ -96,7 +96,7 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawScene(Graphics g){
-        ArrayList<Layer> layers = canvas.sort();
+        ArrayList<Layer> layers = canvasController.sort();
 
         layers.forEach(layer -> {
             if(layer.isVisible()){
@@ -289,7 +289,7 @@ public class CanvasPanel extends JPanel {
 
         this.addMouseMotionListener(new MouseMotionListener() {
             Point oldPos = new Point(0, 0);
-            Point direction = new Point(0, 0);
+            final Point direction = new Point(0, 0);
 
             int pixelsPassed = 0;
             @Override
@@ -316,7 +316,7 @@ public class CanvasPanel extends JPanel {
                 calculateDirection(e.getPoint());
             }
 
-            private int calculateDirection(Point pos){
+            private void calculateDirection(Point pos){
                 direction.x = pos.x - oldPos.x;
                 direction.y = pos.y - oldPos.y;
 
@@ -324,7 +324,7 @@ public class CanvasPanel extends JPanel {
 
                 oldPos = pos;
 
-                return (int) temp.distance(pos);
+                temp.distance(pos);
             }
         });
     }

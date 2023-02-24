@@ -1,8 +1,5 @@
 package org.anomalou.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 
 public class FPoint implements Serializable {

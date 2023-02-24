@@ -13,7 +13,7 @@ public class Application {
     private Project project;
 
     @Getter
-    private PropertiesController propertiesController;
+    private final PropertiesController propertiesController;
 
     //TODO all controller should be temp classes, that created only for UI!
     @Getter

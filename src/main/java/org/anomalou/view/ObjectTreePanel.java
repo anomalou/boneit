@@ -11,7 +11,6 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,12 +20,11 @@ import java.util.UUID;
 
 public class ObjectTreePanel extends JPanel {
 
-    private Canvas canvas;
-    private CanvasController canvasController;
-    private PropertiesController propertiesController;
+    private final Canvas canvas;
+    private final CanvasController canvasController;
+    private final PropertiesController propertiesController;
 
     private JTree tree;
-    private JPopupMenu popupMenu;
 
     //Properties
     private int iconWidth;
@@ -69,7 +67,7 @@ public class ObjectTreePanel extends JPanel {
             sortedObject.add(object);
         });
 
-        Collections.sort(sortedObject, Collections.reverseOrder());
+        sortedObject.sort(Collections.reverseOrder());
 
         sortedObject.forEach(object -> {
             node.add(createNode(object, object.getChildren()));
@@ -131,7 +129,7 @@ public class ObjectTreePanel extends JPanel {
     }
 
     private void createPopupMenu(){
-        popupMenu = new JPopupMenu();
+        JPopupMenu popupMenu = new JPopupMenu();
 
         JMenuItem newLayerItem = new JMenuItem("Create layer");
         newLayerItem.addActionListener(new ActionListener() {

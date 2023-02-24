@@ -51,12 +51,11 @@ public class Canvas implements Serializable {
     }
 
     public Layer getSelection(){
-        return objectCache.getLayers().get(selection);
+        return objectCache.getObjects().get(selection);
     }
 
     public void registerObject(Layer parent, @NonNull Layer object){
         getObjectCache().registerObject(object.getUuid(), object);
-//        logger.severe(String.format("Can't register new layer! Error: %s", exception.getMessage()));
 
         if(parent == null){
             layersHierarchy.add(object.getUuid());
@@ -71,14 +70,14 @@ public class Canvas implements Serializable {
         if(layer.isRoot())
             layersHierarchy.remove(layer.getUuid());
         else{
-            getObjectCache().getLayers().get(layer.getParent()).getChildren().remove(layer.getUuid());
+            getObjectCache().getObjects().get(layer.getParent()).getChildren().remove(layer.getUuid());
         }
 
         getObjectCache().unregister(layer.getUuid());
     }
 
     public void registerObject(UUID parent, @NonNull Layer object){
-        registerObject(objectCache.getLayers().get(parent), object);
+        registerObject(objectCache.getObjects().get(parent), object);
     }
 
     public ArrayList<Layer> sort(){
@@ -89,7 +88,7 @@ public class Canvas implements Serializable {
         ArrayList<Layer> tempArray = new ArrayList<>();
 
         iArray.forEach(uuid -> {
-            tempArray.add(objectCache.getLayers().get(uuid));
+            tempArray.add(objectCache.getObjects().get(uuid));
         });
 
         Collections.sort(tempArray);
@@ -108,7 +107,7 @@ public class Canvas implements Serializable {
         FPoint childrenPosition = new FPoint(bone.getPosition().x + rotatedVector.x, bone.getPosition().y + rotatedVector.y);
 
         bone.getChildren().forEach(uuid -> {
-            Layer l = objectCache.getLayers().get(uuid);
+            Layer l = objectCache.getObjects().get(uuid);
             if(l.getClass().equals(Bone.class)){
                 Bone b = (Bone) l;
                 b.setPosition(new Point((int)Math.round(childrenPosition.x), (int)Math.round(childrenPosition.y)));
@@ -122,7 +121,7 @@ public class Canvas implements Serializable {
     }
 
     public void applyBoneTransform(UUID uuid, Double additionalAngle){
-        Layer l = objectCache.getLayers().get(uuid);
+        Layer l = objectCache.getObjects().get(uuid);
         if(l.getClass().equals(Bone.class)){
             applyBoneTransform((Bone) l, additionalAngle);
         }

@@ -9,11 +9,11 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class ToolPanelController extends Controller{
-    private Canvas canvas;
-    private ObjectCache objectCache;
+    private final Canvas canvas;
+    private final ObjectCache objectCache;
 
     private Tool selectedTool;
-    private ArrayList<Tool> tools;
+    private final ArrayList<Tool> tools;
 
     public ToolPanelController(Canvas canvas, ObjectCache objectCache){
         this.canvas = canvas;
