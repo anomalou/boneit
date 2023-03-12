@@ -89,9 +89,9 @@ public class Main {
 
         application.getCanvasController().applyBoneTransform(root, root.getRotationAngle());
 
-        CanvasPanel canvasPanel = new CanvasPanel(application.getProject().getCanvas(), application.getCanvasController(), application.getPropertiesController(), application.getToolPanelController());
+        CanvasPanel canvasPanel = new CanvasPanel(application.getCanvasController(), application.getPropertiesController(), application.getToolPanelController());
 
-        ObjectTreePanel treePanel = new ObjectTreePanel(application.getProject().getCanvas(), application.getCanvasController(), application.getPropertiesController());
+        ObjectTreePanel treePanel = new ObjectTreePanel(application.getCanvasController(), application.getPropertiesController());
 
         //TODO move to Application
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, canvasPanel, treePanel);

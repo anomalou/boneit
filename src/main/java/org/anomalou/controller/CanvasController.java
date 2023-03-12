@@ -19,6 +19,10 @@ public class CanvasController extends Controller{
         return canvas.getSelection();
     }
 
+    public void setSelection(UUID objectID){
+        canvas.setSelection(objectID);
+    }
+
     public void registerObject(Layer parent, Layer object){
         canvas.registerObject(parent, object);
     }
@@ -63,6 +67,14 @@ public class CanvasController extends Controller{
         return canvas.calculateRotatedVector(zeroVector, angle);
     }
 
+    public int getWidth(){
+        return canvas.getWidth();
+    }
+
+    public int getHeight(){
+        return canvas.getHeight();
+    }
+
     public void reshape(Layer layer, int w, int h){
         if(layer.getBaseBitmap().getWidth() == 1 || layer.getBaseBitmap().getHeight() == 1)
             layer.setBaseBitmap(new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
@@ -102,5 +114,9 @@ public class CanvasController extends Controller{
         }
 
         return null; //TODO check, controller can return nulls?
+    }
+
+    public ArrayList<UUID> getLayersHierarchy(){
+        return canvas.getLayersHierarchy();
     }
 }

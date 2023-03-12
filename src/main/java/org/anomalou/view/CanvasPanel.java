@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class CanvasPanel extends JPanel {
-
-    private final Canvas canvas;
     private final CanvasController canvasController;
     private final PropertiesController propertiesController;
     private final ToolPanelController toolPanelController;
@@ -48,8 +46,7 @@ public class CanvasPanel extends JPanel {
 
     private boolean isScrollPressed;
 
-    public CanvasPanel(Canvas canvas, CanvasController canvasController, PropertiesController propertiesController, ToolPanelController toolPanelController){
-        this.canvas = canvas;
+    public CanvasPanel(CanvasController canvasController, PropertiesController propertiesController, ToolPanelController toolPanelController){
         this.canvasController = canvasController;
         this.propertiesController = propertiesController;
         this.toolPanelController = toolPanelController;
@@ -125,22 +122,22 @@ public class CanvasPanel extends JPanel {
         g.drawLine(0, scale * offset.y, getWidth(), scale * offset.y);
 
         //RD corner
-        g.drawString(String.format("%d", canvas.getWidth()), scale * (offset.x + 1 + canvas.getWidth()), rulerOffsetY);
-        g.drawString(String.format("%d", canvas.getHeight()), rulerOffsetX, scale * (offset.y + rulerOffsetY + canvas.getHeight()));
-        g.drawLine(scale * (offset.x + canvas.getWidth()), 0, scale * (offset.x + canvas.getWidth()), getHeight());
-        g.drawLine(0, scale * (offset.y + canvas.getHeight()), getWidth(), scale * (offset.y + canvas.getHeight()));
+        g.drawString(String.format("%d", canvasController.getWidth()), scale * (offset.x + 1 + canvasController.getWidth()), rulerOffsetY);
+        g.drawString(String.format("%d", canvasController.getHeight()), rulerOffsetX, scale * (offset.y + rulerOffsetY + canvasController.getHeight()));
+        g.drawLine(scale * (offset.x + canvasController.getWidth()), 0, scale * (offset.x + canvasController.getWidth()), getHeight());
+        g.drawLine(0, scale * (offset.y + canvasController.getHeight()), getWidth(), scale * (offset.y + canvasController.getHeight()));
 
         //Pixel in corners
         g.drawString(String.format("%d", -offset.x), rulerCornerOffsetUX, rulerCornerOffsetUY);
         g.drawString(String.format("%d", -offset.y), rulerCornerOffsetLX, rulerCornerOffsetLY);
-        g.drawString(String.format("%d", getWidth() / scale - offset.x - canvas.getWidth()), getWidth() - rulerCornerOffsetUX, rulerCornerOffsetUY);
-        g.drawString(String.format("%d", getHeight() / scale - offset.y - canvas.getHeight()), rulerCornerOffsetLX, getHeight() - rulerCornerOffsetLY);
+        g.drawString(String.format("%d", getWidth() / scale - offset.x - canvasController.getWidth()), getWidth() - rulerCornerOffsetUX, rulerCornerOffsetUY);
+        g.drawString(String.format("%d", getHeight() / scale - offset.y - canvasController.getHeight()), rulerCornerOffsetLX, getHeight() - rulerCornerOffsetLY);
 
         g.setColor(Color.black);
     }
 
     private void drawSelection(Graphics g){
-        Layer layer = canvas.getSelection();
+        Layer layer = canvasController.getSelection();
 
         if(layer == null)
             return;
@@ -182,7 +179,7 @@ public class CanvasPanel extends JPanel {
 
         //Vectors
         //rootDirection
-        FPoint parentRotationVector = canvas.calculateParentRotationVector(bone);
+        FPoint parentRotationVector = canvasController.calculateParentRotationVector(bone);
         g.drawLine(scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y),
                 (int) Math.round(scale * (offset.x + bone.getPosition().x + parentRotationVector.x)),
                 (int) Math.round(scale * (offset.y + bone.getPosition().y + parentRotationVector.y)));
@@ -190,7 +187,7 @@ public class CanvasPanel extends JPanel {
         //rotation vector
         g.setColor(Color.cyan);
 
-        FPoint rotationVector = canvas.calculateFullRotationVector(bone);
+        FPoint rotationVector = canvasController.calculateFullRotationVector(bone);
         g.drawLine(scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y),
                 (int) Math.round(scale * (offset.x + bone.getPosition().x + rotationVector.x)),
                 (int) Math.round(scale * (offset.y + bone.getPosition().y + rotationVector.y)));

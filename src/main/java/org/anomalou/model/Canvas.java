@@ -80,6 +80,10 @@ public class Canvas implements Serializable {
         registerObject(objectCache.getObjects().get(parent), object);
     }
 
+    /**
+     * Get all object on scene sorted by draw priority as list
+     * @return ArrayList
+     */
     public ArrayList<Layer> sort(){
         return _sort(layersHierarchy);
     }

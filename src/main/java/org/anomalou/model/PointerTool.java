@@ -41,8 +41,9 @@ public class PointerTool implements Tool{
 
     @Override
     public void click(Graphics g, Point position, int button) {
-        if(button == MouseEvent.BUTTON1)
+        if(button == MouseEvent.BUTTON1) {
             select(position);
+        }
     }
 
     @Override
@@ -76,10 +77,16 @@ public class PointerTool implements Tool{
      * @param clickPosition mouse click position in screen coordinates (raw position)
      */
     private void select(Point clickPosition){
-        canvas.sort().forEach(layer -> {
-            if(isClickInBound(layer, clickPosition))
+        boolean selected = false;
+        for(Layer layer : canvas.sort()){
+            if(isClickInBound(layer, clickPosition)){
                 canvas.setSelection(layer.getUuid());
-        });
+                selected = true;
+            }
+        }
+
+        if(!selected)
+            canvas.setSelection(null);
     }
 
     /**
