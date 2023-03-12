@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class CanvasPanel extends JPanel {
+    private final UIManager uiManager;
     private final CanvasController canvasController;
     private final PropertiesController propertiesController;
     private final ToolPanelController toolPanelController;
@@ -46,10 +47,11 @@ public class CanvasPanel extends JPanel {
 
     private boolean isScrollPressed;
 
-    public CanvasPanel(CanvasController canvasController, PropertiesController propertiesController, ToolPanelController toolPanelController){
-        this.canvasController = canvasController;
-        this.propertiesController = propertiesController;
-        this.toolPanelController = toolPanelController;
+    public CanvasPanel(UIManager uiManager){
+        this.uiManager = uiManager;
+        this.canvasController = uiManager.getCanvasController();
+        this.propertiesController = uiManager.getPropertiesController();
+        this.toolPanelController = uiManager.getToolPanelController();
         offset = new Point(0, 0);
         scale = 1;
 
@@ -230,6 +232,7 @@ public class CanvasPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 toolPanelController.click(getGraphics(), screenToCanvas(e.getPoint()), e.getButton());
+                uiManager.updateInspector();
                 //wrap into draw method
 //                if(isClickInBound(objectController.getObject(canvas.getSelection()), screenToCanvas(e.getPoint()))){
 //                    //Rotation tests! :3
@@ -294,6 +297,8 @@ public class CanvasPanel extends JPanel {
                 calculateDirection(e.getPoint());
 
                 toolPanelController.drag(getGraphics(), screenToCanvas(e.getPoint()), e.getModifiersEx());
+                uiManager.updateTree();
+                uiManager.updateInspector();
 
                 //LOCKED! CAN NOT BE IN TOOLS! IMPORTANT FUNCTION!
                 pixelsPassed += 1;

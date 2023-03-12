@@ -17,8 +17,6 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        JFrame frame = makeFrame();
-
         BufferedImage img = null;
         BufferedImage arrow = null;
         BufferedImage sunflower_img = null;
@@ -89,28 +87,24 @@ public class Main {
 
         application.getCanvasController().applyBoneTransform(root, root.getRotationAngle());
 
-        CanvasPanel canvasPanel = new CanvasPanel(application.getCanvasController(), application.getPropertiesController(), application.getToolPanelController());
+        application.openInterface();
 
-        ObjectTreePanel treePanel = new ObjectTreePanel(application.getCanvasController(), application.getPropertiesController());
-
-        //TODO move to Application
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, canvasPanel, treePanel);
-        splitPane.setResizeWeight(0.9);
-
-        frame.setLayout(new BorderLayout());
-
-        frame.add(splitPane, BorderLayout.CENTER);
-        frame.add(new JLabel("Info panel"), BorderLayout.PAGE_END);
-        frame.add(new InspectorPanel(application.getCanvasController()), BorderLayout.WEST);
-        frame.revalidate();
+//        JFrame frame = makeFrame();
+//        application.getUiManager().initInterface();
+//        application.getUiManager().relocateView();
+//
+//        frame.setLayout(new BorderLayout());
+//        frame.add(application.getUiManager(), BorderLayout.CENTER);
+//        frame.revalidate();
+//        frame.setVisible(true);
     }
 
-    public static JFrame makeFrame(){
+    private static JFrame makeFrame(){
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
-        frame.setVisible(true);
-        frame.setTitle("Bone-it");
+//        frame.setVisible(true);
+        frame.setTitle("Boneto");
         return frame;
     }
 }

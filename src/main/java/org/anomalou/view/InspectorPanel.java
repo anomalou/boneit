@@ -16,12 +16,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class InspectorPanel extends JPanel {
+    private final UIManager uiManager;
     private final CanvasController canvasController;
 
     private final JPanel container;
 
-    public InspectorPanel(CanvasController canvasController){
-        this.canvasController = canvasController;
+    public InspectorPanel(UIManager uiManager){
+        this.uiManager = uiManager;
+        this.canvasController = uiManager.getCanvasController();
 
         container = new JPanel();
 
@@ -46,6 +48,15 @@ public class InspectorPanel extends JPanel {
         });
 
         add(debugUpdate, BorderLayout.PAGE_START);
+    }
+
+    public void updateFields(){
+        if(canvasController.getSelection() != null)
+            buildFieldsEditor();
+        else{
+            container.removeAll();
+            revalidate();
+        }
     }
 
     private void buildFieldsEditor(){
@@ -133,6 +144,8 @@ public class InspectorPanel extends JPanel {
                         setFieldValue(field, object, Integer.valueOf(textField.getText()));
                     else if(field.getType() == Double.class)
                         setFieldValue(field, object, Double.valueOf(textField.getText()));
+                    uiManager.updateCanvas();
+                    uiManager.updateTree();
                 }catch (Exception ex){
                     ex.printStackTrace();
                 }
@@ -154,6 +167,7 @@ public class InspectorPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setFieldValue(field, object, checkBox.isSelected());
+                uiManager.updateCanvas();
             }
         });
 

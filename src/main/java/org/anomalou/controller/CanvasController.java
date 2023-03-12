@@ -108,7 +108,7 @@ public class CanvasController extends Controller{
 
     public Layer getObject(UUID uuid){
         try{
-            return canvas.getObjectCache().getObjects().get(uuid);
+            return canvas.getObject(uuid);
         }catch (Exception exception){
             logger.severe(String.format("Object with UUID %s not exist! Error:\n%s", uuid, exception.getMessage()));
         }
@@ -118,5 +118,9 @@ public class CanvasController extends Controller{
 
     public ArrayList<UUID> getLayersHierarchy(){
         return canvas.getLayersHierarchy();
+    }
+
+    public void updateObjects(){
+        canvas.updateObjects();
     }
 }

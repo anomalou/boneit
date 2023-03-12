@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 public class ObjectTreePanel extends JPanel {
+    private final UIManager uiManager;
     private final CanvasController canvasController;
     private final PropertiesController propertiesController;
 
@@ -28,10 +29,11 @@ public class ObjectTreePanel extends JPanel {
     private int iconWidth;
     private int iconHeight;
 
-    public ObjectTreePanel(CanvasController canvasController, PropertiesController propertiesController) {
+    public ObjectTreePanel(UIManager uiManager) {
         super();
-        this.canvasController = canvasController;
-        this.propertiesController = propertiesController;
+        this.uiManager = uiManager;
+        this.canvasController = uiManager.getCanvasController();
+        this.propertiesController = uiManager.getPropertiesController();
 
         loadProperties();
         createTree();
@@ -118,6 +120,7 @@ public class ObjectTreePanel extends JPanel {
                 Object object = node.getUserObject();
                 if(object instanceof Layer){
                     canvasController.setSelection(((Layer) object).getUuid());
+                    uiManager.updateInspector();
                 }
 
                 getParent().repaint();

@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.function.BinaryOperator;
 import java.util.logging.Logger;
 
 public class Canvas implements Serializable {
@@ -80,6 +81,10 @@ public class Canvas implements Serializable {
         registerObject(objectCache.getObjects().get(parent), object);
     }
 
+    public Layer getObject(UUID uuid){
+        return objectCache.getObjects().get(uuid);
+    }
+
     /**
      * Get all object on scene sorted by draw priority as list
      * @return ArrayList
@@ -109,6 +114,8 @@ public class Canvas implements Serializable {
         FPoint rotatedVector = calculateFullRotationVector(bone);
 
         FPoint childrenPosition = new FPoint(bone.getPosition().x + rotatedVector.x, bone.getPosition().y + rotatedVector.y);
+
+        applyBoneRotation(bone, additionalAngle);
 
         bone.getChildren().forEach(uuid -> {
             Layer l = objectCache.getObjects().get(uuid);
@@ -200,5 +207,13 @@ public class Canvas implements Serializable {
         rotatedVector.y *= -1;
 
         return rotatedVector;
+    }
+
+    public void updateObjects(){
+        getLayersHierarchy().forEach(uuid -> {
+            Layer object = getObject(uuid);
+            if(object.getClass().equals(Bone.class))
+                applyBoneTransform((Bone) object, ((Bone) object).getRotationAngle() + ((Bone) object).getParentRotationAngle());
+        });
     }
 }
