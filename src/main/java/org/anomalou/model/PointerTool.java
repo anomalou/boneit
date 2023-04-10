@@ -54,7 +54,7 @@ public class PointerTool implements Tool{
             FPoint rotation = new FPoint(position.x, position.y);
             rotation.x -= objectPos.x;
             rotation.y -= objectPos.y;
-            rotation = canvas.calculateRotatedVector(rotation, bone.getParentRotationAngle());
+            rotation = canvas.calculateRotationVectorForAngle(rotation, bone.getParentRotationAngle());
             bone.setRotationAngle(canvas.calculateRotationAngleFor(bone, rotation));
             canvas.applyBoneRotation(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
             canvas.applyBoneTransform(bone, bone.getRotationAngle() + bone.getParentRotationAngle());

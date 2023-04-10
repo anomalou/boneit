@@ -51,7 +51,7 @@ public class Main {
         canvasController.applyBoneRotation(root, root.getRotationAngle());
 
         Bone prev = root;
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < 10; i++){
             Bone newBone = new Bone();
 
             application.getCanvasController().registerObject(prev, newBone);

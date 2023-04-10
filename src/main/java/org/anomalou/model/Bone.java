@@ -52,6 +52,11 @@ public class Bone extends Layer{
     @Setter
     private boolean isBoneVisible;
 
+//    @Editable(name = "Use parent rotation", editorType = EditorType.CHECK_BOX)
+    @Getter
+    @Setter
+    private boolean useParentRotationAngle;
+
     public Bone(){
         super();
 
@@ -62,6 +67,7 @@ public class Bone extends Layer{
         rotationAngle = 0d;
         parentRotationAngle = 0d;
         isBoneVisible = false;
+        useParentRotationAngle = true;
     }
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES

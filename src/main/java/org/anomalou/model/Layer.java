@@ -28,6 +28,9 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
     @Getter
     @Setter
     protected String name;
+
+    @Editable(name = "Test field!", editorType = EditorType.TEXT_FIELD)
+    protected String test;
     /**
      * Just image of the layer, its shape MUST be 1x1 or more! <br>
      * Do not try to transform this image, its just raw pixel information for future transformation!
@@ -68,6 +71,7 @@ public class Layer implements Serializable, Comparable<Layer> { //a base class f
 
     public Layer(){
         name = "NewLayer";
+        test = "test";
         position = new Point(0, 0);
         baseBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         logger.fine(String.format("Entity (%s) created!", getUuid().toString()));

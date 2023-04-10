@@ -63,8 +63,8 @@ public class CanvasController extends Controller{
         return canvas.calculateFullRotationVector(bone);
     }
 
-    public FPoint calculateRotatedVector(FPoint zeroVector, Double angle){
-        return canvas.calculateRotatedVector(zeroVector, angle);
+    public FPoint calculateRotationVectorForAngle(FPoint zeroVector, Double angle){
+        return canvas.calculateRotationVectorForAngle(zeroVector, angle);
     }
 
     public int getWidth(){

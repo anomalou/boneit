@@ -10,14 +10,11 @@ import java.util.ArrayList;
 
 public class ToolPanelController extends Controller{
     private final Canvas canvas;
-    private final ObjectCache objectCache;
-
     private Tool selectedTool;
     private final ArrayList<Tool> tools;
 
     public ToolPanelController(Canvas canvas, ObjectCache objectCache){
         this.canvas = canvas;
-        this.objectCache = objectCache;
 
         tools = new ArrayList<>();
 

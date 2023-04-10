@@ -38,14 +38,15 @@ public class UIManager extends JPanel {
     public void relocateView(){
         this.removeAll();
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, canvasPanel, objectTreePanel);
-        splitPane.setResizeWeight(0.9);
+        JSplitPane rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, canvasPanel, objectTreePanel);
+        rightSplitPane.setResizeWeight(0.9);
+        JSplitPane leftSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, inspectorPanel, rightSplitPane);
+        leftSplitPane.setResizeWeight(0.1);
 
         this.setLayout(new BorderLayout());
 
-        this.add(splitPane, BorderLayout.CENTER);
+        this.add(leftSplitPane, BorderLayout.CENTER);
         this.add(new JLabel("Info panel"), BorderLayout.PAGE_END);
-        this.add(inspectorPanel, BorderLayout.WEST);
         this.revalidate();
     }
 

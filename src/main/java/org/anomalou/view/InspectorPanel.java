@@ -28,26 +28,12 @@ public class InspectorPanel extends JPanel {
         container = new JPanel();
 
         initialize();
-        debugButton();//TODO debug
     }
 
     private void initialize(){
         setLayout(new BorderLayout());
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         add(new JScrollPane(container), BorderLayout.CENTER);
-    }
-
-    //TODO debug? remove in future
-    private void debugButton(){
-        JButton debugUpdate = new JButton("DEBUG");
-        debugUpdate.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buildFieldsEditor();
-            }
-        });
-
-        add(debugUpdate, BorderLayout.PAGE_START);
     }
 
     public void updateFields(){
@@ -66,10 +52,20 @@ public class InspectorPanel extends JPanel {
 
         Field[] fields = unpackFields(selected.getClass());
 
+        Box verticalBox = Box.createVerticalBox();
+
         for(Field f : fields){
-            if(f.isAnnotationPresent(Editable.class))
-                selectFieldType(f, selected);
+            if(f.isAnnotationPresent(Editable.class)) {
+                Component component = getFieldEditor(f, selected);
+                if(component != null){
+                    verticalBox.add(component);
+                }
+            }
         }
+
+        verticalBox.add(Box.createGlue());
+
+        container.add(verticalBox);
 
         revalidate();
     }
@@ -84,13 +80,18 @@ public class InspectorPanel extends JPanel {
         return fields.toArray(new Field[]{});
     }
 
-    private void selectFieldType(Field field, Object object){
+    private Component getFieldEditor(Field field, Object object){
         if(field.getAnnotation(Editable.class).editorType() == EditorType.TEXT_FIELD){
-            createTextField(field, object);
+            return createTextField(field, object);
         }
         if(field.getAnnotation(Editable.class).editorType() == EditorType.CHECK_BOX){
-            createCheckBox(field, object);
+            return createCheckBox(field, object);
         }
+        if(field.getAnnotation(Editable.class).editorType() == EditorType.VECTOR_EDITOR){
+            return createVectorField(field, object);
+        }
+
+        return null;
     }
 
     private void setFieldValue(Field field, Object object, Object newValue){
@@ -116,11 +117,10 @@ public class InspectorPanel extends JPanel {
         return -1;
     }
 
-    private void createTextField(Field field, Object object){
-        JLabel fieldName = new JLabel();
+    private Component createTextField(Field field, Object object){
         JTextField textField = new JTextField();
 
-        fieldName.setText(field.getAnnotation(Editable.class).name());
+        String fieldName = field.getAnnotation(Editable.class).name();
         textField.setText(getFieldValue(field, object).toString());
 
         textField.addFocusListener(new FocusListener() {
@@ -152,15 +152,18 @@ public class InspectorPanel extends JPanel {
             }
         });
 
-        container.add(fieldName);
-        container.add(textField);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setBorder(BorderFactory.createTitledBorder(fieldName));
+        panel.add(textField);
+
+        return panel;
     }
 
-    private void createCheckBox(Field field, Object object){
-        JLabel fieldName = new JLabel();
+    private Component createCheckBox(Field field, Object object){
         JCheckBox checkBox = new JCheckBox("Enabled");
 
-        fieldName.setText(field.getAnnotation(Editable.class).name());
+        String fieldName = field.getAnnotation(Editable.class).name();
         checkBox.setSelected((Boolean) getFieldValue(field, object));
 
         checkBox.addActionListener(new ActionListener() {
@@ -171,7 +174,82 @@ public class InspectorPanel extends JPanel {
             }
         });
 
-        container.add(fieldName);
-        container.add(checkBox);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setBorder(BorderFactory.createTitledBorder(fieldName));
+        panel.add(checkBox);
+
+        return panel;
+    }
+
+    private Component createVectorField(Field field, Object object){
+        JTextField xTextField = new JTextField();
+        JTextField yTextField = new JTextField();
+
+        String fieldName = field.getAnnotation(Editable.class).name();
+        Point point = (Point) ((Point) getFieldValue(field, object)).clone();
+
+        xTextField.setText(String.valueOf(point.x));
+        yTextField.setText(String.valueOf(point.y));
+
+        xTextField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                Point point = (Point) getFieldValue(field, object);
+                xTextField.setText(String.valueOf(point.x));
+            }
+        });
+        xTextField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    point.x = Integer.valueOf(xTextField.getText());
+                    setFieldValue(field, object, point);
+                    uiManager.updateCanvas();
+                    uiManager.updateTree();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        yTextField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                Point point = (Point) getFieldValue(field, object);
+                yTextField.setText(String.valueOf(point.y));
+            }
+        });
+        yTextField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    point.y = Integer.valueOf(yTextField.getText());
+                    setFieldValue(field, object, point);
+                    uiManager.updateCanvas();
+                    uiManager.updateTree();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+        panel.setBorder(BorderFactory.createTitledBorder(fieldName));
+        panel.add(xTextField);
+        panel.add(yTextField);
+
+        return panel;
     }
 }

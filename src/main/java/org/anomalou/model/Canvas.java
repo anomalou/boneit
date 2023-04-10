@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
-import java.util.function.BinaryOperator;
 import java.util.logging.Logger;
 
 public class Canvas implements Serializable {
@@ -111,7 +110,11 @@ public class Canvas implements Serializable {
     }
 
     public void applyBoneTransform(Bone bone, Double additionalAngle){ //TODO also for layers
-        FPoint rotatedVector = calculateFullRotationVector(bone);
+        FPoint rotatedVector;
+        if(bone.isUseParentRotationAngle())
+            rotatedVector = calculateFullRotationVector(bone);
+        else
+            rotatedVector = calculateRotationVector(bone);
 
         FPoint childrenPosition = new FPoint(bone.getPosition().x + rotatedVector.x, bone.getPosition().y + rotatedVector.y);
 
@@ -123,8 +126,12 @@ public class Canvas implements Serializable {
                 Bone b = (Bone) l;
                 b.setPosition(new Point((int)Math.round(childrenPosition.x), (int)Math.round(childrenPosition.y)));
                 b.setParentRotationAngle(additionalAngle);
-                applyBoneRotation(b, additionalAngle + b.getRotationAngle());
-                applyBoneTransform(b, additionalAngle + b.getRotationAngle());
+
+                Double parentAngle = additionalAngle;
+                if(!b.isUseParentRotationAngle())
+                    parentAngle = 0d;
+
+                applyBoneTransform(b, parentAngle + b.getRotationAngle());
             }
         });
 
@@ -182,16 +189,20 @@ public class Canvas implements Serializable {
         return new FPoint(bone.getRootVectorDirection().x - bone.getRootVectorOrigin().x, (bone.getRootVectorDirection().y - bone.getRootVectorOrigin().y) * -1);
     }
 
+    public FPoint calculateRotationVector(Bone bone){
+        return calculateRotationVectorForAngle(normalizeSourceVector(bone), bone.getRotationAngle());
+    }
+
     /**
      * New vector, result of rotation rootDirection vector. Returns vector that start from (0; 0) coordinates.
      * @return FPoint vector
      */
     public FPoint calculateParentRotationVector(Bone bone){
-        return calculateRotatedVector(normalizeSourceVector(bone), bone.getParentRotationAngle());
+        return calculateRotationVectorForAngle(normalizeSourceVector(bone), bone.getParentRotationAngle());
     }
 
     public FPoint calculateFullRotationVector(Bone bone){
-        return calculateRotatedVector(normalizeSourceVector(bone), bone.getRotationAngle() + bone.getParentRotationAngle());
+        return calculateRotationVectorForAngle(normalizeSourceVector(bone), bone.getRotationAngle() + bone.getParentRotationAngle());
     }
 
     /**
@@ -200,7 +211,7 @@ public class Canvas implements Serializable {
      * @param angle angle to rotate
      * @return FPoint
      */
-    public FPoint calculateRotatedVector(FPoint zeroVector, Double angle){
+    public FPoint calculateRotationVectorForAngle(FPoint zeroVector, Double angle){
         FPoint rotatedVector = new FPoint(zeroVector.x * Math.cos(angle) - zeroVector.y * Math.sin(angle),
                 zeroVector.x * Math.sin(angle) + zeroVector.y * Math.cos(angle));
 
