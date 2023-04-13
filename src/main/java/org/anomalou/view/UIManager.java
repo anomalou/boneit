@@ -51,16 +51,16 @@ public class UIManager extends JPanel {
     }
 
     public void updateCanvas(){
-        canvasController.updateObjects();
-        canvasPanel.repaint();
+//        canvasController.updateObjects();
+//        canvasPanel.repaint();
     }
 
     public void updateInspector(){
-        inspectorPanel.repaint();
-        inspectorPanel.updateFields();
+//        inspectorPanel.repaint();
+//        inspectorPanel.updateFields();
     }
 
     public void updateTree(){
-        objectTreePanel.repaint();
+//        objectTreePanel.repaint();
     }
 }

@@ -2,9 +2,8 @@ package org.anomalou.view;
 
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
-import org.anomalou.model.Bone;
-import org.anomalou.model.Canvas;
-import org.anomalou.model.Layer;
+import org.anomalou.model.scene.Bone;
+import org.anomalou.model.scene.Layer;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;

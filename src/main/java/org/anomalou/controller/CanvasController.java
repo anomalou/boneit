@@ -1,7 +1,12 @@
 package org.anomalou.controller;
 
+import jdk.jshell.spi.ExecutionControl;
 import org.anomalou.model.*;
 import org.anomalou.model.Canvas;
+import org.anomalou.model.scene.Bone;
+import org.anomalou.model.scene.Layer;
+import org.anomalou.model.scene.SceneObject;
+import org.anomalou.model.scene.TransformObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,7 +20,7 @@ public class CanvasController extends Controller{
         this.canvas = canvas;
     }
 
-    public Layer getSelection(){
+    public SceneObject getSelection(){
         return canvas.getSelection();
     }
 
@@ -23,48 +28,46 @@ public class CanvasController extends Controller{
         canvas.setSelection(objectID);
     }
 
-    public void registerObject(Layer parent, Layer object){
-        canvas.registerObject(parent, object);
+    public void registerObject(SceneObject object){
+        canvas.registerObject(object);
     }
 
     public void unregisterObject(Layer object){
         canvas.unregisterObject(object);
     }
 
-    public ArrayList<Layer> sort(){
+    public ArrayList<SceneObject> sort(){
         return canvas.sort();
     }
 
-    public void applyBoneTransform(Bone bone, Double additionalAngle){
-        canvas.applyBoneTransform(bone, additionalAngle);
+    //TODO work!
+    public void applyTransform(TransformObject object){
+        try {
+            object.applyTransformation();
+        }catch (ExecutionControl.NotImplementedException ex){
+            logger.warning(ex.getMessage());
+        }
     }
 
-    public void applyBoneTransform(UUID uuid, Double additionalAngle){
-        canvas.applyBoneTransform(uuid, additionalAngle);
+    //TODO work!
+    public void applyBoneRotation(TransformObject object, Double angle){
+        object.applyBoneRotation(bone, angle);
     }
 
-    public void applyBoneRotation(Bone bone, Double angle){
-        canvas.applyBoneRotation(bone, angle);
+    public double calculateRotationAngle(TransformObject object, FPoint direction){
+        return object.calculateRotationAngle(direction);
     }
 
-    public double calculateRotationAngleFor(Bone bone, FPoint directionVector){
-        return canvas.calculateRotationAngleFor(bone, directionVector);
+    public FPoint normalizeSourceVector(TransformObject object){
+        return object.normalizeSourceVector();
     }
 
-    public FPoint normalizeSourceVector(Bone bone){
-        return canvas.normalizeSourceVector(bone);
+    public FPoint calculateParentRotationVector(TransformObject object){
+        return object.calculateParentRotationVector();
     }
 
-    public FPoint calculateParentRotationVector(Bone bone){
-        return canvas.calculateParentRotationVector(bone);
-    }
-
-    public FPoint calculateFullRotationVector(Bone bone){
-        return canvas.calculateFullRotationVector(bone);
-    }
-
-    public FPoint calculateRotationVectorForAngle(FPoint zeroVector, Double angle){
-        return canvas.calculateRotationVectorForAngle(zeroVector, angle);
+    public FPoint calculateFullRotationVector(TransformObject object){
+        return object.calculateFullRotationVector();
     }
 
     public int getWidth(){
@@ -75,38 +78,39 @@ public class CanvasController extends Controller{
         return canvas.getHeight();
     }
 
+    @Deprecated
     public void reshape(Layer layer, int w, int h){
-        if(layer.getBaseBitmap().getWidth() == 1 || layer.getBaseBitmap().getHeight() == 1)
-            layer.setBaseBitmap(new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
+        if(layer.getSourceBitmap().getWidth() == 1 || layer.getSourceBitmap().getHeight() == 1)
+            layer.setSourceBitmap(new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
         else{
-            Image tmp = layer.getBaseBitmap().getSubimage(0, 0, layer.getBaseBitmap().getWidth(), layer.getBaseBitmap().getHeight());
+            Image tmp = layer.getSourceBitmap().getSubimage(0, 0, layer.getSourceBitmap().getWidth(), layer.getSourceBitmap().getHeight());
             BufferedImage nBaseBitmap = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
             Graphics2D g2d = nBaseBitmap.createGraphics();
             g2d.drawImage(tmp, 0, 0, null);
             g2d.dispose();
-            layer.setBaseBitmap(nBaseBitmap);
+            layer.setSourceBitmap(nBaseBitmap);
         }
 
         if(!layer.getClass().equals(Bone.class))
             return;
 
-        Bone bone = (Bone) layer;
-
-        if(bone.getTransformBitmap().getWidth() == 1 || bone.getTransformBitmap().getHeight() == 1)
-            bone.setTransformBitmap(new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
-        else{
-            Image tmp = bone.getTransformBitmap().getSubimage(0, 0, bone.getTransformBitmap().getWidth(), bone.getTransformBitmap().getHeight());
-            BufferedImage nBaseBitmap = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
-            Graphics2D g2d = nBaseBitmap.createGraphics();
-            g2d.drawImage(tmp, 0, 0, null);
-            g2d.dispose();
-            bone.setTransformBitmap(nBaseBitmap);
-        }
+//        Bone bone = (Bone) layer;
+//
+//        if(bone.getResultBitmap().getWidth() == 1 || bone.getResultBitmap().getHeight() == 1)
+//            bone.setResultBitmap(new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
+//        else{
+//            Image tmp = bone.getResultBitmap().getSubimage(0, 0, bone.getResultBitmap().getWidth(), bone.getResultBitmap().getHeight());
+//            BufferedImage nBaseBitmap = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+//
+//            Graphics2D g2d = nBaseBitmap.createGraphics();
+//            g2d.drawImage(tmp, 0, 0, null);
+//            g2d.dispose();
+//            bone.setResultBitmap(nBaseBitmap);
+//        }
     }
 
-    public Layer getObject(UUID uuid){
+    public SceneObject getObject(UUID uuid){
         try{
             return canvas.getObject(uuid);
         }catch (Exception exception){
@@ -116,7 +120,7 @@ public class CanvasController extends Controller{
         return null; //TODO check, controller can return nulls?
     }
 
-    public ArrayList<UUID> getLayersHierarchy(){
+    public ArrayList<SceneObject> getLayersHierarchy(){
         return canvas.getLayersHierarchy();
     }
 

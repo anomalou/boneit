@@ -1,6 +1,6 @@
 package org.anomalou.view;
 
-import org.anomalou.model.Layer;
+import org.anomalou.model.scene.Layer;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -24,7 +24,7 @@ public class ObjectTreeCellRenderer extends DefaultTreeCellRenderer {
         Object object = ((DefaultMutableTreeNode) value).getUserObject();
 
         if(object instanceof Layer layer){
-            setIcon(new ImageIcon(layer.getBaseBitmap().getScaledInstance(width, height, Image.SCALE_FAST)));
+            setIcon(new ImageIcon(layer.getSourceBitmap().getScaledInstance(width, height, Image.SCALE_FAST)));
             setText(layer.toString());
         }else{
             setIcon(null);

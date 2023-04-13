@@ -1,5 +1,8 @@
 package org.anomalou.model;
 
+import org.anomalou.model.scene.Bone;
+import org.anomalou.model.scene.Layer;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -56,8 +59,8 @@ public class PointerTool implements Tool{
             rotation.y -= objectPos.y;
             rotation = canvas.calculateRotationVectorForAngle(rotation, bone.getParentRotationAngle());
             bone.setRotationAngle(canvas.calculateRotationAngleFor(bone, rotation));
-            canvas.applyBoneRotation(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
-            canvas.applyBoneTransform(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
+//            canvas.applyBoneRotation(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
+            canvas.applyTransform(bone);
         }
         if(isMoveMode){
             Point dragDirection = new Point(canvas.getSelection().getPosition().x + position.x - oldPosition.x, canvas.getSelection().getPosition().y + position.y - oldPosition.y);
@@ -67,7 +70,7 @@ public class PointerTool implements Tool{
 
             canvas.getSelection().setPosition(dragDirection);
             if(canvas.getSelection().getClass().equals(Bone.class)){
-                    canvas.applyBoneTransform((Bone) canvas.getSelection(), ((Bone) canvas.getSelection()).getRotationAngle() + ((Bone) canvas.getSelection()).getParentRotationAngle());
+                    canvas.applyPosition((Bone) canvas.getSelection());
             }
         }
     }
@@ -108,8 +111,8 @@ public class PointerTool implements Tool{
             position.y = layer.getPosition().y;
         }
 
-        width = layer.getBaseBitmap().getWidth();
-        height = layer.getBaseBitmap().getHeight();
+        width = layer.getSourceBitmap().getWidth();
+        height = layer.getSourceBitmap().getHeight();
 
         if(clickPosition.x >= position.x && clickPosition.x < (position.x + width)){
             return clickPosition.y >= position.y && clickPosition.y < (position.y + height);

@@ -1,12 +1,9 @@
 package org.anomalou;
 
 import org.anomalou.controller.CanvasController;
-import org.anomalou.model.Bone;
-import org.anomalou.model.Layer;
+import org.anomalou.model.scene.Bone;
+import org.anomalou.model.scene.Layer;
 import org.anomalou.model.Project;
-import org.anomalou.view.CanvasPanel;
-import org.anomalou.view.InspectorPanel;
-import org.anomalou.view.ObjectTreePanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -38,24 +35,24 @@ public class Main {
 
         Layer layer = new Layer();
         application.getCanvasController().registerObject(null, layer);
-        layer.setBaseBitmap(img);
+        layer.setSourceBitmap(img);
         layer.setPosition(new Point(0, 0));
         layer.setVisible(true);
 
         Bone root = new Bone();
         application.getCanvasController().registerObject(null, root);
-        root.setBaseBitmap(stem_img);
+        root.setSourceBitmap(stem_img);
         root.setPosition(new Point(30 ,80));
         root.setRootVectorOrigin(new Point(15, 15));
         root.setRootVectorDirection(new Point(15,30));
         canvasController.applyBoneRotation(root, root.getRotationAngle());
 
         Bone prev = root;
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 1000; i++){
             Bone newBone = new Bone();
 
             application.getCanvasController().registerObject(prev, newBone);
-            newBone.setBaseBitmap(stem_img);
+            newBone.setSourceBitmap(stem_img);
             newBone.setPosition(new Point(30 ,80));
             newBone.setRootVectorOrigin(new Point(15, 15));
             newBone.setRootVectorDirection(new Point(15,30));
@@ -85,7 +82,7 @@ public class Main {
 ////        objectController.calculateRotationAngleFor(sunflower, new FPoint(0, 1));
 ////        application.getObjectController().applyRotation(childBone2, childBone2.getRotationAngle());
 
-        application.getCanvasController().applyBoneTransform(root, root.getRotationAngle());
+        application.getCanvasController().applyTransform(root);
 
         application.openInterface();
 

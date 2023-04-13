@@ -3,10 +3,10 @@ package org.anomalou.view;
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.controller.ToolPanelController;
-import org.anomalou.model.Bone;
-import org.anomalou.model.Canvas;
+import org.anomalou.model.scene.Bone;
 import org.anomalou.model.FPoint;
-import org.anomalou.model.Layer;
+import org.anomalou.model.scene.Layer;
+import org.anomalou.model.scene.SceneObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -139,30 +139,30 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawSelection(Graphics g){
-        Layer layer = canvasController.getSelection();
+        SceneObject object = canvasController.getSelection();
 
-        if(layer == null)
+        if(object == null)
             return;
 
         g.setColor(Color.black);
 
-        if(layer.getClass().equals(Bone.class)){
-            drawSelectedSkeleton(g, (Bone) layer);
+        if(object.getClass().equals(Bone.class)){
+            drawSelectedSkeleton(g, (Bone) object);
         }else{
-            drawSelectedLayer(g, layer);
+            drawSelectedLayer(g, object);
         }
     }
 
     private void drawSelectedLayer(Graphics g, Layer layer){
         g.drawRect(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
-                scale * layer.getBaseBitmap().getWidth(), scale * layer.getBaseBitmap().getHeight());
+                scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight());
     }
 
     private void drawSelectedSkeleton(Graphics g, Bone bone){
         Point bonePosition = new Point(offset.x + bone.getPosition().x - bone.getRootVectorOrigin().x, offset.y + bone.getPosition().y - bone.getRootVectorOrigin().y);
         g.drawRect(scale * (bonePosition.x),
                 scale * (bonePosition.y),
-                scale * (bone.getBaseBitmap().getWidth()), scale * (bone.getBaseBitmap().getHeight()));
+                scale * (bone.getSourceBitmap().getWidth()), scale * (bone.getSourceBitmap().getHeight()));
 
         drawSelectedBone(g, bone);
     }
@@ -322,11 +322,7 @@ public class CanvasPanel extends JPanel {
                 direction.x = pos.x - oldPos.x;
                 direction.y = pos.y - oldPos.y;
 
-                Point temp = oldPos;
-
                 oldPos = pos;
-
-                temp.distance(pos);
             }
         });
     }
@@ -334,10 +330,10 @@ public class CanvasPanel extends JPanel {
 
 
     private void drawLayer(Layer layer, Graphics g){
-        g.drawImage(layer.getBaseBitmap(), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y), scale * layer.getBaseBitmap().getWidth(), scale * layer.getBaseBitmap().getHeight(), null);
+        g.drawImage(layer.getSourceBitmap(), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
     }
 
     private void drawBone(Bone bone, Graphics g){
-        g.drawImage(bone.getTransformBitmap(), scale * (offset.x + bone.getPosition().x - bone.getRootVectorOrigin().x), scale * (offset.y + bone.getPosition().y - bone.getRootVectorOrigin().y), scale * bone.getTransformBitmap().getWidth(), scale * bone.getTransformBitmap().getHeight(), null);
+        g.drawImage(bone.getResultBitmap(), scale * (offset.x + bone.getPosition().x - bone.getRootVectorOrigin().x), scale * (offset.y + bone.getPosition().y - bone.getRootVectorOrigin().y), scale * bone.getResultBitmap().getWidth(), scale * bone.getResultBitmap().getHeight(), null);
     }
 }

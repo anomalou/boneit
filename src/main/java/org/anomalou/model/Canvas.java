@@ -1,8 +1,10 @@
 package org.anomalou.model;
 
+import jdk.jshell.spi.ExecutionControl;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.anomalou.model.scene.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,7 +24,7 @@ public class Canvas implements Serializable {
     @Setter
     private int height;
     @Getter
-    private final ArrayList<UUID> layersHierarchy;
+    private final ArrayList<SceneObject> layersHierarchy;
     /**
      * Cache that stores every object on scene. This allows get needed object faster.
      */
@@ -50,37 +52,29 @@ public class Canvas implements Serializable {
         this.height = Math.max(1, height);
     }
 
-    public Layer getSelection(){
+    public SceneObject getSelection(){
         return objectCache.getObjects().get(selection);
     }
 
-    public void registerObject(Layer parent, @NonNull Layer object){
-        getObjectCache().registerObject(object.getUuid(), object);
+    public void registerObject(SceneObject object){
+        try{
+            getObjectCache().registerObject(object.getUuid(), object);
 
-        if(parent == null){
-            layersHierarchy.add(object.getUuid());
-        }else{
-            object.setParent(parent.uuid);
-            parent.getChildren().add(object.uuid);
+            logger.fine(String.format("Object %s created!", object.getUuid()));
+        }catch (NullPointerException ex){
+            logger.warning(ex.getMessage());
         }
-        logger.fine(String.format("Object %s created!", object.getUuid()));
     }
 
-    public void unregisterObject(Layer layer){
-        if(layer.isRoot())
-            layersHierarchy.remove(layer.getUuid());
-        else{
-            getObjectCache().getObjects().get(layer.getParent()).getChildren().remove(layer.getUuid());
+    public void unregisterObject(SceneObject object){
+        try{
+            getObjectCache().unregister(object.getUuid());
+        }catch (NullPointerException ex){
+            logger.warning(ex.getMessage());
         }
-
-        getObjectCache().unregister(layer.getUuid());
     }
 
-    public void registerObject(UUID parent, @NonNull Layer object){
-        registerObject(objectCache.getObjects().get(parent), object);
-    }
-
-    public Layer getObject(UUID uuid){
+    public SceneObject getObject(UUID uuid){
         return objectCache.getObjects().get(uuid);
     }
 
@@ -88,12 +82,12 @@ public class Canvas implements Serializable {
      * Get all object on scene sorted by draw priority as list
      * @return ArrayList
      */
-    public ArrayList<Layer> sort(){
+    public ArrayList<SceneObject> sort(){
         return _sort(layersHierarchy);
     }
-    private ArrayList<Layer> _sort(ArrayList<UUID> iArray){
-        ArrayList<Layer> oArray = new ArrayList<>();
-        ArrayList<Layer> tempArray = new ArrayList<>();
+    private ArrayList<SceneObject> _sort(ArrayList<SceneObject> iArray){
+        ArrayList<SceneObject> oArray = new ArrayList<>();
+        ArrayList<SceneObject> tempArray = new ArrayList<>();
 
         iArray.forEach(uuid -> {
             tempArray.add(objectCache.getObjects().get(uuid));
@@ -103,128 +97,87 @@ public class Canvas implements Serializable {
 
         tempArray.forEach(element -> {
             oArray.add(element);
-            oArray.addAll(_sort(element.getChildren()));
+            if(element instanceof Groupable)
+                oArray.addAll(_sort(((Groupable) element).getChildren())); //TODO may exception here
         });
 
         return oArray;
     }
 
-    public void applyBoneTransform(Bone bone, Double additionalAngle){ //TODO also for layers
-        FPoint rotatedVector;
-        if(bone.isUseParentRotationAngle())
-            rotatedVector = calculateFullRotationVector(bone);
-        else
-            rotatedVector = calculateRotationVector(bone);
+//    public void applyTransform(Bone object){ //TODO also for layers
+//        applyRotation(object, object.getParentRotationAngle() + object.getRotationAngle());
+//        applyPosition(object);
+//
+//        logger.fine(String.format("Bone %s position applied!", object.getUuid()));
+//    }
 
-        FPoint childrenPosition = new FPoint(bone.getPosition().x + rotatedVector.x, bone.getPosition().y + rotatedVector.y);
+//    public void applyTransform(TransformObject object){
+//        try {
+//            object.applyTransformation();
+//        }catch (ExecutionControl.NotImplementedException ex){
+//            logger.warning(ex.getMessage());
+//        }
+//    }
 
-        applyBoneRotation(bone, additionalAngle);
+//    public void applyPosition(Bone object){
+//        FPoint rotatedVector;
+//        rotatedVector = calculateFullRotationVector(object);
+//
+//        FPoint childrenPosition;
+//        if(!object.isChildSetAtEnd())
+//            childrenPosition = new FPoint(object.getPosition().x + rotatedVector.x, object.getPosition().y + rotatedVector.y);
+//        else
+//            childrenPosition = new FPoint(object.getPosition().x, object.getPosition().y);
+//
+//        object.getChildren().forEach(uuid -> {
+//            Layer l = objectCache.getObjects().get(uuid);
+//            if(l.getClass().equals(Bone.class)){
+//                Bone b = (Bone) l;
+//                b.setPosition(new Point((int)Math.round(childrenPosition.x), (int)Math.round(childrenPosition.y)));
+//
+//                applyPosition(b);
+//            }
+//        });
+//    }
 
-        bone.getChildren().forEach(uuid -> {
-            Layer l = objectCache.getObjects().get(uuid);
-            if(l.getClass().equals(Bone.class)){
-                Bone b = (Bone) l;
-                b.setPosition(new Point((int)Math.round(childrenPosition.x), (int)Math.round(childrenPosition.y)));
-                b.setParentRotationAngle(additionalAngle);
-
-                Double parentAngle = additionalAngle;
-                if(!b.isUseParentRotationAngle())
-                    parentAngle = 0d;
-
-                applyBoneTransform(b, parentAngle + b.getRotationAngle());
-            }
-        });
-
-        logger.fine(String.format("Bone %s position applied!", bone.getUuid()));
-    }
-
-    public void applyBoneTransform(UUID uuid, Double additionalAngle){
-        Layer l = objectCache.getObjects().get(uuid);
-        if(l.getClass().equals(Bone.class)){
-            applyBoneTransform((Bone) l, additionalAngle);
-        }
-    }
+//    public void applyRotation(Bone object, Double additionalAngle){
+//        applyBoneRotation(object, additionalAngle);
+//
+//        object.getChildren().forEach(uuid -> {
+//            Layer l = objectCache.getObjects().get(uuid);
+//            if(l.getClass().equals(Bone.class)){
+//                Bone b = (Bone) l;
+//                b.setParentRotationAngle(additionalAngle);
+//
+//                Double parentAngle = additionalAngle;
+//
+//                applyRotation(b, parentAngle + b.getRotationAngle());
+//            }
+//        });
+//    }
 
     //TODO maybe, in future, if i have time, make transformBitmap adaptation to rotation of the image
-    public void applyBoneRotation(Bone bone, Double angle){
-        bone.setTransformBitmap(new BufferedImage(bone.getBaseBitmap().getWidth(), bone.getBaseBitmap().getHeight(), BufferedImage.TYPE_INT_ARGB));
-        Graphics2D g2d = bone.getTransformBitmap().createGraphics();
-        angle *= -1;
-        g2d.rotate(angle, bone.getRootVectorOrigin().x, bone.getRootVectorOrigin().y);
-        g2d.drawImage(bone.getBaseBitmap(), null, 0, 0);
-        g2d.dispose();
+//    public void applyBoneRotation(Bone bone, Double angle){
+//        bone.setResultBitmap(new BufferedImage(bone.getSourceBitmap().getWidth(), bone.getSourceBitmap().getHeight(), BufferedImage.TYPE_INT_ARGB));
+//        Graphics2D g2d = bone.getResultBitmap().createGraphics();
+//        angle *= -1;
+//        g2d.rotate(angle, bone.getRootVectorOrigin().x, bone.getRootVectorOrigin().y);
+//        g2d.drawImage(bone.getSourceBitmap(), null, 0, 0);
+//        g2d.dispose();
+//
+//        logger.fine(String.format("Bone %s rotated to %f angle!", bone.getUuid().toString(), angle));
+//    }
 
-        logger.fine(String.format("Bone %s rotated to %f angle!", bone.getUuid().toString(), angle));
-    }
 
-    /**
-     * get angle between direction and rootDirectionPosition vectors, as it began in (0, 0)
-     * @return double
-     */
-    public double calculateRotationAngleFor(Bone bone, FPoint directionVector){
-        FPoint normalizedRootDirectionVector = normalizeSourceVector(bone);
-
-        double side = (directionVector.x) * (normalizedRootDirectionVector.y) - (directionVector.y) * (normalizedRootDirectionVector.x);
-
-        side = side <= 0 ? 1 : -1;
-
-        double cos = (directionVector.x * normalizedRootDirectionVector.x + directionVector.y * normalizedRootDirectionVector.y) /
-                (Math.sqrt(Math.pow(directionVector.x, 2) + Math.pow(directionVector.y, 2)) * Math.sqrt(Math.pow(normalizedRootDirectionVector.x, 2) + Math.pow(normalizedRootDirectionVector.y, 2)));
-        cos = Math.abs(cos) > 1d ? 1d : cos;
-
-        double resultAngle =  Math.acos(cos) * side;
-        if(Double.isNaN(resultAngle))
-            resultAngle = 0d;
-
-        bone.setRotationAngle(resultAngle);
-
-        return resultAngle;
-    }
-
-    /**
-     * Normalize rootDirection vector. Move it to (0; 0) coordinates.
-     * @return FPoint normalized vector
-     */
-    public FPoint normalizeSourceVector(Bone bone){
-        return new FPoint(bone.getRootVectorDirection().x - bone.getRootVectorOrigin().x, (bone.getRootVectorDirection().y - bone.getRootVectorOrigin().y) * -1);
-    }
-
-    public FPoint calculateRotationVector(Bone bone){
-        return calculateRotationVectorForAngle(normalizeSourceVector(bone), bone.getRotationAngle());
-    }
-
-    /**
-     * New vector, result of rotation rootDirection vector. Returns vector that start from (0; 0) coordinates.
-     * @return FPoint vector
-     */
-    public FPoint calculateParentRotationVector(Bone bone){
-        return calculateRotationVectorForAngle(normalizeSourceVector(bone), bone.getParentRotationAngle());
-    }
-
-    public FPoint calculateFullRotationVector(Bone bone){
-        return calculateRotationVectorForAngle(normalizeSourceVector(bone), bone.getRotationAngle() + bone.getParentRotationAngle());
-    }
-
-    /**
-     * Calculate new vector like if zeroVector (begins in (0, 0)) would be rotated to some angle
-     * @param zeroVector vector to rotate (source in (0,0))
-     * @param angle angle to rotate
-     * @return FPoint
-     */
-    public FPoint calculateRotationVectorForAngle(FPoint zeroVector, Double angle){
-        FPoint rotatedVector = new FPoint(zeroVector.x * Math.cos(angle) - zeroVector.y * Math.sin(angle),
-                zeroVector.x * Math.sin(angle) + zeroVector.y * Math.cos(angle));
-
-        rotatedVector.y *= -1;
-
-        return rotatedVector;
-    }
 
     public void updateObjects(){
-        getLayersHierarchy().forEach(uuid -> {
-            Layer object = getObject(uuid);
-            if(object.getClass().equals(Bone.class))
-                applyBoneTransform((Bone) object, ((Bone) object).getRotationAngle() + ((Bone) object).getParentRotationAngle());
+        getLayersHierarchy().forEach(object -> {
+            if(object instanceof TransformObject)
+                try {
+                    ((TransformObject) object).applyTransformation();
+                }catch (ExecutionControl.NotImplementedException ex){
+                    logger.warning(ex.getMessage());
+                }
         });
     }
 }

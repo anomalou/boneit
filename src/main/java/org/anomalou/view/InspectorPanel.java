@@ -3,7 +3,7 @@ package org.anomalou.view;
 import org.anomalou.annotation.Editable;
 import org.anomalou.annotation.EditorType;
 import org.anomalou.controller.CanvasController;
-import org.anomalou.model.Layer;
+import org.anomalou.model.scene.Layer;
 
 import javax.swing.*;
 import java.awt.*;

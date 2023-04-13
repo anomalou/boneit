@@ -1,6 +1,8 @@
 package org.anomalou.model;
 
 import lombok.Getter;
+import org.anomalou.model.scene.Layer;
+import org.anomalou.model.scene.SceneObject;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -11,20 +13,20 @@ public class ObjectCache implements Serializable {
     private final Logger logger = Logger.getLogger(ObjectCache.class.getName());
 
     @Getter
-    private final HashMap<UUID, Layer> objects;
+    private final HashMap<UUID, SceneObject> objects;
 
     public ObjectCache(){
         objects = new HashMap<>();
     }
 
-    public void registerObject(UUID uuid, Layer layer){
+    public void registerObject(UUID uuid, SceneObject object){
         if(objects.containsKey(uuid)){
             logger.warning(String.format("Object with uuid %s already registered!", uuid.toString()));
             return;
         }
 
-        objects.put(uuid, layer);
-        logger.fine(String.format("Object with uuid %s registered! [%s|%s]", uuid.toString(), uuid.toString(), layer.getName()));
+        objects.put(uuid, object);
+        logger.fine(String.format("Object with uuid %s registered! [%s|%s]", uuid.toString(), uuid.toString(), object.getName()));
     }
 
     public void unregister(UUID uuid){
