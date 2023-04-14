@@ -58,7 +58,7 @@ public class Layer extends TransformObject { //a base class for layers or bones
 
     @Override
     public boolean isInBounds(Point point) {
-        return isInRectangle(point, new Rectangle(position.x - rootVectorOrigin.x, position.y - rootVectorOrigin.y, sourceBitmap.getWidth(), sourceBitmap.getHeight()));
+        return isInRectangle(point, new Rectangle(getGlobalPosition().x - rootVectorOrigin.x, getGlobalPosition().y - rootVectorOrigin.y, sourceBitmap.getWidth(), sourceBitmap.getHeight()));
     }
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES

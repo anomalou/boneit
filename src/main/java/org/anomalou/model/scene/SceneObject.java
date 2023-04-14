@@ -39,19 +39,27 @@ public class SceneObject implements Serializable, Comparable<SceneObject> {
     /**
      * Offset on canvas. Bones will ignore this parameter.
      */
-    @Editable(name = "Position", editorType = EditorType.VECTOR_EDITOR)
+    @Editable(name = "Local position", editorType = EditorType.VECTOR_EDITOR)
     @Getter
     @Setter
-    protected Point position;
+    protected Point localPosition;
+    @Getter
+    @Setter
+    protected Point parentPosition;
 
     public SceneObject(){
         name = "Object";
         priority = 0;
-        position = new Point();
+        localPosition = new Point();
+        parentPosition = new Point();
     }
 
     public Rectangle getBounds(){
         return new Rectangle();
+    }
+
+    public Point getGlobalPosition(){
+        return new Point(parentPosition.x + localPosition.x, parentPosition.y + localPosition.y);
     }
 
     @Override

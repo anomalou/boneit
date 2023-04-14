@@ -9,20 +9,22 @@ import org.anomalou.model.FPoint;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class Bone extends TransformObject implements Groupable<SceneObject>{
     /**
      * Visibility of the bone rig.
      */
-    @Editable(name = "Set bone visibility", editorType = EditorType.CHECK_BOX)
+    @Editable(name = "Set bone always visible", editorType = EditorType.CHECK_BOX)
     @Getter
     @Setter
     private boolean isBoneVisible;
+    /**
+     * Set this bone to end of a parents.
+     */
     @Editable(name = "Set child at end", editorType = EditorType.CHECK_BOX)
     @Getter
     @Setter
-    private boolean childSetAtEnd;
+    private boolean setAtEnd;
     private SceneObject parent;
     /**
      * Children of the layer, follows for its parent
@@ -38,26 +40,27 @@ public class Bone extends TransformObject implements Groupable<SceneObject>{
         rotationAngle = 0d;
         parentRotationAngle = 0d;
         isBoneVisible = false;
-        childSetAtEnd = false;
+        setAtEnd = true;
         parent = null;
         children = new ArrayList<>();
     }
 
     @Override
     public void applyTransformation(){
-        FPoint rotatedVector;
-        rotatedVector = calculateFullRotationVector();
+        FPoint rotatedVector = calculateFullRotationVector(); //TODO calculate also vector localPosition with directionVector
 
-        FPoint childrenPosition;
-        if(!isChildSetAtEnd())
-            childrenPosition = new FPoint(getPosition().x + rotatedVector.x, getPosition().y + rotatedVector.y);
-        else
-            childrenPosition = new FPoint(getPosition().x, getPosition().y);
+        FPoint childrenEndPosition = new FPoint(getGlobalPosition().x + rotatedVector.x, getGlobalPosition().y + rotatedVector.y);
 
         getChildren().forEach(object -> {
             if(object instanceof TransformObject){
-                object.setPosition(new Point((int)Math.round(childrenPosition.x), (int)Math.round(childrenPosition.y)));
-                ((TransformObject) object).setParentRotationAngle(parentRotationAngle + rotationAngle);
+                object.setParentPosition(new Point(getGlobalPosition().x, getGlobalPosition().y));
+
+                if(object instanceof Bone)
+                    if(((Bone) object).isSetAtEnd())
+                        object.setParentPosition(new Point((int)Math.round(childrenEndPosition.x), (int)Math.round(childrenEndPosition.y)));
+
+                ((TransformObject) object).setParentRotationAngle(getFullRotationAngle());
+
                 try{
                     ((TransformObject) object).applyTransformation();
                 }catch (ExecutionControl.NotImplementedException ex){

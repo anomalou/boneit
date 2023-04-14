@@ -47,6 +47,10 @@ public class TransformObject extends SceneObject{
         parentRotationAngle = 0d;
     }
 
+    public Double getFullRotationAngle(){
+        return rotationAngle + parentRotationAngle;
+    }
+
     public void applyTransformation() throws ExecutionControl.NotImplementedException {
         throw new ExecutionControl.NotImplementedException("Implement this!");
     }
@@ -120,7 +124,7 @@ public class TransformObject extends SceneObject{
      * @return boolean
      */
     public boolean isInBounds(Point point){
-        return isInRectangle(point, new Rectangle(getPosition().x, getPosition().y, rootVectorDirection.x, rootVectorDirection.x));
+        return isInRectangle(point, new Rectangle(getGlobalPosition().x, getGlobalPosition().y, rootVectorDirection.x, rootVectorDirection.x));
     }
 
     protected boolean isInRectangle(Point point, Rectangle rectangle){

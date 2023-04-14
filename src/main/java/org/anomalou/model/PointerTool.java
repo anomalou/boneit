@@ -53,7 +53,7 @@ public class PointerTool implements Tool{
     public void drag(Graphics g, Point position, int button) {
         if(isRotateMode){ //TODO rewrite
             TransformObject object = (TransformObject) canvas.getSelection();
-            Point objectPos = object.getPosition();
+            Point objectPos = new Point(object.getGlobalPosition().x, object.getGlobalPosition().y);
             FPoint rotation = new FPoint(position.x, position.y);
             rotation.x -= objectPos.x;
             rotation.y -= objectPos.y;
@@ -68,7 +68,7 @@ public class PointerTool implements Tool{
         }
         if(isMoveMode){
             //TODO need fix
-            Point dragDirection = new Point(canvas.getSelection().getPosition().x + position.x - oldPosition.x, canvas.getSelection().getPosition().y + position.y - oldPosition.y);
+            Point dragDirection = new Point(canvas.getSelection().getLocalPosition().x + position.x - oldPosition.x, canvas.getSelection().getLocalPosition().y + position.y - oldPosition.y);
             oldPosition = position;
             if(canvas.getSelection() instanceof Groupable<?>){
                 if(!((Groupable<SceneObject>) canvas.getSelection()).isRoot()) //TODO <<< here convert child position as parent was main coordinate axis

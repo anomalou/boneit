@@ -154,7 +154,7 @@ public class CanvasPanel extends JPanel {
 
     private void drawSelectedLayer(Graphics g, Layer object){
         g.setColor(Color.black);
-        g.drawRect(scale * (offset.x + object.getPosition().x - object.getRootVectorOrigin().x), scale * (offset.y + object.getPosition().y - object.getRootVectorOrigin().y),
+        g.drawRect(scale * (offset.x + object.getGlobalPosition().x - object.getRootVectorOrigin().x), scale * (offset.y + object.getGlobalPosition().y - object.getRootVectorOrigin().y),
                 scale * object.getSourceBitmap().getWidth(), scale * object.getSourceBitmap().getHeight());
     }
 
@@ -178,24 +178,27 @@ public class CanvasPanel extends JPanel {
 
         g.setColor(Color.green);
 
+        //TODO add more adaptivity. You too dump to remember all spots like this
+        Point position = new Point(transformObject.getGlobalPosition().x, transformObject.getGlobalPosition().y);
+
         //Cross in the rootBasePosition
-        g.drawLine(scale * (offset.x + transformObject.getPosition().x), scale * (offset.y + transformObject.getPosition().y - 1), scale * (offset.x + transformObject.getPosition().x), scale * (offset.y + transformObject.getPosition().y + 1));
-        g.drawLine(scale * (offset.x + transformObject.getPosition().x - 1), scale * (offset.y + transformObject.getPosition().y), scale * (offset.x + transformObject.getPosition().x + 1), scale * (offset.y + transformObject.getPosition().y));
+        g.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y - 1), scale * (offset.x + position.x), scale * (offset.y + position.y + 1));
+        g.drawLine(scale * (offset.x + position.x - 1), scale * (offset.y + position.y), scale * (offset.x + position.x + 1), scale * (offset.y + position.y));
 
         //Vectors
         //rootDirection
         FPoint parentRotationVector = transformObject.calculateParentRotationVector();
-        g.drawLine(scale * (offset.x + transformObject.getPosition().x), scale * (offset.y + transformObject.getPosition().y),
-                (int) Math.round(scale * (offset.x + transformObject.getPosition().x + parentRotationVector.x)),
-                (int) Math.round(scale * (offset.y + transformObject.getPosition().y + parentRotationVector.y)));
+        g.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y),
+                (int) Math.round(scale * (offset.x + position.x + parentRotationVector.x)),
+                (int) Math.round(scale * (offset.y + position.y + parentRotationVector.y)));
 
         //rotation vector
         g.setColor(Color.cyan);
 
         FPoint rotationVector = transformObject.calculateFullRotationVector();
-        g.drawLine(scale * (offset.x + transformObject.getPosition().x), scale * (offset.y + transformObject.getPosition().y),
-                (int) Math.round(scale * (offset.x + transformObject.getPosition().x + rotationVector.x)),
-                (int) Math.round(scale * (offset.y + transformObject.getPosition().y + rotationVector.y)));
+        g.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y),
+                (int) Math.round(scale * (offset.x + position.x + rotationVector.x)),
+                (int) Math.round(scale * (offset.y + position.y + rotationVector.y)));
 
     }
 
@@ -333,6 +336,6 @@ public class CanvasPanel extends JPanel {
 
 
     private void drawLayer(Layer layer, Graphics g){
-        g.drawImage(layer.getResultBitmap(), scale * (offset.x + layer.getPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + layer.getPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
+        g.drawImage(layer.getResultBitmap(), scale * (offset.x + layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
     }
 }

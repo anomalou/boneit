@@ -36,19 +36,19 @@ public class Main {
         Layer layer = new Layer();
         application.getCanvasController().registerObject(layer);
         layer.setSourceBitmap(img);
-        layer.setPosition(new Point(0, 0));
         layer.setVisible(true);
 //        application.getCanvasController().addObject(layer);
 
         Layer root_stem = new Layer();
         application.getCanvasController().registerObject(root_stem);
         root_stem.setSourceBitmap(stem_img);
-        root_stem.setPosition(new Point(0, 0));
+        root_stem.setRootVectorOrigin(new Point(15, 15));
+        root_stem.setRootVectorDirection(new Point(15,30));
+        root_stem.setRotationAngle(Math.PI / 2);
         root_stem.setVisible(true);
 
         Bone root = new Bone();
         application.getCanvasController().registerObject(root);
-        root.setPosition(new Point(0 ,0));
         root.setRootVectorOrigin(new Point(0, 0));
         root.setRootVectorDirection(new Point(15,0));
         root.addObject(root_stem);
@@ -60,17 +60,18 @@ public class Main {
 
             application.getCanvasController().registerObject(newBone);
             prev.addObject(newBone);
-            newBone.setPosition(new Point(0 ,0));
             newBone.setRootVectorOrigin(new Point(0, 0));
             newBone.setRootVectorDirection(new Point(15,0));
             newBone.setRotationAngle(i * 0.1d);
+
             Layer stem = new Layer();
             application.getCanvasController().registerObject(stem);
             stem.setSourceBitmap(stem_img);
-            stem.setPosition(new Point(0, 0));
             stem.setRootVectorOrigin(new Point(15, 15));
             stem.setRootVectorDirection(new Point(15,30));
+            stem.setRotationAngle(Math.PI / 2);
             stem.setVisible(true);
+
             newBone.addObject(stem);
             prev = newBone;
         }
