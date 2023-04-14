@@ -1,9 +1,12 @@
 package org.anomalou.view;
 
+import jdk.jshell.spi.ExecutionControl;
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.model.scene.Bone;
+import org.anomalou.model.scene.Groupable;
 import org.anomalou.model.scene.Layer;
+import org.anomalou.model.scene.SceneObject;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -55,20 +58,20 @@ public class ObjectTreePanel extends JPanel {
         treeModel.setRoot(createNode("Scene", canvasController.getLayersHierarchy()));
     }
 
-    private DefaultMutableTreeNode createNode(Object nodeObject, ArrayList<UUID> objects){
+    private DefaultMutableTreeNode createNode(Object nodeObject, ArrayList<SceneObject> objects){
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(nodeObject);
 
-        ArrayList<Layer> sortedObject = new ArrayList<>();
-
-        objects.forEach(uuid -> {
-            Layer object = canvasController.getObject(uuid);
-            sortedObject.add(object);
-        });
+        ArrayList<SceneObject> sortedObject = new ArrayList<>(objects);
 
         sortedObject.sort(Collections.reverseOrder());
 
         sortedObject.forEach(object -> {
-            node.add(createNode(object, object.getChildren()));
+            if(object instanceof Groupable<?>)
+                try{
+                    node.add(createNode(object, ((Groupable<SceneObject>) object).getChildren()));
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
         });
 
         return node;
@@ -134,9 +137,9 @@ public class ObjectTreePanel extends JPanel {
         newLayerItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Layer selection = canvasController.getSelection();
-                Layer newLayer = new Layer();
-                canvasController.registerObject(selection, newLayer);
+                SceneObject selection = canvasController.getSelection();
+                SceneObject newLayer = new Layer();
+                canvasController.registerObject(newLayer);
                 appendSelection(selection, newLayer);
             }
         });
@@ -145,9 +148,9 @@ public class ObjectTreePanel extends JPanel {
         newBoneItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Layer selection = canvasController.getSelection();
-                Layer newBone = new Bone();
-                canvasController.registerObject(selection, newBone);
+                SceneObject selection = canvasController.getSelection();
+                SceneObject newBone = new Bone();
+                canvasController.registerObject(newBone);
                 appendSelection(selection, newBone);
             }
         });

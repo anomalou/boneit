@@ -4,6 +4,7 @@ import org.anomalou.annotation.Editable;
 import org.anomalou.annotation.EditorType;
 import org.anomalou.controller.CanvasController;
 import org.anomalou.model.scene.Layer;
+import org.anomalou.model.scene.SceneObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +49,7 @@ public class InspectorPanel extends JPanel {
     private void buildFieldsEditor(){
         container.removeAll();
 
-        Layer selected = canvasController.getSelection();
+        SceneObject selected = canvasController.getSelection();
 
         Field[] fields = unpackFields(selected.getClass());
 

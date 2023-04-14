@@ -45,7 +45,6 @@ public class Main {
         root.setPosition(new Point(30 ,80));
         root.setRootVectorOrigin(new Point(15, 15));
         root.setRootVectorDirection(new Point(15,30));
-        canvasController.applyBoneRotation(root, root.getRotationAngle());
 
         Bone prev = root;
         for(int i = 0; i < 1000; i++){

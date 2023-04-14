@@ -32,7 +32,7 @@ public class CanvasController extends Controller{
         canvas.registerObject(object);
     }
 
-    public void unregisterObject(Layer object){
+    public void unregisterObject(SceneObject object){
         canvas.unregisterObject(object);
     }
 
@@ -47,11 +47,6 @@ public class CanvasController extends Controller{
         }catch (ExecutionControl.NotImplementedException ex){
             logger.warning(ex.getMessage());
         }
-    }
-
-    //TODO work!
-    public void applyBoneRotation(TransformObject object, Double angle){
-        object.applyBoneRotation(bone, angle);
     }
 
     public double calculateRotationAngle(TransformObject object, FPoint direction){
