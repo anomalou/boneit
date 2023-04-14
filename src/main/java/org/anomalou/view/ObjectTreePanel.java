@@ -120,8 +120,8 @@ public class ObjectTreePanel extends JPanel {
                     return;
 
                 Object object = node.getUserObject();
-                if(object instanceof Layer){
-                    canvasController.setSelection(((Layer) object).getUuid());
+                if(object instanceof SceneObject){
+                    canvasController.setSelection(((SceneObject) object).getUuid());
                     uiManager.updateInspector();
                 }
 
@@ -166,6 +166,7 @@ public class ObjectTreePanel extends JPanel {
                 treeModel.removeNodeFromParent(findNode((DefaultMutableTreeNode) treeModel.getRoot(), canvasController.getSelection()));
 
                 canvasController.unregisterObject(canvasController.getSelection());
+
 
                 getParent().repaint();
             }

@@ -9,4 +9,7 @@ public interface Groupable<T extends SceneObject> extends Serializable {
     void removeObject(T object);
     void setParent(T object);
     ArrayList<T> getChildren();
+    T getParent();
+    boolean isLeaf();
+    boolean isRoot();
 }

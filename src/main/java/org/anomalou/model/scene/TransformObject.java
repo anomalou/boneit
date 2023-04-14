@@ -113,4 +113,21 @@ public class TransformObject extends SceneObject{
 
         return rotatedVector;
     }
+
+    /**
+     * Check if point is hit in bound of object (object, bone etc)
+     * @param point point to check
+     * @return boolean
+     */
+    public boolean isInBounds(Point point){
+        return isInRectangle(point, new Rectangle(getPosition().x, getPosition().y, rootVectorDirection.x, rootVectorDirection.x));
+    }
+
+    protected boolean isInRectangle(Point point, Rectangle rectangle){
+        if(point.x >= rectangle.x && point.x < (rectangle.x + rectangle.width)){
+            return point.y >= rectangle.y && point.y < (rectangle.y + rectangle.height);
+        }
+
+        return false;
+    }
 }

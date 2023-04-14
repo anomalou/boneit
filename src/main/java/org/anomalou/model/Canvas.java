@@ -2,12 +2,9 @@ package org.anomalou.model;
 
 import jdk.jshell.spi.ExecutionControl;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.anomalou.model.scene.*;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +21,7 @@ public class Canvas implements Serializable {
     @Setter
     private int height;
     @Getter
-    private final ArrayList<SceneObject> layersHierarchy;
+    private final ArrayList<SceneObject> sceneObjects;
     /**
      * Cache that stores every object on scene. This allows get needed object faster.
      */
@@ -40,7 +37,7 @@ public class Canvas implements Serializable {
     public Canvas(int width, int height){
         this.width = width;
         this.height = height;
-        layersHierarchy = new ArrayList<>();
+        sceneObjects = new ArrayList<>();
         objectCache = new ObjectCache();
         selection = null;
 
@@ -69,9 +66,21 @@ public class Canvas implements Serializable {
     public void unregisterObject(SceneObject object){
         try{
             getObjectCache().unregister(object.getUuid());
+            if(object instanceof Groupable<?>){
+                if(!((Groupable<SceneObject>) object).isRoot()){
+                    SceneObject parent = ((Groupable<?>) object).getParent();
+                    if(parent instanceof Groupable<?>){
+//                        ((Groupable<?>) parent).removeObject(object); //TODO need work
+                    }
+                }
+            }
         }catch (NullPointerException ex){
             logger.warning(ex.getMessage());
         }
+    }
+
+    public void addObject(SceneObject object){
+        sceneObjects.add(object);
     }
 
     public SceneObject getObject(UUID uuid){
@@ -83,15 +92,11 @@ public class Canvas implements Serializable {
      * @return ArrayList
      */
     public ArrayList<SceneObject> sort(){
-        return _sort(layersHierarchy);
+        return _sort(sceneObjects);
     }
     private ArrayList<SceneObject> _sort(ArrayList<SceneObject> iArray){
         ArrayList<SceneObject> oArray = new ArrayList<>();
-        ArrayList<SceneObject> tempArray = new ArrayList<>();
-
-        iArray.forEach(uuid -> {
-            tempArray.add(objectCache.getObjects().get(uuid));
-        });
+        ArrayList<SceneObject> tempArray = new ArrayList<>(iArray);
 
         Collections.sort(tempArray);
 
@@ -171,7 +176,7 @@ public class Canvas implements Serializable {
 
 
     public void updateObjects(){
-        getLayersHierarchy().forEach(object -> {
+        getSceneObjects().forEach(object -> {
             if(object instanceof TransformObject)
                 try {
                     ((TransformObject) object).applyTransformation();

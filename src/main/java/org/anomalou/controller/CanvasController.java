@@ -89,20 +89,10 @@ public class CanvasController extends Controller{
 
         if(!layer.getClass().equals(Bone.class))
             return;
+    }
 
-//        Bone bone = (Bone) layer;
-//
-//        if(bone.getResultBitmap().getWidth() == 1 || bone.getResultBitmap().getHeight() == 1)
-//            bone.setResultBitmap(new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
-//        else{
-//            Image tmp = bone.getResultBitmap().getSubimage(0, 0, bone.getResultBitmap().getWidth(), bone.getResultBitmap().getHeight());
-//            BufferedImage nBaseBitmap = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-//
-//            Graphics2D g2d = nBaseBitmap.createGraphics();
-//            g2d.drawImage(tmp, 0, 0, null);
-//            g2d.dispose();
-//            bone.setResultBitmap(nBaseBitmap);
-//        }
+    public void addObject(SceneObject object){
+        canvas.addObject(object);
     }
 
     public SceneObject getObject(UUID uuid){
@@ -116,7 +106,7 @@ public class CanvasController extends Controller{
     }
 
     public ArrayList<SceneObject> getLayersHierarchy(){
-        return canvas.getLayersHierarchy();
+        return canvas.getSceneObjects();
     }
 
     public void updateObjects(){

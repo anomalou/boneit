@@ -103,6 +103,21 @@ public class Bone extends TransformObject implements Groupable<SceneObject>{
         return new ArrayList<>(children);
     }
 
+    @Override
+    public SceneObject getParent() {
+        return parent;
+    }
+
+    @Override
+    public boolean isLeaf() {
+        return children.isEmpty();
+    }
+
+    @Override
+    public boolean isRoot() {
+        return parent == null;
+    }
+
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES
 
     @Override

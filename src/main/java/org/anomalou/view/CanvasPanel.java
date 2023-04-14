@@ -3,10 +3,8 @@ package org.anomalou.view;
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.controller.ToolPanelController;
-import org.anomalou.model.scene.Bone;
+import org.anomalou.model.scene.*;
 import org.anomalou.model.FPoint;
-import org.anomalou.model.scene.Layer;
-import org.anomalou.model.scene.SceneObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 public class CanvasPanel extends JPanel {
     private final UIManager uiManager;
@@ -95,14 +94,13 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawScene(Graphics g){
-        ArrayList<Layer> layers = canvasController.sort();
+        ArrayList<SceneObject> objects = canvasController.sort();
 
-        layers.forEach(layer -> {
-            if(layer.isVisible()){
-                if(layer.getClass().equals(Bone.class))
-                    drawBone((Bone) layer, g);
-                else
-                    drawLayer(layer, g);
+        objects.forEach(object -> {
+            if(object instanceof Layer){
+                if(((Layer) object).isVisible()){
+                    drawLayer((Layer) object, g);
+                }
             }
         });
     }
@@ -146,53 +144,58 @@ public class CanvasPanel extends JPanel {
 
         g.setColor(Color.black);
 
-        if(object.getClass().equals(Bone.class)){
-            drawSelectedSkeleton(g, (Bone) object);
-        }else{
-            drawSelectedLayer(g, object);
+        if(object instanceof Layer){
+            drawSelectedLayer(g, (Layer) object);
+        }
+        if(object instanceof TransformObject){
+            drawSelectedTransformObject(g, (TransformObject) object);
         }
     }
 
-    private void drawSelectedLayer(Graphics g, Layer layer){
-        g.drawRect(scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y),
-                scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight());
+    private void drawSelectedLayer(Graphics g, Layer object){
+        g.setColor(Color.black);
+        g.drawRect(scale * (offset.x + object.getPosition().x - object.getRootVectorOrigin().x), scale * (offset.y + object.getPosition().y - object.getRootVectorOrigin().y),
+                scale * object.getSourceBitmap().getWidth(), scale * object.getSourceBitmap().getHeight());
     }
 
-    private void drawSelectedSkeleton(Graphics g, Bone bone){
-        Point bonePosition = new Point(offset.x + bone.getPosition().x - bone.getRootVectorOrigin().x, offset.y + bone.getPosition().y - bone.getRootVectorOrigin().y);
-        g.drawRect(scale * (bonePosition.x),
-                scale * (bonePosition.y),
-                scale * (bone.getSourceBitmap().getWidth()), scale * (bone.getSourceBitmap().getHeight()));
+    private void drawSelectedSkeleton(Graphics g, SceneObject object){
+        Bone bone = (Bone) object;
+//        Point bonePosition = new Point(offset.x + bone.getPosition().x - bone.getRootVectorOrigin().x, offset.y + bone.getPosition().y - bone.getRootVectorOrigin().y);
+//        g.drawRect(scale * (bonePosition.x),
+//                scale * (bonePosition.y),
+//                scale * (bone.getSourceBitmap().getWidth()), scale * (bone.getSourceBitmap().getHeight()));
 
-        drawSelectedBone(g, bone);
+        drawSelectedTransformObject(g, bone);
     }
 
-    private void drawSelectedBone(Graphics g, Bone bone){
-        bone.getChildren().forEach(uuid -> {
-            if(canvasController.getObject(uuid).getClass().equals(Bone.class))
-                drawSelectedBone(g, (Bone) canvasController.getObject(uuid));
-        });
+    private void drawSelectedTransformObject(Graphics g, TransformObject transformObject){
+        if(transformObject instanceof Groupable<?>){
+            ((Groupable<SceneObject>) transformObject).getChildren().forEach(object -> {
+                if(object instanceof Bone)
+                    drawSelectedTransformObject(g, (Bone) object);
+            });
+        }
 
         g.setColor(Color.green);
 
         //Cross in the rootBasePosition
-        g.drawLine(scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y - 1), scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y + 1));
-        g.drawLine(scale * (offset.x + bone.getPosition().x - 1), scale * (offset.y + bone.getPosition().y), scale * (offset.x + bone.getPosition().x + 1), scale * (offset.y + bone.getPosition().y));
+        g.drawLine(scale * (offset.x + transformObject.getPosition().x), scale * (offset.y + transformObject.getPosition().y - 1), scale * (offset.x + transformObject.getPosition().x), scale * (offset.y + transformObject.getPosition().y + 1));
+        g.drawLine(scale * (offset.x + transformObject.getPosition().x - 1), scale * (offset.y + transformObject.getPosition().y), scale * (offset.x + transformObject.getPosition().x + 1), scale * (offset.y + transformObject.getPosition().y));
 
         //Vectors
         //rootDirection
-        FPoint parentRotationVector = canvasController.calculateParentRotationVector(bone);
-        g.drawLine(scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y),
-                (int) Math.round(scale * (offset.x + bone.getPosition().x + parentRotationVector.x)),
-                (int) Math.round(scale * (offset.y + bone.getPosition().y + parentRotationVector.y)));
+        FPoint parentRotationVector = transformObject.calculateParentRotationVector();
+        g.drawLine(scale * (offset.x + transformObject.getPosition().x), scale * (offset.y + transformObject.getPosition().y),
+                (int) Math.round(scale * (offset.x + transformObject.getPosition().x + parentRotationVector.x)),
+                (int) Math.round(scale * (offset.y + transformObject.getPosition().y + parentRotationVector.y)));
 
         //rotation vector
         g.setColor(Color.cyan);
 
-        FPoint rotationVector = canvasController.calculateFullRotationVector(bone);
-        g.drawLine(scale * (offset.x + bone.getPosition().x), scale * (offset.y + bone.getPosition().y),
-                (int) Math.round(scale * (offset.x + bone.getPosition().x + rotationVector.x)),
-                (int) Math.round(scale * (offset.y + bone.getPosition().y + rotationVector.y)));
+        FPoint rotationVector = transformObject.calculateFullRotationVector();
+        g.drawLine(scale * (offset.x + transformObject.getPosition().x), scale * (offset.y + transformObject.getPosition().y),
+                (int) Math.round(scale * (offset.x + transformObject.getPosition().x + rotationVector.x)),
+                (int) Math.round(scale * (offset.y + transformObject.getPosition().y + rotationVector.y)));
 
     }
 
@@ -330,10 +333,6 @@ public class CanvasPanel extends JPanel {
 
 
     private void drawLayer(Layer layer, Graphics g){
-        g.drawImage(layer.getSourceBitmap(), scale * (offset.x + layer.getPosition().x), scale * (offset.y + layer.getPosition().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
-    }
-
-    private void drawBone(Bone bone, Graphics g){
-        g.drawImage(bone.getResultBitmap(), scale * (offset.x + bone.getPosition().x - bone.getRootVectorOrigin().x), scale * (offset.y + bone.getPosition().y - bone.getRootVectorOrigin().y), scale * bone.getResultBitmap().getWidth(), scale * bone.getResultBitmap().getHeight(), null);
+        g.drawImage(layer.getResultBitmap(), scale * (offset.x + layer.getPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + layer.getPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
     }
 }

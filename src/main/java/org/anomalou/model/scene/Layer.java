@@ -1,11 +1,13 @@
 package org.anomalou.model.scene;
 
+import jdk.jshell.spi.ExecutionControl;
 import lombok.Getter;
 import lombok.Setter;
 import org.anomalou.annotation.Editable;
 import org.anomalou.annotation.EditorType;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -42,13 +44,22 @@ public class Layer extends TransformObject { //a base class for layers or bones
         logger.fine(String.format("Entity (%s) created!", getUuid().toString()));
     }
 
-//    public boolean isRoot(){
-//        return parent == null;
-//    }
-//
-//    public boolean isLeaf(){
-//        return children.isEmpty();
-//    }
+    @Override
+    public void applyTransformation() {
+        setResultBitmap(new BufferedImage(getSourceBitmap().getWidth(), getSourceBitmap().getHeight(), BufferedImage.TYPE_INT_ARGB));
+        Graphics2D g2d = getResultBitmap().createGraphics();
+        double angle = (rotationAngle + parentRotationAngle) * -1;
+        g2d.rotate(angle, getRootVectorOrigin().x, getRootVectorOrigin().y);
+        g2d.drawImage(getSourceBitmap(), null, 0, 0);
+        g2d.dispose();
+
+        logger.fine(String.format("Bone %s rotated to %f angle!", getUuid(), -angle));
+    }
+
+    @Override
+    public boolean isInBounds(Point point) {
+        return isInRectangle(point, new Rectangle(position.x - rootVectorOrigin.x, position.y - rootVectorOrigin.y, sourceBitmap.getWidth(), sourceBitmap.getHeight()));
+    }
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES
 

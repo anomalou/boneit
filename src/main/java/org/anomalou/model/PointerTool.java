@@ -1,7 +1,7 @@
 package org.anomalou.model;
 
-import org.anomalou.model.scene.Bone;
-import org.anomalou.model.scene.Layer;
+import jdk.jshell.spi.ExecutionControl;
+import org.anomalou.model.scene.*;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -52,26 +52,33 @@ public class PointerTool implements Tool{
     @Override
     public void drag(Graphics g, Point position, int button) {
         if(isRotateMode){ //TODO rewrite
-            Bone bone = (Bone) canvas.getSelection();
-            Point objectPos = bone.getPosition();
+            TransformObject object = (TransformObject) canvas.getSelection();
+            Point objectPos = object.getPosition();
             FPoint rotation = new FPoint(position.x, position.y);
             rotation.x -= objectPos.x;
             rotation.y -= objectPos.y;
-            rotation = canvas.calculateRotationVectorForAngle(rotation, bone.getParentRotationAngle());
-            bone.setRotationAngle(canvas.calculateRotationAngleFor(bone, rotation));
-//            canvas.applyBoneRotation(bone, bone.getRotationAngle() + bone.getParentRotationAngle());
-            canvas.applyTransform(bone);
+            rotation = object.calculateRotationVectorForAngle(rotation, object.getParentRotationAngle());
+            object.setRotationAngle(object.calculateRotationAngle(rotation));
+//            canvas.applyBoneRotation(object, object.getRotationAngle() + object.getParentRotationAngle());
+            try {
+                object.applyTransformation();
+            }catch (ExecutionControl.NotImplementedException ex){
+                ex.printStackTrace();
+            }
         }
         if(isMoveMode){
+            //TODO need fix
             Point dragDirection = new Point(canvas.getSelection().getPosition().x + position.x - oldPosition.x, canvas.getSelection().getPosition().y + position.y - oldPosition.y);
             oldPosition = position;
-            if(canvas.getSelection().getParent() != null)
-                return;
-
-            canvas.getSelection().setPosition(dragDirection);
-            if(canvas.getSelection().getClass().equals(Bone.class)){
-                    canvas.applyPosition((Bone) canvas.getSelection());
+            if(canvas.getSelection() instanceof Groupable<?>){
+                if(!((Groupable<SceneObject>) canvas.getSelection()).isRoot()) //TODO <<< here convert child position as parent was main coordinate axis
+                    return;
             }
+
+//            canvas.getSelection().setPosition(dragDirection);
+//            if(canvas.getSelection().getClass().equals(Bone.class)){
+//                    canvas.applyPosition((Bone) canvas.getSelection());
+//            }
         }
     }
 
@@ -81,43 +88,16 @@ public class PointerTool implements Tool{
      */
     private void select(Point clickPosition){
         boolean selected = false;
-        for(Layer layer : canvas.sort()){
-            if(isClickInBound(layer, clickPosition)){
-                canvas.setSelection(layer.getUuid());
-                selected = true;
+        for(SceneObject object : canvas.sort()){
+            if(object instanceof TransformObject){
+                if(((TransformObject) object).isInBounds(clickPosition)){
+                    canvas.setSelection(object.getUuid());
+                    selected = true;
+                }
             }
         }
 
         if(!selected)
             canvas.setSelection(null);
-    }
-
-    /**
-     * Check if mouse pointer is hit in bound of object (layer, bone etc)
-     * @param layer layer to check
-     * @param clickPosition mouse click position in canvas coordinates (use screenToCanvas to convert!)
-     * @return boolean
-     */
-    private boolean isClickInBound(Layer layer, Point clickPosition){
-        Point position = new Point(0, 0);
-        int width = 0;
-        int height = 0;
-
-        if(layer.getClass().equals(Bone.class)){
-            position.x = layer.getPosition().x - ((Bone) layer).getRootVectorOrigin().x;
-            position.y = layer.getPosition().y - ((Bone) layer).getRootVectorOrigin().y;
-        }else{
-            position.x = layer.getPosition().x;
-            position.y = layer.getPosition().y;
-        }
-
-        width = layer.getSourceBitmap().getWidth();
-        height = layer.getSourceBitmap().getHeight();
-
-        if(clickPosition.x >= position.x && clickPosition.x < (position.x + width)){
-            return clickPosition.y >= position.y && clickPosition.y < (position.y + height);
-        }
-
-        return false;
     }
 }
