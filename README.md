@@ -1,6 +1,6 @@
 # boneit
 Simple software for image generation. Move your image like if it has a skeleton!
-<h3>Roadmap:</h3>
+## Roadmap:
 * Working image editor
 * Working skeleton
 * Compatibility with popular image types (jpg, png and others)
