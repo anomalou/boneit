@@ -1,10 +1,9 @@
 package org.anomalou.view;
 
-import jdk.jshell.spi.ExecutionControl;
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.model.scene.Bone;
-import org.anomalou.model.scene.Groupable;
+import org.anomalou.model.scene.Group;
 import org.anomalou.model.scene.Layer;
 import org.anomalou.model.scene.SceneObject;
 
@@ -18,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.UUID;
 
 public class ObjectTreePanel extends JPanel {
     private final UIManager uiManager;
@@ -61,17 +59,23 @@ public class ObjectTreePanel extends JPanel {
     private DefaultMutableTreeNode createNode(Object nodeObject, ArrayList<SceneObject> objects){
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(nodeObject);
 
+        if(objects == null)
+            return node;
+
         ArrayList<SceneObject> sortedObject = new ArrayList<>(objects);
 
         sortedObject.sort(Collections.reverseOrder());
 
         sortedObject.forEach(object -> {
-            if(object instanceof Groupable<?>)
+            if(object instanceof Group<?>){
                 try{
-                    node.add(createNode(object, ((Groupable<SceneObject>) object).getChildren()));
+                    node.add(createNode(object, ((Group<SceneObject>) object).getChildren()));
                 }catch (Exception ex){
                     ex.printStackTrace();
                 }
+            }else{
+                node.add(createNode(object, null));
+            }
         });
 
         return node;
@@ -140,6 +144,9 @@ public class ObjectTreePanel extends JPanel {
                 SceneObject selection = canvasController.getSelection();
                 SceneObject newLayer = new Layer();
                 canvasController.registerObject(newLayer);
+                if(selection instanceof Group<?>){
+                    ((Group<SceneObject>) selection).addObject(newLayer);
+                }
                 appendSelection(selection, newLayer);
             }
         });
@@ -151,6 +158,9 @@ public class ObjectTreePanel extends JPanel {
                 SceneObject selection = canvasController.getSelection();
                 SceneObject newBone = new Bone();
                 canvasController.registerObject(newBone);
+                if(selection instanceof Group<?>){
+                    ((Group<SceneObject>) selection).addObject(newBone);
+                }
                 appendSelection(selection, newBone);
             }
         });
@@ -166,7 +176,6 @@ public class ObjectTreePanel extends JPanel {
                 treeModel.removeNodeFromParent(findNode((DefaultMutableTreeNode) treeModel.getRoot(), canvasController.getSelection()));
 
                 canvasController.unregisterObject(canvasController.getSelection());
-
 
                 getParent().repaint();
             }

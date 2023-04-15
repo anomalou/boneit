@@ -1,6 +1,5 @@
 package org.anomalou.model.scene;
 
-import jdk.jshell.spi.ExecutionControl;
 import lombok.Getter;
 import lombok.Setter;
 import org.anomalou.annotation.Editable;
@@ -10,7 +9,7 @@ import org.anomalou.model.FPoint;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Bone extends TransformObject implements Groupable<SceneObject>{
+public class Bone extends TransformObject implements Group<SceneObject> {
     /**
      * Visibility of the bone rig.
      */
@@ -47,25 +46,21 @@ public class Bone extends TransformObject implements Groupable<SceneObject>{
 
     @Override
     public void applyTransformation(){
-        FPoint rotatedVector = calculateFullRotationVector(); //TODO calculate also vector localPosition with directionVector
+        FPoint rotatedVector = calculateFullRotationVector();
 
-        FPoint childrenEndPosition = new FPoint(getGlobalPosition().x + rotatedVector.x, getGlobalPosition().y + rotatedVector.y);
+        FPoint childPosition = new FPoint(getGlobalPosition().x + rotatedVector.x, getGlobalPosition().y + rotatedVector.y);
 
         getChildren().forEach(object -> {
             if(object instanceof TransformObject){
-                object.setParentPosition(new Point(getGlobalPosition().x, getGlobalPosition().y));
+                object.setOriginPosition(new Point((int)getGlobalPosition().x, (int)getGlobalPosition().y));
 
                 if(object instanceof Bone)
                     if(((Bone) object).isSetAtEnd())
-                        object.setParentPosition(new Point((int)Math.round(childrenEndPosition.x), (int)Math.round(childrenEndPosition.y)));
+                        object.setOriginPosition(new Point((int)Math.round(childPosition.x), (int)Math.round(childPosition.y)));
 
                 ((TransformObject) object).setParentRotationAngle(getFullRotationAngle());
 
-                try{
-                    ((TransformObject) object).applyTransformation();
-                }catch (ExecutionControl.NotImplementedException ex){
-                    logger.warning(ex.getMessage());
-                }
+                ((TransformObject) object).applyTransformation();
             }
         });
 
@@ -74,9 +69,9 @@ public class Bone extends TransformObject implements Groupable<SceneObject>{
 
     @Override
     public void addObject(SceneObject object) {
-        if(object instanceof Groupable<?>){
+        if(object instanceof Node<?>){
             try{
-                ((Groupable<SceneObject>) object).setParent(this);
+                ((Node<SceneObject>) object).setParent(this);
             }catch (Exception ex){
                 logger.warning(ex.getMessage());
             }
@@ -86,9 +81,9 @@ public class Bone extends TransformObject implements Groupable<SceneObject>{
 
     @Override
     public void removeObject(SceneObject object) {
-        if(object instanceof Groupable<?>){
+        if(object instanceof Node<?>){
             try{
-                ((Groupable<SceneObject>) object).setParent(null);
+                ((Node<SceneObject>) object).setParent(null);
             }catch (Exception ex){
                 logger.warning(ex.getMessage());
             }
@@ -97,28 +92,13 @@ public class Bone extends TransformObject implements Groupable<SceneObject>{
     }
 
     @Override
-    public void setParent(SceneObject object) {
-        parent = object;
-    }
-
-    @Override
     public ArrayList<SceneObject> getChildren() {
         return new ArrayList<>(children);
     }
 
     @Override
-    public SceneObject getParent() {
-        return parent;
-    }
-
-    @Override
     public boolean isLeaf() {
-        return children.isEmpty();
-    }
-
-    @Override
-    public boolean isRoot() {
-        return parent == null;
+        return children.isEmpty() && !isRoot();
     }
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES

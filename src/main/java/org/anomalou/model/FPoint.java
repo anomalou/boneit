@@ -1,5 +1,6 @@
 package org.anomalou.model;
 
+import java.awt.*;
 import java.io.Serializable;
 
 public class FPoint implements Serializable {
@@ -16,7 +17,12 @@ public class FPoint implements Serializable {
         this.y = y;
     }
 
+    public FPoint(Point point){
+        this.x = point.x;
+        this.y = point.y;
+    }
+
     public String toString(){
-        return String.format("[%f:%f]", x, y);
+        return String.format("[%f; %f]", x, y);
     }
 }

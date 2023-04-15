@@ -1,6 +1,5 @@
 package org.anomalou.model.scene;
 
-import jdk.jshell.spi.ExecutionControl;
 import lombok.Getter;
 import lombok.Setter;
 import org.anomalou.annotation.Editable;
@@ -41,6 +40,7 @@ public class TransformObject extends SceneObject{
     public TransformObject(){
         super();
 
+        name = "Transform object";
         rootVectorOrigin = new Point();
         rootVectorDirection = new Point();
         rotationAngle = 0d;
@@ -51,12 +51,18 @@ public class TransformObject extends SceneObject{
         return rotationAngle + parentRotationAngle;
     }
 
-    public void applyTransformation() throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Implement this!");
+    public void applyTransformation() {
+        logger.info("I'm not implemented! :3");
+    }
+
+    @Override
+    public FPoint getGlobalPosition() {
+        FPoint rotatedVector = calculateRotationVectorForAngle(localPosition, parentRotationAngle);
+        return new FPoint(rotatedVector.x + originPosition.x, rotatedVector.y + originPosition.y);
     }
 
     /**
-     * get angle between direction and rootDirectionPosition vectors, as it began in (0, 0)
+     * Get angle between direction and rootDirectionPosition vectors, as it began in (0, 0)
      * @return double
      */
     public double calculateRotationAngle(FPoint direction){
@@ -118,13 +124,17 @@ public class TransformObject extends SceneObject{
         return rotatedVector;
     }
 
+    public FPoint calculateRotationVectorForAngle(Point vector, Double angle){
+        return calculateRotationVectorForAngle(new FPoint(vector), angle);
+    }
+
     /**
      * Check if point is hit in bound of object (object, bone etc)
      * @param point point to check
      * @return boolean
      */
     public boolean isInBounds(Point point){
-        return isInRectangle(point, new Rectangle(getGlobalPosition().x, getGlobalPosition().y, rootVectorDirection.x, rootVectorDirection.x));
+        return isInRectangle(point, new Rectangle(getOriginPosition().x, getOriginPosition().y, rootVectorDirection.x, rootVectorDirection.x));
     }
 
     protected boolean isInRectangle(Point point, Rectangle rectangle){

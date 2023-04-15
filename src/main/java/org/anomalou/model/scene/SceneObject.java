@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.anomalou.annotation.Editable;
 import org.anomalou.annotation.EditorType;
+import org.anomalou.model.FPoint;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * Base class for all scene objects. Extends from it for compability with other objects.
  */
-public class SceneObject implements Serializable, Comparable<SceneObject> {
+public class SceneObject implements Serializable, Comparable<SceneObject>, Node<SceneObject> {
     protected transient final Logger logger = Logger.getLogger(Layer.class.getName());
 
     /**
@@ -37,29 +38,55 @@ public class SceneObject implements Serializable, Comparable<SceneObject> {
     @Setter
     protected Integer priority;
     /**
-     * Offset on canvas. Bones will ignore this parameter.
+     * Position in local coordinates.
      */
     @Editable(name = "Local position", editorType = EditorType.VECTOR_EDITOR)
     @Getter
     @Setter
     protected Point localPosition;
+    /**
+     * Origin of local coordinates on scene
+     */
+    @Editable(name = "Origin position", editorType = EditorType.VECTOR_EDITOR)
     @Getter
     @Setter
-    protected Point parentPosition;
+    protected Point originPosition;
+
+    protected SceneObject parent;
 
     public SceneObject(){
         name = "Object";
         priority = 0;
         localPosition = new Point();
-        parentPosition = new Point();
+        originPosition = new Point();
+    }
+
+    @Override
+    public void setParent(SceneObject object) {
+        parent = object;
+    }
+
+    @Override
+    public SceneObject getParent() {
+        return parent;
+    }
+
+    @Override
+    public boolean isRoot() {
+        return parent == null;
+    }
+
+    @Override
+    public boolean isLeaf() {
+        return !isRoot();
     }
 
     public Rectangle getBounds(){
         return new Rectangle();
     }
 
-    public Point getGlobalPosition(){
-        return new Point(parentPosition.x + localPosition.x, parentPosition.y + localPosition.y);
+    public FPoint getGlobalPosition(){
+        return new FPoint(localPosition.x + originPosition.x, localPosition.y + originPosition.y);
     }
 
     @Override

@@ -14,7 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 public class CanvasPanel extends JPanel {
     private final UIManager uiManager;
@@ -105,6 +104,10 @@ public class CanvasPanel extends JPanel {
         });
     }
 
+    private void drawLayer(Layer layer, Graphics g){
+        g.drawImage(layer.getResultBitmap(), scale * (offset.x + (int)layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + (int)layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
+    }
+
     private void drawInterface(Graphics g){
         g.setColor(Color.gray);
 
@@ -154,7 +157,7 @@ public class CanvasPanel extends JPanel {
 
     private void drawSelectedLayer(Graphics g, Layer object){
         g.setColor(Color.black);
-        g.drawRect(scale * (offset.x + object.getGlobalPosition().x - object.getRootVectorOrigin().x), scale * (offset.y + object.getGlobalPosition().y - object.getRootVectorOrigin().y),
+        g.drawRect(scale * (offset.x + (int)object.getGlobalPosition().x - object.getRootVectorOrigin().x), scale * (offset.y + (int)object.getGlobalPosition().y - object.getRootVectorOrigin().y),
                 scale * object.getSourceBitmap().getWidth(), scale * object.getSourceBitmap().getHeight());
     }
 
@@ -169,8 +172,8 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawSelectedTransformObject(Graphics g, TransformObject transformObject){
-        if(transformObject instanceof Groupable<?>){
-            ((Groupable<SceneObject>) transformObject).getChildren().forEach(object -> {
+        if(transformObject instanceof Group<?>){
+            ((Group<SceneObject>) transformObject).getChildren().forEach(object -> {
                 if(object instanceof Bone)
                     drawSelectedTransformObject(g, (Bone) object);
             });
@@ -179,11 +182,11 @@ public class CanvasPanel extends JPanel {
         g.setColor(Color.green);
 
         //TODO add more adaptivity. You too dump to remember all spots like this
-        Point position = new Point(transformObject.getGlobalPosition().x, transformObject.getGlobalPosition().y);
+        Point position = new Point((int)transformObject.getGlobalPosition().x, (int)transformObject.getGlobalPosition().y);
 
-        //Cross in the rootBasePosition
-        g.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y - 1), scale * (offset.x + position.x), scale * (offset.y + position.y + 1));
-        g.drawLine(scale * (offset.x + position.x - 1), scale * (offset.y + position.y), scale * (offset.x + position.x + 1), scale * (offset.y + position.y));
+        //Cross in the rootBasePosition //TODO DEPRECATED delete this
+//        g.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y - 1), scale * (offset.x + position.x), scale * (offset.y + position.y + 1));
+//        g.drawLine(scale * (offset.x + position.x - 1), scale * (offset.y + position.y), scale * (offset.x + position.x + 1), scale * (offset.y + position.y));
 
         //Vectors
         //rootDirection
@@ -199,6 +202,10 @@ public class CanvasPanel extends JPanel {
         g.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y),
                 (int) Math.round(scale * (offset.x + position.x + rotationVector.x)),
                 (int) Math.round(scale * (offset.y + position.y + rotationVector.y)));
+
+    }
+
+    private void drawLocalCoordinateOrigin(Graphics g, TransformObject object){
 
     }
 
@@ -331,11 +338,5 @@ public class CanvasPanel extends JPanel {
                 oldPos = pos;
             }
         });
-    }
-
-
-
-    private void drawLayer(Layer layer, Graphics g){
-        g.drawImage(layer.getResultBitmap(), scale * (offset.x + layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
     }
 }

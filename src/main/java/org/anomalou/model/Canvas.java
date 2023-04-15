@@ -1,6 +1,5 @@
 package org.anomalou.model;
 
-import jdk.jshell.spi.ExecutionControl;
 import lombok.Getter;
 import lombok.Setter;
 import org.anomalou.model.scene.*;
@@ -66,12 +65,14 @@ public class Canvas implements Serializable {
     public void unregisterObject(SceneObject object){
         try{
             getObjectCache().unregister(object.getUuid());
-            if(object instanceof Groupable<?>){
-                if(!((Groupable<SceneObject>) object).isRoot()){
-                    SceneObject parent = ((Groupable<?>) object).getParent();
-                    if(parent instanceof Groupable<?>){
-//                        ((Groupable<?>) parent).removeObject(object); //TODO need work
+            if(object instanceof Node<?>){
+                if(!((Node<SceneObject>) object).isRoot()){
+                    SceneObject parent = ((Node<SceneObject>) object).getParent();
+                    if(parent instanceof Group<?>){
+                        ((Group<SceneObject>) parent).removeObject(object);
                     }
+                }else{
+                    sceneObjects.remove(object);
                 }
             }
         }catch (NullPointerException ex){
@@ -102,8 +103,8 @@ public class Canvas implements Serializable {
 
         tempArray.forEach(element -> {
             oArray.add(element);
-            if(element instanceof Groupable)
-                oArray.addAll(_sort(((Groupable) element).getChildren())); //TODO may exception here
+            if(element instanceof Group)
+                oArray.addAll(_sort(((Group) element).getChildren())); //TODO may exception here
         });
 
         return oArray;
@@ -178,11 +179,7 @@ public class Canvas implements Serializable {
     public void updateObjects(){
         getSceneObjects().forEach(object -> {
             if(object instanceof TransformObject)
-                try {
-                    ((TransformObject) object).applyTransformation();
-                }catch (ExecutionControl.NotImplementedException ex){
-                    logger.warning(ex.getMessage());
-                }
+                ((TransformObject) object).applyTransformation();
         });
     }
 }

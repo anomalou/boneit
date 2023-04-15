@@ -42,11 +42,7 @@ public class CanvasController extends Controller{
 
     //TODO work!
     public void applyTransform(TransformObject object){
-        try {
-            object.applyTransformation();
-        }catch (ExecutionControl.NotImplementedException ex){
-            logger.warning(ex.getMessage());
-        }
+        object.applyTransformation();
     }
 
     public double calculateRotationAngle(TransformObject object, FPoint direction){

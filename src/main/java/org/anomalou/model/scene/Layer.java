@@ -1,6 +1,5 @@
 package org.anomalou.model.scene;
 
-import jdk.jshell.spi.ExecutionControl;
 import lombok.Getter;
 import lombok.Setter;
 import org.anomalou.annotation.Editable;
@@ -13,7 +12,7 @@ import java.io.*;
 
 public class Layer extends TransformObject { //a base class for layers or bones
     /**
-     * Just image of the layer, its shape MUST be 1x1 or more! <br>
+     * Just image of the layer, its shape MUST be 1x1 or larger! <br>
      * Do not try to transform this image, its just raw pixel information for future transformation!
      */
     @Getter
@@ -32,6 +31,8 @@ public class Layer extends TransformObject { //a base class for layers or bones
     @Getter
     @Setter
     protected boolean isVisible;
+
+    private SceneObject parent;
 
 
     public Layer(){
@@ -58,7 +59,7 @@ public class Layer extends TransformObject { //a base class for layers or bones
 
     @Override
     public boolean isInBounds(Point point) {
-        return isInRectangle(point, new Rectangle(getGlobalPosition().x - rootVectorOrigin.x, getGlobalPosition().y - rootVectorOrigin.y, sourceBitmap.getWidth(), sourceBitmap.getHeight()));
+        return isInRectangle(point, new Rectangle(getOriginPosition().x - rootVectorOrigin.x, getOriginPosition().y - rootVectorOrigin.y, sourceBitmap.getWidth(), sourceBitmap.getHeight()));
     }
 
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES

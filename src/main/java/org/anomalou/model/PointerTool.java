@@ -1,6 +1,5 @@
 package org.anomalou.model;
 
-import jdk.jshell.spi.ExecutionControl;
 import org.anomalou.model.scene.*;
 
 import java.awt.*;
@@ -53,32 +52,31 @@ public class PointerTool implements Tool{
     public void drag(Graphics g, Point position, int button) {
         if(isRotateMode){ //TODO rewrite
             TransformObject object = (TransformObject) canvas.getSelection();
-            Point objectPos = new Point(object.getGlobalPosition().x, object.getGlobalPosition().y);
+            Point objectPos = new Point((int)object.getGlobalPosition().x, (int)object.getGlobalPosition().y);
             FPoint rotation = new FPoint(position.x, position.y);
             rotation.x -= objectPos.x;
             rotation.y -= objectPos.y;
             rotation = object.calculateRotationVectorForAngle(rotation, object.getParentRotationAngle());
             object.setRotationAngle(object.calculateRotationAngle(rotation));
-//            canvas.applyBoneRotation(object, object.getRotationAngle() + object.getParentRotationAngle());
-            try {
-                object.applyTransformation();
-            }catch (ExecutionControl.NotImplementedException ex){
-                ex.printStackTrace();
-            }
+            object.applyTransformation();
         }
-        if(isMoveMode){
-            //TODO need fix
-            Point dragDirection = new Point(canvas.getSelection().getLocalPosition().x + position.x - oldPosition.x, canvas.getSelection().getLocalPosition().y + position.y - oldPosition.y);
+        if(isMoveMode){ //TODO fix
+            SceneObject selectedObject = canvas.getSelection();
+
+            Point dragDirection = new Point(selectedObject.getLocalPosition().x + position.x - oldPosition.x, selectedObject.getLocalPosition().y + position.y - oldPosition.y);
             oldPosition = position;
-            if(canvas.getSelection() instanceof Groupable<?>){
-                if(!((Groupable<SceneObject>) canvas.getSelection()).isRoot()) //TODO <<< here convert child position as parent was main coordinate axis
-                    return;
+
+            if(selectedObject instanceof TransformObject){
+                FPoint rotatedDragDirection = ((TransformObject) selectedObject).calculateRotationVectorForAngle(dragDirection, ((TransformObject) selectedObject).getParentRotationAngle());
+                selectedObject.setLocalPosition(new Point((int)rotatedDragDirection.x, (int)rotatedDragDirection.y));
+                System.out.printf("%s\n", rotatedDragDirection);
+            }else{
+                selectedObject.setLocalPosition(new Point(dragDirection.x, dragDirection.y));
             }
 
-//            canvas.getSelection().setPosition(dragDirection);
-//            if(canvas.getSelection().getClass().equals(Bone.class)){
-//                    canvas.applyPosition((Bone) canvas.getSelection());
-//            }
+            if(selectedObject instanceof TransformObject){
+                ((TransformObject) selectedObject).applyTransformation();
+            }
         }
     }
 
