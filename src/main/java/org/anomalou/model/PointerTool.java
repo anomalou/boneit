@@ -50,33 +50,11 @@ public class PointerTool implements Tool{
 
     @Override
     public void drag(Graphics g, Point position, int button) {
-        if(isRotateMode){ //TODO rewrite
-            TransformObject object = (TransformObject) canvas.getSelection();
-            Point objectPos = new Point((int)object.getGlobalPosition().x, (int)object.getGlobalPosition().y);
-            FPoint rotation = new FPoint(position.x, position.y);
-            rotation.x -= objectPos.x;
-            rotation.y -= objectPos.y;
-            rotation = object.calculateRotationVectorForAngle(rotation, object.getParentRotationAngle());
-            object.setRotationAngle(object.calculateRotationAngle(rotation));
-            object.applyTransformation();
+        if(isRotateMode){
+            rotate(position);
         }
-        if(isMoveMode){ //TODO fix
-            SceneObject selectedObject = canvas.getSelection();
-
-            Point dragDirection = new Point(selectedObject.getLocalPosition().x + position.x - oldPosition.x, selectedObject.getLocalPosition().y + position.y - oldPosition.y);
-            oldPosition = position;
-
-            if(selectedObject instanceof TransformObject){
-                FPoint rotatedDragDirection = ((TransformObject) selectedObject).calculateRotationVectorForAngle(dragDirection, ((TransformObject) selectedObject).getParentRotationAngle());
-                selectedObject.setLocalPosition(new Point((int)rotatedDragDirection.x, (int)rotatedDragDirection.y));
-                System.out.printf("%s\n", rotatedDragDirection);
-            }else{
-                selectedObject.setLocalPosition(new Point(dragDirection.x, dragDirection.y));
-            }
-
-            if(selectedObject instanceof TransformObject){
-                ((TransformObject) selectedObject).applyTransformation();
-            }
+        if(isMoveMode){
+            repose(position);
         }
     }
 
@@ -97,5 +75,36 @@ public class PointerTool implements Tool{
 
         if(!selected)
             canvas.setSelection(null);
+    }
+
+    private void rotate(Point direction){
+        TransformObject object = (TransformObject) canvas.getSelection();
+        if(object == null)
+            return;
+
+        FPoint rotation = new FPoint(direction.x, direction.y);
+        rotation.x -= (int)object.getGlobalPosition().x;
+        rotation.y -= (int)object.getGlobalPosition().y;
+        rotation = object.calculateRotationVectorForAngle(rotation, object.getParentRotationAngle());
+        object.setRotationAngle(object.calculateRotationAngle(rotation));
+        object.applyTransformation();
+    }
+
+    private void repose(Point position){ //TODO need fix, not works!
+        SceneObject object = canvas.getSelection();
+        if(object == null)
+            return;
+
+        Point dragDirection = new Point(position.x - oldPosition.x, -(position.y - oldPosition.y)); //TODO oldposition make impact into calculation when you unpress LMB
+        oldPosition = position;
+
+        if(object instanceof TransformObject){
+            FPoint rotatedDragDirection = ((TransformObject) object).calculateRotationVectorForAngle(dragDirection, -((TransformObject) object).getParentRotationAngle());
+            object.setLocalPosition(new Point((int) Math.round(object.getLocalPosition().x + rotatedDragDirection.x), (int) Math.round(object.getLocalPosition().y - rotatedDragDirection.y)));
+        }
+
+        if(object instanceof TransformObject){
+            ((TransformObject) object).applyTransformation();
+        }
     }
 }

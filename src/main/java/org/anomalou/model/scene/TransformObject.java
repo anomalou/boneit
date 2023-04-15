@@ -134,7 +134,7 @@ public class TransformObject extends SceneObject{
      * @return boolean
      */
     public boolean isInBounds(Point point){
-        return isInRectangle(point, new Rectangle(getOriginPosition().x, getOriginPosition().y, rootVectorDirection.x, rootVectorDirection.x));
+        return isInRectangle(point, new Rectangle((int) getGlobalPosition().x, (int) getGlobalPosition().y, rootVectorDirection.x, rootVectorDirection.x));
     }
 
     protected boolean isInRectangle(Point point, Rectangle rectangle){
