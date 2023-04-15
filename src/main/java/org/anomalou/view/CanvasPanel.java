@@ -161,7 +161,7 @@ public class CanvasPanel extends JPanel {
                 scale * object.getSourceBitmap().getWidth(), scale * object.getSourceBitmap().getHeight());
     }
 
-    private void drawSelectedSkeleton(Graphics g, SceneObject object){
+    private void drawSelectedSkeleton(Graphics g, SceneObject object){ //TODO useless
         Bone bone = (Bone) object;
 //        Point bonePosition = new Point(offset.x + bone.getPosition().x - bone.getRootVectorOrigin().x, offset.y + bone.getPosition().y - bone.getRootVectorOrigin().y);
 //        g.drawRect(scale * (bonePosition.x),
@@ -183,10 +183,6 @@ public class CanvasPanel extends JPanel {
 
         //TODO add more adaptivity. You too dump to remember all spots like this
         Point position = new Point((int)transformObject.getGlobalPosition().x, (int)transformObject.getGlobalPosition().y);
-
-        //Cross in the rootBasePosition //TODO DEPRECATED delete this
-//        g.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y - 1), scale * (offset.x + position.x), scale * (offset.y + position.y + 1));
-//        g.drawLine(scale * (offset.x + position.x - 1), scale * (offset.y + position.y), scale * (offset.x + position.x + 1), scale * (offset.y + position.y));
 
         //Vectors
         //rootDirection
@@ -244,20 +240,11 @@ public class CanvasPanel extends JPanel {
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                toolPanelController.click(getGraphics(), screenToCanvas(e.getPoint()), e.getButton());
-                uiManager.updateInspector();
-                //wrap into draw method
-//                if(isClickInBound(objectController.getObject(canvas.getSelection()), screenToCanvas(e.getPoint()))){
-//                    //Rotation tests! :3
-//                    if(!objectController.getObject(canvas.getSelection()).getClass().equals(Bone.class))
-//                        return;
-//
-//
-//                    return;//TODO draw process
-//                }
-                // ^^^ it is
-
-//                select(e.getPoint());
+                if(SwingUtilities.isLeftMouseButton(e))
+                    toolPanelController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
+                if(SwingUtilities.isRightMouseButton(e))
+                    toolPanelController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
+                uiManager.updateInspector(); //TODO optimization
 
                 repaint();
             }
@@ -267,8 +254,6 @@ public class CanvasPanel extends JPanel {
                 if(e.getButton() == MouseEvent.BUTTON2){
                     isScrollPressed = true;
                 }
-
-                toolPanelController.press(getGraphics(), screenToCanvas(e.getPoint()), e.getButton(), false);
             }
 
             @Override
@@ -276,8 +261,6 @@ public class CanvasPanel extends JPanel {
                 if(e.getButton() == MouseEvent.BUTTON2){
                     isScrollPressed = false;
                 }
-
-                toolPanelController.press(getGraphics(), screenToCanvas(e.getPoint()), e.getButton(), true);
             }
 
             @Override
@@ -296,7 +279,7 @@ public class CanvasPanel extends JPanel {
             public void mouseWheelMoved(MouseWheelEvent e) {
                 scale = Math.max(scaleMin, scale - e.getWheelRotation());
                 scale = Math.min(scaleMax, scale);
-                repaint();
+                repaint(); //TODO optimization
             }
         });
 
@@ -309,8 +292,12 @@ public class CanvasPanel extends JPanel {
             public void mouseDragged(MouseEvent e) {
                 calculateDirection(e.getPoint());
 
-                toolPanelController.drag(getGraphics(), screenToCanvas(e.getPoint()), e.getModifiersEx());
-                uiManager.updateTree();
+                if(SwingUtilities.isLeftMouseButton(e))
+                    toolPanelController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
+                if(SwingUtilities.isRightMouseButton(e))
+                    toolPanelController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
+
+                uiManager.updateTree();//TODO optimization
                 uiManager.updateInspector();
 
                 //LOCKED! CAN NOT BE IN TOOLS! IMPORTANT FUNCTION!

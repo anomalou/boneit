@@ -6,6 +6,7 @@ import org.anomalou.controller.ProjectController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.controller.ToolPanelController;
 import org.anomalou.model.Project;
+import org.anomalou.model.tools.ToolPanel;
 import org.anomalou.view.UIManager;
 
 import javax.swing.*;
@@ -16,12 +17,13 @@ public class Application {
     private JFrame mainFrame;
     @Getter //TODO set it for TEST only!
     private Project project;
+    private ToolPanel toolPanel;
+    @Getter
+    private UIManager uiManager;
 
     @Getter
     private final PropertiesController propertiesController;
 
-    @Getter
-    private UIManager uiManager;
 
     //TODO all controller should be temp classes, that created only for UI!
     @Getter
@@ -30,6 +32,7 @@ public class Application {
     private CanvasController canvasController;
     @Getter
     private ToolPanelController toolPanelController;
+
 
 
     //TODO here will be view, shortcut controller and etc
@@ -47,9 +50,10 @@ public class Application {
 
     public void openProject(Project project){
         this.project = project;
+        toolPanel = new ToolPanel(project.getCanvas());
         projectController = new ProjectController(project);
         canvasController = new CanvasController(project.getCanvas());
-        toolPanelController = new ToolPanelController(project.getCanvas(), project.getCanvas().getObjectCache());
+        toolPanelController = new ToolPanelController(toolPanel);
         uiManager = new UIManager(propertiesController, canvasController, toolPanelController);
     }
 

@@ -1,25 +1,23 @@
-package org.anomalou.model;
+package org.anomalou.model.tools;
 
+import org.anomalou.model.Canvas;
+import org.anomalou.model.FPoint;
 import org.anomalou.model.scene.*;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class PointerTool implements Tool{
+public class PointerTool implements Tool {
     private final String name = "Pointer";
 
-    private final Canvas canvas;
-
-    private boolean isMoveMode;
-    private boolean isRotateMode;
+    private final org.anomalou.model.Canvas canvas;
 
     private Point oldPosition;
 
     public PointerTool(Canvas canvas){
         this.canvas = canvas;
 
-        isMoveMode = false;
-        isRotateMode = false;
+        oldPosition = new Point();
     }
 
     @Override
@@ -32,30 +30,14 @@ public class PointerTool implements Tool{
         return new Rectangle(position.x - 5, position.y - 5, 10, 10);
     }
 
-    public void press(Graphics g, Point position, int button, boolean released){
-        if(button == MouseEvent.BUTTON3)
-            isRotateMode = !released;
-        if(button == MouseEvent.BUTTON1){
-            isMoveMode = !released;
-            oldPosition = position;
-        }
+    @Override
+    public void primaryUse(Graphics g, Point position) {
+        repose(position);
     }
 
     @Override
-    public void click(Graphics g, Point position, int button) {
-        if(button == MouseEvent.BUTTON1) {
-            select(position);
-        }
-    }
-
-    @Override
-    public void drag(Graphics g, Point position, int button) {
-        if(isRotateMode){
-            rotate(position);
-        }
-        if(isMoveMode){
-            repose(position);
-        }
+    public void secondaryUse(Graphics g, Point position) {
+        rotate(position);
     }
 
     /**
@@ -95,7 +77,7 @@ public class PointerTool implements Tool{
         if(object == null)
             return;
 
-        Point dragDirection = new Point(position.x - oldPosition.x, -(position.y - oldPosition.y)); //TODO oldposition make impact into calculation when you unpress LMB
+        Point dragDirection = normalizeDirection(new Point(position.x - oldPosition.x, -(position.y - oldPosition.y))); //TODO oldposition make impact into calculation when you unpress LMB
         oldPosition = position;
 
         if(object instanceof TransformObject){
@@ -106,5 +88,20 @@ public class PointerTool implements Tool{
         if(object instanceof TransformObject){
             ((TransformObject) object).applyTransformation();
         }
+    }
+
+    private Point normalizeDirection(Point point){
+        Point result = new Point(point);
+
+        if(point.x > 0)
+            result.x = 1;
+        if(point.x < 0)
+            result.x = -1;
+        if(point.y > 0)
+            result.y = 1;
+        if(point.y < 0)
+            result.y = -1;
+
+        return result;
     }
 }

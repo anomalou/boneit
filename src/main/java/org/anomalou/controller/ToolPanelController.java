@@ -2,43 +2,25 @@ package org.anomalou.controller;
 
 import org.anomalou.model.Canvas;
 import org.anomalou.model.ObjectCache;
-import org.anomalou.model.PointerTool;
-import org.anomalou.model.Tool;
+import org.anomalou.model.tools.PointerTool;
+import org.anomalou.model.tools.Tool;
+import org.anomalou.model.tools.ToolPanel;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class ToolPanelController extends Controller{
-    private final Canvas canvas;
-    private Tool selectedTool;
-    private final ArrayList<Tool> tools;
+    private ToolPanel toolPanel;
 
-    public ToolPanelController(Canvas canvas, ObjectCache objectCache){
-        this.canvas = canvas;
-
-        tools = new ArrayList<>();
-
-        loadTools();
+    public ToolPanelController(ToolPanel toolPanel){
+        this.toolPanel = toolPanel;
     }
 
-    public void press(Graphics g, Point position, int button, boolean released){
-        selectedTool.press(g, position, button, released);
-    }
-    public void click(Graphics g, Point position, int button){
-        selectedTool.click(g, position, button);
-    }
-    public void drag(Graphics g, Point position, int button){
-        selectedTool.drag(g, position, button);
+    public void primaryUseTool(Graphics g, Point point){
+        toolPanel.primaryUseTool(g, point);
     }
 
-
-    public Rectangle draw(Graphics g, Point position){
-        return selectedTool.drawInterface(g, position);
-    }
-
-    private void loadTools(){
-        tools.add(new PointerTool(canvas));
-
-        selectedTool = tools.get(0);
+    public void secondaryUseTool(Graphics g, Point point){
+        toolPanel.secondaryUseTool(g, point);
     }
 }

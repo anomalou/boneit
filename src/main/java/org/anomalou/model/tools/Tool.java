@@ -1,4 +1,4 @@
-package org.anomalou.model;
+package org.anomalou.model.tools;
 
 import java.awt.*;
 
@@ -12,7 +12,6 @@ public interface Tool {
      * @return rect to redraw
      */
     Rectangle drawInterface(Graphics g, Point position);
-    void press(Graphics g, Point position, int button, boolean released);
-    void click(Graphics g, Point position, int button);
-    void drag(Graphics g, Point position, int button);
+    void primaryUse(Graphics g, Point position);
+    void secondaryUse(Graphics g, Point position);
 }
