@@ -54,7 +54,7 @@ public class SceneObject implements Serializable, Comparable<SceneObject>, Node<
 
     protected SceneObject parent;
 
-    public SceneObject(){
+    public SceneObject() {
         name = "Object";
         priority = 0;
         localPosition = new Point();
@@ -81,16 +81,16 @@ public class SceneObject implements Serializable, Comparable<SceneObject>, Node<
         return !isRoot();
     }
 
-    public Rectangle getBounds(){
+    public Rectangle getBounds() {
         return new Rectangle();
     }
 
-    public FPoint getGlobalPosition(){
+    public FPoint getGlobalPosition() {
         return new FPoint(localPosition.x + originPosition.x, localPosition.y + originPosition.y);
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return name;
     }
 

@@ -3,22 +3,22 @@ package org.anomalou.controller;
 import java.io.*;
 import java.util.Properties;
 
-public class PropertiesController extends Controller{
+public class PropertiesController extends Controller {
     private final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath(); //TODO may null pointer exception source
     private final String propertiesPath = rootPath + "config.properties";
 
     private final Properties properties;
 
-    public PropertiesController(){
+    public PropertiesController() {
         properties = new Properties();
 
         loadPropertiesFile();
     }
 
-    public int getInt(String property){
+    public int getInt(String property) {
         String value = properties.getProperty(property);
 
-        if(value != null){
+        if (value != null) {
             logger.fine(String.format("Property [%s=%s] was loaded!", property, value));
             return Integer.parseInt(value);
         }
@@ -28,10 +28,10 @@ public class PropertiesController extends Controller{
         return 0;
     }
 
-    public String getString(String property){
+    public String getString(String property) {
         String value = properties.getProperty(property);
 
-        if(value != null){
+        if (value != null) {
             logger.fine(String.format("Property [%s=%s] was loaded!", property, value));
             return value;
         }
@@ -41,7 +41,7 @@ public class PropertiesController extends Controller{
         return "NaN";
     }
 
-    private void writeDefaultProperties(FileOutputStream fileOutputStream) throws IOException{
+    private void writeDefaultProperties(FileOutputStream fileOutputStream) throws IOException {
         properties.put("ruler.width", "10");
         properties.put("ruler.height", "10");
         properties.put("ruler.corner.l.offset.x", "0");
@@ -58,24 +58,24 @@ public class PropertiesController extends Controller{
         fileOutputStream.close();
     }
 
-    private void loadPropertiesFile(){
+    private void loadPropertiesFile() {
         File file = new File(propertiesPath);
         System.out.print(propertiesPath);
 
-        if(!file.exists()){
-            try{
-                if(file.createNewFile())
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile())
                     writeDefaultProperties(new FileOutputStream(file));
-            }catch (FileNotFoundException exception){
+            } catch (FileNotFoundException exception) {
                 logger.severe(String.format("File with path %s not founded!", propertiesPath));
-            }catch (IOException exception){
+            } catch (IOException exception) {
                 logger.severe(String.format("IO exception! Message:\n%s", exception.getMessage()));
             }
-        }else{
-            try{
+        } else {
+            try {
                 properties.load(new FileInputStream(file));
                 logger.fine("Properties file loaded successfully!");
-            }catch (IOException exception){
+            } catch (IOException exception) {
                 logger.severe(String.format("Properties file with path \"%s\" was not found! Check write/read rights! Error message:\n%s", propertiesPath, exception.getMessage()));
             }
         }

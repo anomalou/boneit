@@ -10,22 +10,22 @@ public class FPoint implements Serializable {
     public double x;
     public double y;
 
-    public FPoint(){
+    public FPoint() {
         x = 0d;
         y = 0d;
     }
 
-    public FPoint(double x, double y){
+    public FPoint(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public FPoint(Point point){
+    public FPoint(Point point) {
         this.x = point.x;
         this.y = point.y;
     }
 
-    public String toString(){
+    public String toString() {
         return String.format("[%f; %f]", x, y);
     }
 }

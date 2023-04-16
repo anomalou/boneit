@@ -15,7 +15,7 @@ public class Toolbar extends JPanel {
 
     private JPanel content;
 
-    public Toolbar(UIManager uiManager){
+    public Toolbar(UIManager uiManager) {
         this.uiManager = uiManager;
         this.toolPanelController = uiManager.getToolPanelController();
 
@@ -23,14 +23,14 @@ public class Toolbar extends JPanel {
         createToolbar();
     }
 
-    private void createToolbar(){
+    private void createToolbar() {
         GridBagLayout layout = new GridBagLayout();
         content = new JPanel();
         ArrayList<Tool> tools = toolPanelController.getToolList();
         content.setLayout(layout);
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL; //TODO need tests
-        for(int i = 0; i < 2; i++){
+        for (int i = 0; i < 2; i++) {
             content.add(createTool(tools.get(i)), constraints);
         }
         constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -42,11 +42,11 @@ public class Toolbar extends JPanel {
         add(new JSeparator(), BorderLayout.PAGE_END);
     }
 
-    private void setupPanel(){
+    private void setupPanel() {
         setLayout(new BorderLayout());
     }
 
-    private Component createTool(Tool tool){
+    private Component createTool(Tool tool) {
         JButton toolButton = new JButton(tool.getName());
         toolButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 

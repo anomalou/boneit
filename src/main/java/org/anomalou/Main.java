@@ -20,12 +20,12 @@ public class Main {
         BufferedImage arrow = null;
         BufferedImage sunflower_img = null;
         BufferedImage stem_img = null;
-        try{
+        try {
             img = ImageIO.read(Main.class.getResource("debug/test.png"));
 //            arrow = ImageIO.read(new File("low_arrow.png"));
 //            sunflower_img = ImageIO.read(new File("sunflower.png"));
             stem_img = ImageIO.read(Main.class.getResource("debug/stem.png"));
-        }catch (IOException ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
 
@@ -45,32 +45,32 @@ public class Main {
         application.getCanvasController().registerObject(root_stem);
         root_stem.setSourceBitmap(stem_img);
         root_stem.setRootVectorOrigin(new Point(15, 15));
-        root_stem.setRootVectorDirection(new Point(15,30));
+        root_stem.setRootVectorDirection(new Point(15, 30));
         root_stem.setRotationAngle(Math.PI / 2);
         root_stem.setVisible(true);
 
         Bone root = new Bone();
         application.getCanvasController().registerObject(root);
         root.setRootVectorOrigin(new Point(0, 0));
-        root.setRootVectorDirection(new Point(15,0));
+        root.setRootVectorDirection(new Point(15, 0));
         root.addObject(root_stem);
         application.getCanvasController().addObject(root);
 
         Bone prev = root;
-        for(int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             Bone newBone = new Bone();
 
             application.getCanvasController().registerObject(newBone);
             prev.addObject(newBone);
             newBone.setRootVectorOrigin(new Point(0, 0));
-            newBone.setRootVectorDirection(new Point(15,0));
+            newBone.setRootVectorDirection(new Point(15, 0));
             newBone.setRotationAngle(i * 0.1d);
 
             Layer stem = new Layer();
             application.getCanvasController().registerObject(stem);
             stem.setSourceBitmap(stem_img);
             stem.setRootVectorOrigin(new Point(15, 15));
-            stem.setRootVectorDirection(new Point(15,30));
+            stem.setRootVectorDirection(new Point(15, 30));
             stem.setRotationAngle(Math.PI / 2);
             stem.setVisible(true);
 
@@ -114,7 +114,7 @@ public class Main {
 //        frame.setVisible(true);
     }
 
-    private static JFrame makeFrame(){
+    private static JFrame makeFrame() {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(400, 400);

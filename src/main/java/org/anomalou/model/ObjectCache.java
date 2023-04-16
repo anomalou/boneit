@@ -18,12 +18,12 @@ public class ObjectCache implements Serializable {
     @Getter
     private final HashMap<UUID, SceneObject> objects;
 
-    public ObjectCache(){
+    public ObjectCache() {
         objects = new HashMap<>();
     }
 
-    public void registerObject(UUID uuid, SceneObject object){
-        if(objects.containsKey(uuid)){
+    public void registerObject(UUID uuid, SceneObject object) {
+        if (objects.containsKey(uuid)) {
             logger.warning(String.format("Object with uuid %s already registered!", uuid.toString()));
             return;
         }
@@ -32,8 +32,8 @@ public class ObjectCache implements Serializable {
         logger.fine(String.format("Object with uuid %s registered! [%s|%s]", uuid.toString(), uuid.toString(), object.getName()));
     }
 
-    public void unregister(UUID uuid){
-        if(!objects.containsKey(uuid)){
+    public void unregister(UUID uuid) {
+        if (!objects.containsKey(uuid)) {
             logger.warning(String.format("Cache do not contain object with uuid %s!", uuid.toString()));
             return;
         }

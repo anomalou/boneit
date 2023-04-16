@@ -42,7 +42,7 @@ public class ObjectTreePanel extends JPanel {
         createPopupMenu();
     }
 
-    private void createTree(){
+    private void createTree() {
         tree = new JTree();
         tree.setCellRenderer(new ObjectTreeCellRenderer(iconWidth, iconHeight));
         tree.setShowsRootHandles(true);
@@ -51,15 +51,15 @@ public class ObjectTreePanel extends JPanel {
         add(new JScrollPane(tree), BorderLayout.CENTER);
     }
 
-    private void createNodes(){
+    private void createNodes() {
         DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
         treeModel.setRoot(createNode("Scene", canvasController.getLayersHierarchy()));
     }
 
-    private DefaultMutableTreeNode createNode(Object nodeObject, ArrayList<SceneObject> objects){
+    private DefaultMutableTreeNode createNode(Object nodeObject, ArrayList<SceneObject> objects) {
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(nodeObject);
 
-        if(objects == null)
+        if (objects == null)
             return node;
 
         ArrayList<SceneObject> sortedObject = new ArrayList<>(objects);
@@ -67,13 +67,13 @@ public class ObjectTreePanel extends JPanel {
         sortedObject.sort(Collections.reverseOrder());
 
         sortedObject.forEach(object -> {
-            if(object instanceof Group<?>){
-                try{
+            if (object instanceof Group<?>) {
+                try {
                     node.add(createNode(object, ((Group<SceneObject>) object).getChildren()));
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-            }else{
+            } else {
                 node.add(createNode(object, null));
             }
         });
@@ -81,11 +81,11 @@ public class ObjectTreePanel extends JPanel {
         return node;
     }
 
-    private DefaultMutableTreeNode findNode(DefaultMutableTreeNode root, Object objectToCompare){
-        if(root == null)
+    private DefaultMutableTreeNode findNode(DefaultMutableTreeNode root, Object objectToCompare) {
+        if (root == null)
             return null;
 
-        if(root.getUserObject().equals(objectToCompare)){
+        if (root.getUserObject().equals(objectToCompare)) {
             return root;
         }
 
@@ -93,7 +93,7 @@ public class ObjectTreePanel extends JPanel {
 
         int i = 0;
 
-        while(node == null && i < root.getChildCount()){
+        while (node == null && i < root.getChildCount()) {
             node = findNode((DefaultMutableTreeNode) root.getChildAt(i), objectToCompare);
             i++;
         }
@@ -101,11 +101,11 @@ public class ObjectTreePanel extends JPanel {
         return node;
     }
 
-    private void appendSelection(Object selection, Object object){
+    private void appendSelection(Object selection, Object object) {
         DefaultMutableTreeNode selectedNode = findNode((DefaultMutableTreeNode) tree.getLastSelectedPathComponent(), selection);
         DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
         DefaultMutableTreeNode root;
-        if(selection == null)
+        if (selection == null)
             root = (DefaultMutableTreeNode) treeModel.getRoot();
         else
             root = selectedNode;
@@ -114,17 +114,17 @@ public class ObjectTreePanel extends JPanel {
         treeModel.insertNodeInto(newNode, root, 0);
     }
 
-    private void createListeners(){
+    private void createListeners() {
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
-                if(node == null)
+                if (node == null)
                     return;
 
                 Object object = node.getUserObject();
-                if(object instanceof SceneObject){
+                if (object instanceof SceneObject) {
                     canvasController.setSelection(((SceneObject) object).getUuid());
                     uiManager.updateInspector();
                 }
@@ -134,7 +134,7 @@ public class ObjectTreePanel extends JPanel {
         });
     }
 
-    private void createPopupMenu(){
+    private void createPopupMenu() {
         JPopupMenu popupMenu = new JPopupMenu();
 
         JMenuItem newLayerItem = new JMenuItem("Create layer");
@@ -144,7 +144,7 @@ public class ObjectTreePanel extends JPanel {
                 SceneObject selection = canvasController.getSelection();
                 SceneObject newLayer = new Layer();
                 canvasController.registerObject(newLayer);
-                if(selection instanceof Group<?>){
+                if (selection instanceof Group<?>) {
                     ((Group<SceneObject>) selection).addObject(newLayer);
                 }
                 appendSelection(selection, newLayer);
@@ -158,7 +158,7 @@ public class ObjectTreePanel extends JPanel {
                 SceneObject selection = canvasController.getSelection();
                 SceneObject newBone = new Bone();
                 canvasController.registerObject(newBone);
-                if(selection instanceof Group<?>){
+                if (selection instanceof Group<?>) {
                     ((Group<SceneObject>) selection).addObject(newBone);
                 }
                 appendSelection(selection, newBone);
@@ -185,7 +185,7 @@ public class ObjectTreePanel extends JPanel {
         tree.setComponentPopupMenu(popupMenu);
     }
 
-    private void loadProperties(){
+    private void loadProperties() {
         iconWidth = propertiesController.getInt("preview.width");
         iconHeight = propertiesController.getInt("preview.height");
     }

@@ -91,9 +91,9 @@ public class UIManager {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
         frame.setTitle("Boneto");
-        try{
+        try {
             frame.setIconImage(ImageIO.read(this.getClass().getResource("icon.png")));
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return frame;

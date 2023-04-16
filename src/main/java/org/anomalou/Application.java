@@ -59,10 +59,10 @@ public class Application {
         uiManager = new UIManager(propertiesController, canvasController, toolPanelController);
     }
 
-    public void start(){
+    public void start() {
         try {
             uiManager.openInterface();
-        }catch (NullPointerException ex){
+        } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
     }

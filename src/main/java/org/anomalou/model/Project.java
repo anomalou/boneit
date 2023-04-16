@@ -23,20 +23,20 @@ public class Project implements Serializable {
     private Canvas canvas;
     //TODO here maybe something else, like history of changes or something like that
 
-    public Project(){
+    public Project() {
         this(1, 1);
     }
 
-    public Project(int width, int height){
+    public Project(int width, int height) {
         name = "NewProject";
         canvas = new Canvas(width, height);
     }
 
-    public Project(String name){
+    public Project(String name) {
         this(name, 1, 1);
     }
 
-    public Project(String name, int width, int height){
+    public Project(String name, int width, int height) {
         this(width, height);
 
         this.name = name;

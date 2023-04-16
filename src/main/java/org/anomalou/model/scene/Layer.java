@@ -38,7 +38,7 @@ public class Layer extends TransformObject { //a base class for layers or bones
     private SceneObject parent;
 
 
-    public Layer(){
+    public Layer() {
         super();
 
         name = "NewLayer";
@@ -75,7 +75,7 @@ public class Layer extends TransformObject { //a base class for layers or bones
     }
 
     @Serial
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         sourceBitmap = ImageIO.read(in);
         resultBitmap = ImageIO.read(in);

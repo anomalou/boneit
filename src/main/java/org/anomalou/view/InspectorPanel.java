@@ -23,7 +23,7 @@ public class InspectorPanel extends JPanel {
 
     private final JPanel container;
 
-    public InspectorPanel(UIManager uiManager){
+    public InspectorPanel(UIManager uiManager) {
         this.uiManager = uiManager;
         this.canvasController = uiManager.getCanvasController();
 
@@ -32,23 +32,23 @@ public class InspectorPanel extends JPanel {
         initialize();
     }
 
-    private void initialize(){
+    private void initialize() {
         setLayout(new BorderLayout());
         add(new JLabel("Inspector"), BorderLayout.PAGE_START);
         container.setLayout(new GridBagLayout());
         add(new JScrollPane(container), BorderLayout.CENTER);
     }
 
-    public void updateFields(){
+    public void updateFields() {
         container.removeAll();
 
-        if(canvasController.getSelection() != null)
+        if (canvasController.getSelection() != null)
             buildFieldsEditor();
 
         revalidate();
     }
 
-    private void buildFieldsEditor(){
+    private void buildFieldsEditor() {
         SceneObject selected = canvasController.getSelection();
 
         Field[] fields = unpackFields(selected.getClass());
@@ -57,10 +57,10 @@ public class InspectorPanel extends JPanel {
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 1.0d;
         constraints.gridx = 0;
-        for(int i = 0; i < fields.length; i++){
-            if(fields[i].isAnnotationPresent(Editable.class)) {
+        for (int i = 0; i < fields.length; i++) {
+            if (fields[i].isAnnotationPresent(Editable.class)) {
                 JPanel component = getFieldEditor(fields[i], selected);
-                if(component != null){
+                if (component != null) {
                     component.setBorder(BorderFactory.createTitledBorder(new EmptyBorder(0, 0, 0, 0), fields[i].getAnnotation(Editable.class).name()));
                     container.add(component, constraints);
                 }
@@ -72,8 +72,8 @@ public class InspectorPanel extends JPanel {
         container.add(new JPanel(), constraints);
     }
 
-    private Field[] unpackFields(Class<?> clazz){
-        if(clazz == null)
+    private Field[] unpackFields(Class<?> clazz) {
+        if (clazz == null)
             return new Field[0];
 
         ArrayList<Field> fields = new ArrayList<>(Arrays.asList(unpackFields(clazz.getSuperclass())));
@@ -82,44 +82,44 @@ public class InspectorPanel extends JPanel {
         return fields.toArray(new Field[]{});
     }
 
-    private JPanel getFieldEditor(Field field, Object object){
-        if(field.getAnnotation(Editable.class).editorType() == EditorType.TEXT_FIELD){
+    private JPanel getFieldEditor(Field field, Object object) {
+        if (field.getAnnotation(Editable.class).editorType() == EditorType.TEXT_FIELD) {
             return createTextField(field, object);
         }
-        if(field.getAnnotation(Editable.class).editorType() == EditorType.CHECK_BOX){
+        if (field.getAnnotation(Editable.class).editorType() == EditorType.CHECK_BOX) {
             return createCheckBox(field, object);
         }
-        if(field.getAnnotation(Editable.class).editorType() == EditorType.VECTOR_EDITOR){
+        if (field.getAnnotation(Editable.class).editorType() == EditorType.VECTOR_EDITOR) {
             return createVectorField(field, object);
         }
 
         return null;
     }
 
-    private void setFieldValue(Field field, Object object, Object newValue){
-        try{
+    private void setFieldValue(Field field, Object object, Object newValue) {
+        try {
             field.setAccessible(true);
             field.set(object, newValue);
             field.setAccessible(false);
-        }catch (IllegalAccessException ex){
+        } catch (IllegalAccessException ex) {
             ex.printStackTrace();
         }
     }
 
-    private Object getFieldValue(Field field, Object object){
-        try{
+    private Object getFieldValue(Field field, Object object) {
+        try {
             field.setAccessible(true);
             Object value = field.get(object);
             field.setAccessible(false);
             return value;
-        }catch (IllegalAccessException ex){
+        } catch (IllegalAccessException ex) {
             ex.printStackTrace();
         }
 
         return -1;
     }
 
-    private JPanel createTextField(Field field, Object object){
+    private JPanel createTextField(Field field, Object object) {
         JTextField textField = new JTextField();
 
         String fieldName = field.getAnnotation(Editable.class).name();
@@ -139,16 +139,16 @@ public class InspectorPanel extends JPanel {
         textField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                    if(field.getType() == String.class)
+                try {
+                    if (field.getType() == String.class)
                         setFieldValue(field, object, textField.getText());
-                    else if(field.getType() == Integer.class)
+                    else if (field.getType() == Integer.class)
                         setFieldValue(field, object, Integer.valueOf(textField.getText()));
-                    else if(field.getType() == Double.class)
+                    else if (field.getType() == Double.class)
                         setFieldValue(field, object, Double.valueOf(textField.getText()));
                     uiManager.updateCanvas();
                     uiManager.updateTree();
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
@@ -161,7 +161,7 @@ public class InspectorPanel extends JPanel {
         return panel;
     }
 
-    private JPanel createCheckBox(Field field, Object object){
+    private JPanel createCheckBox(Field field, Object object) {
         JCheckBox checkBox = new JCheckBox("Enabled");
 
         String fieldName = field.getAnnotation(Editable.class).name();
@@ -182,7 +182,7 @@ public class InspectorPanel extends JPanel {
         return panel;
     }
 
-    private JPanel createVectorField(Field field, Object object){
+    private JPanel createVectorField(Field field, Object object) {
         JTextField xTextField = new JTextField();
         JTextField yTextField = new JTextField();
 
@@ -207,12 +207,12 @@ public class InspectorPanel extends JPanel {
         xTextField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
+                try {
                     point.x = Integer.valueOf(xTextField.getText());
                     setFieldValue(field, object, point);
                     uiManager.updateCanvas();
                     uiManager.updateTree();
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
@@ -233,12 +233,12 @@ public class InspectorPanel extends JPanel {
         yTextField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
+                try {
                     point.y = Integer.valueOf(yTextField.getText());
                     setFieldValue(field, object, point);
                     uiManager.updateCanvas();
                     uiManager.updateTree();
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }

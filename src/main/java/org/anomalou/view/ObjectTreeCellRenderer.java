@@ -12,7 +12,7 @@ public class ObjectTreeCellRenderer extends DefaultTreeCellRenderer {
     private final int width;
     private final int height;
 
-    public ObjectTreeCellRenderer(int width, int height){
+    public ObjectTreeCellRenderer(int width, int height) {
         this.width = width;
         this.height = height;
     }
@@ -23,10 +23,10 @@ public class ObjectTreeCellRenderer extends DefaultTreeCellRenderer {
 
         Object object = ((DefaultMutableTreeNode) value).getUserObject();
 
-        if(object instanceof Layer layer){
+        if (object instanceof Layer layer) {
             setIcon(new ImageIcon(layer.getSourceBitmap().getScaledInstance(width, height, Image.SCALE_FAST)));
             setText(layer.toString());
-        }else{
+        } else {
             setIcon(null);
             setText(value.toString());
         }

@@ -33,7 +33,7 @@ public class Bone extends TransformObject implements Group<SceneObject> {
      */
     private final ArrayList<SceneObject> children;
 
-    public Bone(){
+    public Bone() {
         super();
 
         name = "NewBone";
@@ -48,18 +48,18 @@ public class Bone extends TransformObject implements Group<SceneObject> {
     }
 
     @Override
-    public void applyTransformation(){
+    public void applyTransformation() {
         FPoint rotatedVector = calculateFullRotationVector();
 
         FPoint childPosition = new FPoint(getGlobalPosition().x + rotatedVector.x, getGlobalPosition().y + rotatedVector.y);
 
         getChildren().forEach(object -> {
-            if(object instanceof TransformObject){
-                object.setOriginPosition(new Point((int)getGlobalPosition().x, (int)getGlobalPosition().y));
+            if (object instanceof TransformObject) {
+                object.setOriginPosition(new Point((int) getGlobalPosition().x, (int) getGlobalPosition().y));
 
-                if(object instanceof Bone)
-                    if(((Bone) object).isSetAtEnd())
-                        object.setOriginPosition(new Point((int)Math.round(childPosition.x), (int)Math.round(childPosition.y)));
+                if (object instanceof Bone)
+                    if (((Bone) object).isSetAtEnd())
+                        object.setOriginPosition(new Point((int) Math.round(childPosition.x), (int) Math.round(childPosition.y)));
 
                 ((TransformObject) object).setParentRotationAngle(getFullRotationAngle());
 
@@ -72,10 +72,10 @@ public class Bone extends TransformObject implements Group<SceneObject> {
 
     @Override
     public void addObject(SceneObject object) {
-        if(object != null){
-            try{
+        if (object != null) {
+            try {
                 object.setParent(this);
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 logger.warning(ex.getMessage());
             }
         }
@@ -84,10 +84,10 @@ public class Bone extends TransformObject implements Group<SceneObject> {
 
     @Override
     public void removeObject(SceneObject object) {
-        if(object != null){
-            try{
+        if (object != null) {
+            try {
                 object.setParent(null);
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 logger.warning(ex.getMessage());
             }
         }
@@ -107,7 +107,7 @@ public class Bone extends TransformObject implements Group<SceneObject> {
     //------ OVERRIDES SERIALIZATION METHODS FOR IMAGES
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("%s(%.2f deg)", name, Math.toDegrees(rotationAngle));
     }
 }

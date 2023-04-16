@@ -49,7 +49,7 @@ public class CanvasPanel extends JPanel {
     private Color xAxisColor;
     private Color directionColor;
 
-    public CanvasPanel(UIManager uiManager){
+    public CanvasPanel(UIManager uiManager) {
         this.uiManager = uiManager;
         this.canvasController = uiManager.getCanvasController();
         this.propertiesController = uiManager.getPropertiesController();
@@ -74,7 +74,7 @@ public class CanvasPanel extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g){
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         drawScene(g);
@@ -82,19 +82,19 @@ public class CanvasPanel extends JPanel {
         drawSelection(g);
     }
 
-    private void loadGraphics(){//TODO something with textures
-        try{
+    private void loadGraphics() {//TODO something with textures
+        try {
             horizontalRulerImage = ImageIO.read(this.getClass().getResource("ruler.png"));
             verticalRulerImage = new BufferedImage(horizontalRulerImage.getWidth(), horizontalRulerImage.getHeight(), horizontalRulerImage.getType());
             Graphics2D g2d = (Graphics2D) verticalRulerImage.getGraphics();
             g2d.rotate(Math.toRadians(-90), horizontalRulerImage.getWidth() / 2.0, horizontalRulerImage.getHeight() / 2.0);
             g2d.drawImage(horizontalRulerImage, 0, 0, null);
-        }catch (IOException exception){
+        } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
 
-    private void loadProperties(){
+    private void loadProperties() {
         rulerWidth = propertiesController.getInt("ruler.width");
         rulerHeight = propertiesController.getInt("ruler.height");
         rulerCornerOffsetLX = propertiesController.getInt("ruler.corner.l.offset.x");
@@ -107,36 +107,36 @@ public class CanvasPanel extends JPanel {
         scaleMax = propertiesController.getInt("scale.max");
     }
 
-    private void drawScene(Graphics g){
+    private void drawScene(Graphics g) {
         ArrayList<SceneObject> objects = canvasController.sort();
 
         objects.forEach(object -> {
-            if(object instanceof Layer){
-                if(((Layer) object).isVisible()){
+            if (object instanceof Layer) {
+                if (((Layer) object).isVisible()) {
                     drawLayer(g, (Layer) object);
                 }
             }
         });
 
         objects.forEach(object -> {
-            if(object instanceof Bone){
-                if(((Bone) object).isBoneVisible()){
+            if (object instanceof Bone) {
+                if (((Bone) object).isBoneVisible()) {
                     drawTransformObject(g, (TransformObject) object);
                 }
             }
         });
     }
 
-    private void drawLayer(Graphics g, Layer layer){
-        g.drawImage(layer.getResultBitmap(), scale * (offset.x + (int)layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + (int)layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
+    private void drawLayer(Graphics g, Layer layer) {
+        g.drawImage(layer.getResultBitmap(), scale * (offset.x + (int) layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + (int) layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
     }
 
-    private void drawInterface(Graphics g){
+    private void drawInterface(Graphics g) {
         g.setColor(Color.gray);
 
         //Draw ruler
         Point mousePosition = this.getMousePosition();
-        if(mousePosition != null){
+        if (mousePosition != null) {
             g.drawImage(horizontalRulerImage, mousePosition.x - rulerWidth / 2, 0, rulerWidth, rulerHeight, null);
             g.drawImage(verticalRulerImage, 0, mousePosition.y - rulerHeight / 2, rulerWidth, rulerHeight, null);
         }
@@ -162,32 +162,32 @@ public class CanvasPanel extends JPanel {
         g.setColor(Color.black);
     }
 
-    private void drawSelection(Graphics g){
+    private void drawSelection(Graphics g) {
         SceneObject object = canvasController.getSelection();
 
-        if(object == null)
+        if (object == null)
             return;
 
         g.setColor(Color.black);
 
-        if(object instanceof Layer){
+        if (object instanceof Layer) {
             drawSelectedLayer(g, (Layer) object);
         }
-        if(object instanceof TransformObject){
+        if (object instanceof TransformObject) {
             drawTransformObjects(g, (TransformObject) object);
         }
     }
 
-    private void drawSelectedLayer(Graphics g, Layer object){
+    private void drawSelectedLayer(Graphics g, Layer object) {
         g.setColor(Color.black);
-        g.drawRect(scale * (offset.x + (int)object.getGlobalPosition().x - object.getRootVectorOrigin().x), scale * (offset.y + (int)object.getGlobalPosition().y - object.getRootVectorOrigin().y),
+        g.drawRect(scale * (offset.x + (int) object.getGlobalPosition().x - object.getRootVectorOrigin().x), scale * (offset.y + (int) object.getGlobalPosition().y - object.getRootVectorOrigin().y),
                 scale * object.getSourceBitmap().getWidth(), scale * object.getSourceBitmap().getHeight());
     }
 
-    private void drawTransformObjects(Graphics g, TransformObject transformObject){
-        if(transformObject instanceof Group<?>){
+    private void drawTransformObjects(Graphics g, TransformObject transformObject) {
+        if (transformObject instanceof Group<?>) {
             ((Group<SceneObject>) transformObject).getChildren().forEach(object -> {
-                if(object instanceof Bone)
+                if (object instanceof Bone)
                     drawTransformObjects(g, (Bone) object);
             });
         }
@@ -195,14 +195,14 @@ public class CanvasPanel extends JPanel {
         drawTransformObject(g, transformObject);
     }
 
-    private void drawTransformObject(Graphics g, TransformObject transformObject){
+    private void drawTransformObject(Graphics g, TransformObject transformObject) {
         Graphics2D graphics2D = (Graphics2D) g;
         graphics2D.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)); //TODO magic number
 
         graphics2D.setColor(xAxisColor);
 
         //TODO add more adaptivity. You too dump to remember all spots like this
-        Point position = new Point((int)transformObject.getGlobalPosition().x, (int)transformObject.getGlobalPosition().y);
+        Point position = new Point((int) transformObject.getGlobalPosition().x, (int) transformObject.getGlobalPosition().y);
 
         //Vectors
         //rootDirection
@@ -220,23 +220,24 @@ public class CanvasPanel extends JPanel {
                 (int) Math.round(scale * (offset.y + position.y + rotationVector.y)));
     }
 
-    private void drawLocalCoordinateOrigin(Graphics g, TransformObject object){
+    private void drawLocalCoordinateOrigin(Graphics g, TransformObject object) {
 
     }
 
     /**
      * Convert mouse screen coordinates to canvas coordinates
+     *
      * @param screen mouse coordinates on screen
      * @return Point
      */
-    private Point screenToCanvas(Point screen){
+    private Point screenToCanvas(Point screen) {
         screen.x = screen.x / scale - offset.x;
         screen.y = screen.y / scale - offset.y;
 
         return screen;
     }
 
-    private void linkKeyShortcuts(){ //TODO replace to KeyBinds
+    private void linkKeyShortcuts() { //TODO replace to KeyBinds
         Action pressed = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -255,13 +256,13 @@ public class CanvasPanel extends JPanel {
         getActionMap().put("released BUTTON1", released);
     }
 
-    private void createMouseListeners(){
+    private void createMouseListeners() {
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(SwingUtilities.isLeftMouseButton(e))
+                if (SwingUtilities.isLeftMouseButton(e))
                     toolPanelController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
-                if(SwingUtilities.isRightMouseButton(e))
+                if (SwingUtilities.isRightMouseButton(e))
                     toolPanelController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
                 uiManager.updateInspector(); //TODO optimization
 
@@ -270,14 +271,14 @@ public class CanvasPanel extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if(e.getButton() == MouseEvent.BUTTON2){
+                if (e.getButton() == MouseEvent.BUTTON2) {
                     isScrollPressed = true;
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if(e.getButton() == MouseEvent.BUTTON2){
+                if (e.getButton() == MouseEvent.BUTTON2) {
                     isScrollPressed = false;
                 }
             }
@@ -307,13 +308,14 @@ public class CanvasPanel extends JPanel {
             final Point direction = new Point(0, 0);
 
             int pixelsPassed = 0;
+
             @Override
             public void mouseDragged(MouseEvent e) {
                 calculateDirection(e.getPoint());
 
-                if(SwingUtilities.isLeftMouseButton(e))
+                if (SwingUtilities.isLeftMouseButton(e))
                     toolPanelController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
-                if(SwingUtilities.isRightMouseButton(e))
+                if (SwingUtilities.isRightMouseButton(e))
                     toolPanelController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
 
                 uiManager.updateTree();//TODO optimization
@@ -322,8 +324,8 @@ public class CanvasPanel extends JPanel {
                 //LOCKED! CAN NOT BE IN TOOLS! IMPORTANT FUNCTION!
                 pixelsPassed += 1;
 
-                if(pixelsPassed >= scale){
-                    if(isScrollPressed){
+                if (pixelsPassed >= scale) {
+                    if (isScrollPressed) {
                         offset.x += direction.x;
                         offset.y += direction.y;
                     }
@@ -340,7 +342,7 @@ public class CanvasPanel extends JPanel {
                 repaint(new Rectangle(0, 0, getWidth(), rulerHeight));
             }
 
-            private void calculateDirection(Point pos){
+            private void calculateDirection(Point pos) {
                 direction.x = pos.x - oldPos.x;
                 direction.y = pos.y - oldPos.y;
 
