@@ -28,20 +28,22 @@ public class Toolbar extends JPanel {
         content = new JPanel();
         ArrayList<Tool> tools = toolPanelController.getToolList();
         content.setLayout(layout);
-        for(int i = 0; i < 2; i++){
-            content.add(createTool(tools.get(i)));
-        }
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.fill = GridBagConstraints.HORIZONTAL; //TODO need tests
+        for(int i = 0; i < 2; i++){
+            content.add(createTool(tools.get(i)), constraints);
+        }
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.weightx = 1.0d;
         content.add(new JPanel(), constraints);
+
+        add(new JLabel("Toolbar"), BorderLayout.PAGE_START);
         add(content, BorderLayout.CENTER);
+        add(new JSeparator(), BorderLayout.PAGE_END);
     }
 
     private void setupPanel(){
         setLayout(new BorderLayout());
-        add(new JLabel("Toolbar"), BorderLayout.PAGE_START);
     }
 
     private Component createTool(Tool tool){

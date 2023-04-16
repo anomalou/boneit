@@ -7,6 +7,7 @@ import org.anomalou.model.scene.Layer;
 import org.anomalou.model.scene.SceneObject;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,8 +59,9 @@ public class InspectorPanel extends JPanel {
         constraints.gridx = 0;
         for(int i = 0; i < fields.length; i++){
             if(fields[i].isAnnotationPresent(Editable.class)) {
-                Component component = getFieldEditor(fields[i], selected);
+                JPanel component = getFieldEditor(fields[i], selected);
                 if(component != null){
+                    component.setBorder(BorderFactory.createTitledBorder(new EmptyBorder(0, 0, 0, 0), fields[i].getAnnotation(Editable.class).name()));
                     container.add(component, constraints);
                 }
             }
@@ -80,7 +82,7 @@ public class InspectorPanel extends JPanel {
         return fields.toArray(new Field[]{});
     }
 
-    private Component getFieldEditor(Field field, Object object){
+    private JPanel getFieldEditor(Field field, Object object){
         if(field.getAnnotation(Editable.class).editorType() == EditorType.TEXT_FIELD){
             return createTextField(field, object);
         }
@@ -117,7 +119,7 @@ public class InspectorPanel extends JPanel {
         return -1;
     }
 
-    private Component createTextField(Field field, Object object){
+    private JPanel createTextField(Field field, Object object){
         JTextField textField = new JTextField();
 
         String fieldName = field.getAnnotation(Editable.class).name();
@@ -154,13 +156,12 @@ public class InspectorPanel extends JPanel {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder(fieldName));
         panel.add(textField);
 
         return panel;
     }
 
-    private Component createCheckBox(Field field, Object object){
+    private JPanel createCheckBox(Field field, Object object){
         JCheckBox checkBox = new JCheckBox("Enabled");
 
         String fieldName = field.getAnnotation(Editable.class).name();
@@ -176,13 +177,12 @@ public class InspectorPanel extends JPanel {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder(fieldName));
         panel.add(checkBox);
 
         return panel;
     }
 
-    private Component createVectorField(Field field, Object object){
+    private JPanel createVectorField(Field field, Object object){
         JTextField xTextField = new JTextField();
         JTextField yTextField = new JTextField();
 
@@ -246,8 +246,8 @@ public class InspectorPanel extends JPanel {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-        panel.setBorder(BorderFactory.createTitledBorder(fieldName));
         panel.add(xTextField);
+        panel.add(Box.createRigidArea(new Dimension(5, 0)));
         panel.add(yTextField);
 
         return panel;

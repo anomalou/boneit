@@ -14,12 +14,11 @@ import org.anomalou.model.Project;
 import org.anomalou.model.tools.ToolPanel;
 import org.anomalou.view.UIManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
 public class Application {
-
-    private JFrame mainFrame;
     @Getter //TODO set it for TEST only!
     private Project project;
     private ToolPanel toolPanel;
@@ -60,51 +59,10 @@ public class Application {
         uiManager = new UIManager(propertiesController, canvasController, toolPanelController);
     }
 
-    private JFrame makeFrame() {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
-        frame.setTitle("Boneto");
-//        frame.setIconImage(Toolkit.getDefaultToolkit().getImage());
-        return frame;
-    }
-
-    public void openInterface() {
-        setUpLookAndFeel();
-
-        mainFrame = makeFrame();
-        uiManager.initInterface();
-        uiManager.relocateView();
-
-        if (mainFrame.getComponentCount() > 0)
-            mainFrame.remove(uiManager);
-        mainFrame.setLayout(new BorderLayout());
-
-        mainFrame.add(uiManager, BorderLayout.CENTER);
-        mainFrame.revalidate();
-        mainFrame.setVisible(true);
-    }
-
-    private void setUpLookAndFeel() {
+    public void start(){
         try {
-            FlatLaf theme = new FlatLightLaf();
-            System.setProperty("flatlaf.useWindowDecorations", "true");
-            System.setProperty("flatlaf.menuBarEmbedded", "true");
-            System.setProperty("flatlaf.animation", "true");
-            System.setProperty("flatlaf.uiScale", "1.2");
-
-            javax.swing.UIManager.put("Button.arc", 5);
-            javax.swing.UIManager.put("Component.arc", 5);
-            javax.swing.UIManager.put("ProgressBar.arc", 5);
-            javax.swing.UIManager.put("TextComponent.arc", 5);
-
-            javax.swing.UIManager.put("ScrollBar.trackArc", 999);
-            javax.swing.UIManager.put("ScrollBar.thumbArc", 999);
-            javax.swing.UIManager.put("ScrollBar.trackInsets", new Insets(2, 4, 2, 4));
-            javax.swing.UIManager.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2));
-
-            javax.swing.UIManager.setLookAndFeel(theme);
-        } catch (Exception ex) {
+            uiManager.openInterface();
+        }catch (NullPointerException ex){
             ex.printStackTrace();
         }
     }

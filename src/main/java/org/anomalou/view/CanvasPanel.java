@@ -8,14 +8,10 @@ import org.anomalou.model.FPoint;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -25,7 +21,8 @@ public class CanvasPanel extends JPanel {
     private final PropertiesController propertiesController;
     private final ToolPanelController toolPanelController;
 
-    private BufferedImage rulerImage;
+    private BufferedImage horizontalRulerImage;
+    private BufferedImage verticalRulerImage;
 
     private int rulerWidth;
     private int rulerHeight;
@@ -87,9 +84,13 @@ public class CanvasPanel extends JPanel {
 
     private void loadGraphics(){//TODO something with textures
         try{
-            rulerImage = ImageIO.read(new File("ruler.png"));
+            horizontalRulerImage = ImageIO.read(this.getClass().getResource("ruler.png"));
+            verticalRulerImage = new BufferedImage(horizontalRulerImage.getWidth(), horizontalRulerImage.getHeight(), horizontalRulerImage.getType());
+            Graphics2D g2d = (Graphics2D) verticalRulerImage.getGraphics();
+            g2d.rotate(Math.toRadians(-90), horizontalRulerImage.getWidth() / 2.0, horizontalRulerImage.getHeight() / 2.0);
+            g2d.drawImage(horizontalRulerImage, 0, 0, null);
         }catch (IOException exception){
-            //TODO temporary
+            exception.printStackTrace();
         }
     }
 
@@ -136,8 +137,8 @@ public class CanvasPanel extends JPanel {
         //Draw ruler
         Point mousePosition = this.getMousePosition();
         if(mousePosition != null){
-            g.drawImage(rulerImage, mousePosition.x - rulerWidth / 2, 0, rulerWidth, rulerHeight, null);
-            g.drawImage(rulerImage, 0, mousePosition.y - rulerHeight / 2, rulerWidth, rulerHeight, null);
+            g.drawImage(horizontalRulerImage, mousePosition.x - rulerWidth / 2, 0, rulerWidth, rulerHeight, null);
+            g.drawImage(verticalRulerImage, 0, mousePosition.y - rulerHeight / 2, rulerWidth, rulerHeight, null);
         }
 
         //LU corner
@@ -334,6 +335,9 @@ public class CanvasPanel extends JPanel {
             @Override
             public void mouseMoved(MouseEvent e) {
                 calculateDirection(e.getPoint());
+
+                repaint(new Rectangle(0, 0, rulerWidth, getHeight()));
+                repaint(new Rectangle(0, 0, getWidth(), rulerHeight));
             }
 
             private void calculateDirection(Point pos){

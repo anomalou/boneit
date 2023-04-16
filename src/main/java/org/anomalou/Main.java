@@ -102,7 +102,7 @@ public class Main {
 
         application.getCanvasController().applyTransform(root);
 
-        application.openInterface();
+        application.start();
 
 //        JFrame frame = makeFrame();
 //        application.getUiManager().initInterface();
