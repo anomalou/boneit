@@ -4,13 +4,16 @@ import org.anomalou.model.Canvas;
 import org.anomalou.model.FPoint;
 import org.anomalou.model.scene.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * Tools for accept rotation and reposition transformations
  */
 public class TransformTool implements Tool {
     private final String name = "Transform";
+    private Image icon;
 
     private final org.anomalou.model.Canvas canvas;
 
@@ -20,11 +23,18 @@ public class TransformTool implements Tool {
         this.canvas = canvas;
 
         oldPosition = new Point();
+
+        loadResources();
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public Image getIcon() {
+        return icon;
     }
 
     @Override
@@ -91,5 +101,13 @@ public class TransformTool implements Tool {
             result.y = -1;
 
         return result;
+    }
+
+    private void loadResources(){
+        try{
+            icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("transform.png")));
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }

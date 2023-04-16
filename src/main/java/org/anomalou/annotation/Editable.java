@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 public @interface Editable {
     String name();
 
+    String description() default "";
+
     EditorType editorType();
 }
 

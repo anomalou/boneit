@@ -58,6 +58,9 @@ public class UIManager {
         constraints.weighty = 1.0d;
         constraints.insets = new Insets(0, 5, 0, 5);
         mainFrame.add(content, constraints);
+
+        mainFrame.setJMenuBar(createMenuBar());
+
         mainFrame.revalidate();
         mainFrame.setVisible(true);
     }
@@ -97,6 +100,16 @@ public class UIManager {
             ex.printStackTrace();
         }
         return frame;
+    }
+
+    private JMenuBar createMenuBar(){
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.add(new JMenuItem("Open"));
+        menuBar.add(fileMenu);
+
+        return menuBar;
     }
 
     public void initInterface() {

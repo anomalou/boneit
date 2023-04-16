@@ -65,6 +65,7 @@ public class CanvasPanel extends JPanel {
 
         setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setBorder(new LineBorder(Color.lightGray));
+        setBackground(Color.white);
 
         loadGraphics();
         loadProperties();

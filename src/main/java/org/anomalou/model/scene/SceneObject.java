@@ -25,7 +25,7 @@ public class SceneObject implements Serializable, Comparable<SceneObject>, Node<
     /**
      * Name of the layer. Human friendly
      */
-    @Editable(name = "Name", editorType = EditorType.TEXT_FIELD)
+    @Editable(name = "Name", description = "Name of the object", editorType = EditorType.TEXT_FIELD)
     @Getter
     @Setter
     protected String name;
@@ -33,21 +33,21 @@ public class SceneObject implements Serializable, Comparable<SceneObject>, Node<
      * Priority of the layer in render queue. <br>
      * Big number of priority, means early render, also work oppositely
      */
-    @Editable(name = "Priority", editorType = EditorType.TEXT_FIELD)
+    @Editable(name = "Priority", description = "Priority that set up order for scene objects", editorType = EditorType.TEXT_FIELD)
     @Getter
     @Setter
     protected Integer priority;
     /**
      * Position in local coordinates.
      */
-    @Editable(name = "Local position", editorType = EditorType.VECTOR_EDITOR)
+    @Editable(name = "Local position", description = "Position of the object by its origin position", editorType = EditorType.VECTOR_EDITOR)
     @Getter
     @Setter
     protected Point localPosition;
     /**
      * Origin of local coordinates on scene
      */
-    @Editable(name = "Origin position", editorType = EditorType.VECTOR_EDITOR)
+    @Editable(name = "Origin position", description = "Position of (0; 0) local coordinates in global", editorType = EditorType.VECTOR_EDITOR)
     @Getter
     @Setter
     protected Point originPosition;

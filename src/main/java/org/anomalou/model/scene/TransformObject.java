@@ -15,21 +15,21 @@ public class TransformObject extends SceneObject {
     /**
      * Source of normal vector of the bone.
      */
-    @Editable(name = "Root vector source", editorType = EditorType.VECTOR_EDITOR)
+    @Editable(name = "Root vector source", description = "Position in pixels of beginning of the direction vector", editorType = EditorType.VECTOR_EDITOR)
     @Getter
     @Setter
     protected Point rootVectorOrigin;
     /**
      * Direction of normal vector of the bone.
      */
-    @Editable(name = "Root vector direction", editorType = EditorType.VECTOR_EDITOR)
+    @Editable(name = "Root vector direction", description = "Position in pixels of end of the direction vector", editorType = EditorType.VECTOR_EDITOR)
     @Getter
     @Setter
     protected Point rootVectorDirection;
     /**
      * Angle of the bone in radian.
      */
-    @Editable(name = "Rotation angle", editorType = EditorType.TEXT_FIELD)
+    @Editable(name = "Rotation angle", description = "Rotation angle of the direction vector in radian", editorType = EditorType.TEXT_FIELD)
     @Getter
     @Setter
     protected Double rotationAngle;

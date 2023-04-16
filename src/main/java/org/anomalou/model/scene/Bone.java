@@ -16,14 +16,14 @@ public class Bone extends TransformObject implements Group<SceneObject> {
     /**
      * Visibility of the bone rig.
      */
-    @Editable(name = "Set bone always visible", editorType = EditorType.CHECK_BOX)
+    @Editable(name = "Set bone always visible", description = "Should the bone rig always shown?", editorType = EditorType.CHECK_BOX)
     @Getter
     @Setter
     private boolean isBoneVisible;
     /**
      * Set this bone to end of a parents.
      */
-    @Editable(name = "Set at end", editorType = EditorType.CHECK_BOX)
+    @Editable(name = "Set at end", description = "Puts this bone's origin position to its of its parent", editorType = EditorType.CHECK_BOX)
     @Getter
     @Setter
     private boolean setAtEnd;

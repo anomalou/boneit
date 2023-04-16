@@ -62,6 +62,7 @@ public class InspectorPanel extends JPanel {
                 JPanel component = getFieldEditor(fields[i], selected);
                 if (component != null) {
                     component.setBorder(BorderFactory.createTitledBorder(new EmptyBorder(0, 0, 0, 0), fields[i].getAnnotation(Editable.class).name()));
+                    component.setToolTipText(fields[i].getAnnotation(Editable.class).description());
                     container.add(component, constraints);
                 }
             }

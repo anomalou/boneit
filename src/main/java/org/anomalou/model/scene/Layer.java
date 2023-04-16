@@ -30,7 +30,7 @@ public class Layer extends TransformObject { //a base class for layers or bones
     /**
      * Visibility of the bitmap.
      */
-    @Editable(name = "Set visibility", editorType = EditorType.CHECK_BOX)
+    @Editable(name = "Set visibility", description = "Visibility of the layer on scene", editorType = EditorType.CHECK_BOX)
     @Getter
     @Setter
     protected boolean isVisible;

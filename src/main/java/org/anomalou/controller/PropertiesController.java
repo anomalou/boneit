@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.Properties;
 
 public class PropertiesController extends Controller {
-    private final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath(); //TODO may null pointer exception source
+    private final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath(); //TODO move it to resources
     private final String propertiesPath = rootPath + "config.properties";
 
     private final Properties properties;
@@ -54,6 +54,7 @@ public class PropertiesController extends Controller {
         properties.put("scale.max", "50");
         properties.put("preview.width", "20");
         properties.put("preview.height", "20");
+        properties.put("toolicon.scale", "25");
         properties.store(fileOutputStream, "Bone-it configuration file");
         fileOutputStream.close();
     }

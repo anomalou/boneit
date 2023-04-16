@@ -4,20 +4,33 @@ import org.anomalou.model.Canvas;
 import org.anomalou.model.scene.SceneObject;
 import org.anomalou.model.scene.TransformObject;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Objects;
 
 public class PointerTool implements Tool{
     private final String name = "Pointer";
+    private Image icon;
 
     private final Canvas canvas;
 
     public PointerTool(Canvas canvas){
         this.canvas = canvas;
+
+        loadResources();
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public Image getIcon() {
+        return icon;
     }
 
     @Override
@@ -52,5 +65,13 @@ public class PointerTool implements Tool{
 
         if(!selected)
             canvas.setSelection(null);
+    }
+
+    private void loadResources(){
+        try{
+            icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("pointer.png")));
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }

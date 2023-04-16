@@ -7,6 +7,7 @@ import java.awt.*;
  */
 public interface Tool {
     String getName();
+    Image getIcon();
 
     /**
      * Return rect to redraw

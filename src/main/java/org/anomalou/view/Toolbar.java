@@ -1,5 +1,6 @@
 package org.anomalou.view;
 
+import org.anomalou.controller.PropertiesController;
 import org.anomalou.controller.ToolPanelController;
 import org.anomalou.model.tools.Tool;
 
@@ -11,14 +12,19 @@ import java.util.ArrayList;
 
 public class Toolbar extends JPanel {
     private final UIManager uiManager;
+    private final PropertiesController propertiesController;
     private final ToolPanelController toolPanelController;
 
     private JPanel content;
 
+    private int iconScale;
+
     public Toolbar(UIManager uiManager) {
         this.uiManager = uiManager;
+        this.propertiesController = uiManager.getPropertiesController();
         this.toolPanelController = uiManager.getToolPanelController();
 
+        loadProperties();
         setupPanel();
         createToolbar();
     }
@@ -29,7 +35,8 @@ public class Toolbar extends JPanel {
         ArrayList<Tool> tools = toolPanelController.getToolList();
         content.setLayout(layout);
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.HORIZONTAL; //TODO need tests
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.insets = new Insets(5, 5, 5, 5);
         for (int i = 0; i < 2; i++) {
             content.add(createTool(tools.get(i)), constraints);
         }
@@ -47,8 +54,11 @@ public class Toolbar extends JPanel {
     }
 
     private Component createTool(Tool tool) {
-        JButton toolButton = new JButton(tool.getName());
+        JButton toolButton = new JButton();
         toolButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        toolButton.setIcon(new ImageIcon(tool.getIcon().getScaledInstance(iconScale, iconScale, Image.SCALE_FAST)));
+        toolButton.setToolTipText(tool.getName());
 
         toolButton.addActionListener(new ActionListener() {
             @Override
@@ -58,5 +68,9 @@ public class Toolbar extends JPanel {
         });
 
         return toolButton;
+    }
+
+    private void loadProperties(){
+        iconScale = propertiesController.getInt("toolicon.scale");
     }
 }
