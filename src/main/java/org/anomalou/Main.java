@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,10 +21,10 @@ public class Main {
         BufferedImage sunflower_img = null;
         BufferedImage stem_img = null;
         try{
-            img = ImageIO.read(new File("test.png"));
-            arrow = ImageIO.read(new File("low_arrow.png"));
-            sunflower_img = ImageIO.read(new File("sunflower.png"));
-            stem_img = ImageIO.read(new File("stem.png"));
+            img = ImageIO.read(Main.class.getResource("debug/test.png"));
+//            arrow = ImageIO.read(new File("low_arrow.png"));
+//            sunflower_img = ImageIO.read(new File("sunflower.png"));
+            stem_img = ImageIO.read(Main.class.getResource("debug/stem.png"));
         }catch (IOException ex){
             ex.printStackTrace();
         }

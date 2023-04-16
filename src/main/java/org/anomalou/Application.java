@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.ui.FlatTableCellBorder;
 import lombok.Getter;
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.ProjectController;
@@ -63,8 +64,8 @@ public class Application {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
-//        frame.setVisible(true);
         frame.setTitle("Boneto");
+//        frame.setIconImage(Toolkit.getDefaultToolkit().getImage());
         return frame;
     }
 
