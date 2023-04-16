@@ -3,6 +3,9 @@ package org.anomalou.model;
 import java.awt.*;
 import java.io.Serializable;
 
+/**
+ * Default object to store coordinates in real format. By default, type is <code>double<code/>
+ */
 public class FPoint implements Serializable {
     public double x;
     public double y;

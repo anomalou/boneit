@@ -5,16 +5,18 @@ import org.anomalou.model.FPoint;
 import org.anomalou.model.scene.*;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
-public class PointerTool implements Tool {
-    private final String name = "Pointer";
+/**
+ * Tools for accept rotation and reposition transformations
+ */
+public class TransformTool implements Tool {
+    private final String name = "Transform";
 
     private final org.anomalou.model.Canvas canvas;
 
     private Point oldPosition;
 
-    public PointerTool(Canvas canvas){
+    public TransformTool(Canvas canvas){
         this.canvas = canvas;
 
         oldPosition = new Point();
@@ -72,7 +74,7 @@ public class PointerTool implements Tool {
         object.applyTransformation();
     }
 
-    private void repose(Point position){ //TODO need fix, not works!
+    private void repose(Point position){
         SceneObject object = canvas.getSelection();
         if(object == null)
             return;
@@ -90,6 +92,11 @@ public class PointerTool implements Tool {
         }
     }
 
+    /**
+     * Normalize vector point to 0..1
+     * @param point vector to normalize
+     * @return Normalized vector
+     */
     private Point normalizeDirection(Point point){
         Point result = new Point(point);
 

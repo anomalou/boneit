@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * Object that store all scene objects. Used for faster access to them
+ */
 public class ObjectCache implements Serializable {
     private final Logger logger = Logger.getLogger(ObjectCache.class.getName());
 

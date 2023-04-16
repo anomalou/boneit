@@ -9,6 +9,9 @@ import org.anomalou.model.FPoint;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Default group object. Uses tree dependency structure. Also, can be as group, also as a node of the group
+ */
 public class Bone extends TransformObject implements Group<SceneObject> {
     /**
      * Visibility of the bone rig.
@@ -69,9 +72,9 @@ public class Bone extends TransformObject implements Group<SceneObject> {
 
     @Override
     public void addObject(SceneObject object) {
-        if(object instanceof Node<?>){
+        if(object != null){
             try{
-                ((Node<SceneObject>) object).setParent(this);
+                object.setParent(this);
             }catch (Exception ex){
                 logger.warning(ex.getMessage());
             }
@@ -81,9 +84,9 @@ public class Bone extends TransformObject implements Group<SceneObject> {
 
     @Override
     public void removeObject(SceneObject object) {
-        if(object instanceof Node<?>){
+        if(object != null){
             try{
-                ((Node<SceneObject>) object).setParent(null);
+                object.setParent(null);
             }catch (Exception ex){
                 logger.warning(ex.getMessage());
             }

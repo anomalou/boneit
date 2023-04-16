@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+/**
+ * Default scene object that can have image. Applies all transformation to image
+ */
 public class Layer extends TransformObject { //a base class for layers or bones
     /**
      * Just image of the layer, its shape MUST be 1x1 or larger! <br>

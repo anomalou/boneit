@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * Object that compose all scene objects to solid image
+ */
 public class Canvas implements Serializable {
     private final Logger logger = Logger.getLogger(Canvas.class.getName());
 
@@ -109,72 +112,6 @@ public class Canvas implements Serializable {
 
         return oArray;
     }
-
-//    public void applyTransform(Bone object){ //TODO also for layers
-//        applyRotation(object, object.getParentRotationAngle() + object.getRotationAngle());
-//        applyPosition(object);
-//
-//        logger.fine(String.format("Bone %s position applied!", object.getUuid()));
-//    }
-
-//    public void applyTransform(TransformObject object){
-//        try {
-//            object.applyTransformation();
-//        }catch (ExecutionControl.NotImplementedException ex){
-//            logger.warning(ex.getMessage());
-//        }
-//    }
-
-//    public void applyPosition(Bone object){
-//        FPoint rotatedVector;
-//        rotatedVector = calculateFullRotationVector(object);
-//
-//        FPoint childrenPosition;
-//        if(!object.isChildSetAtEnd())
-//            childrenPosition = new FPoint(object.getPosition().x + rotatedVector.x, object.getPosition().y + rotatedVector.y);
-//        else
-//            childrenPosition = new FPoint(object.getPosition().x, object.getPosition().y);
-//
-//        object.getChildren().forEach(uuid -> {
-//            Layer l = objectCache.getObjects().get(uuid);
-//            if(l.getClass().equals(Bone.class)){
-//                Bone b = (Bone) l;
-//                b.setPosition(new Point((int)Math.round(childrenPosition.x), (int)Math.round(childrenPosition.y)));
-//
-//                applyPosition(b);
-//            }
-//        });
-//    }
-
-//    public void applyRotation(Bone object, Double additionalAngle){
-//        applyBoneRotation(object, additionalAngle);
-//
-//        object.getChildren().forEach(uuid -> {
-//            Layer l = objectCache.getObjects().get(uuid);
-//            if(l.getClass().equals(Bone.class)){
-//                Bone b = (Bone) l;
-//                b.setParentRotationAngle(additionalAngle);
-//
-//                Double parentAngle = additionalAngle;
-//
-//                applyRotation(b, parentAngle + b.getRotationAngle());
-//            }
-//        });
-//    }
-
-    //TODO maybe, in future, if i have time, make transformBitmap adaptation to rotation of the image
-//    public void applyBoneRotation(Bone bone, Double angle){
-//        bone.setResultBitmap(new BufferedImage(bone.getSourceBitmap().getWidth(), bone.getSourceBitmap().getHeight(), BufferedImage.TYPE_INT_ARGB));
-//        Graphics2D g2d = bone.getResultBitmap().createGraphics();
-//        angle *= -1;
-//        g2d.rotate(angle, bone.getRootVectorOrigin().x, bone.getRootVectorOrigin().y);
-//        g2d.drawImage(bone.getSourceBitmap(), null, 0, 0);
-//        g2d.dispose();
-//
-//        logger.fine(String.format("Bone %s rotated to %f angle!", bone.getUuid().toString(), angle));
-//    }
-
-
 
     public void updateObjects(){
         getSceneObjects().forEach(object -> {

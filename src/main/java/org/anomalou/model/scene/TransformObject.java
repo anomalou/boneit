@@ -8,6 +8,9 @@ import org.anomalou.model.FPoint;
 
 import java.awt.*;
 
+/**
+ * Default scene object that can applies various transformation to itself
+ */
 public class TransformObject extends SceneObject{
     /**
      * Source of normal vector of the bone.

@@ -12,7 +12,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
- * Base class for all scene objects. Extends from it for compability with other objects.
+ * Origin class for all scene objects. Extend from it for compatibility with other objects
  */
 public class SceneObject implements Serializable, Comparable<SceneObject>, Node<SceneObject> {
     protected transient final Logger logger = Logger.getLogger(Layer.class.getName());

@@ -41,7 +41,7 @@ public class ToolPanel {
     }
 
     private void loadDefaultTools(){
-        tools.add(new PointerTool(canvas));
+        tools.add(new TransformTool(canvas));
 
         currentTool = tools.get(0);
     }

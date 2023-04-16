@@ -2,6 +2,9 @@ package org.anomalou.model.tools;
 
 import java.awt.*;
 
+/**
+ * Interface for connection all tools. All tools can have only two action: primary and secondary
+ */
 public interface Tool {
     String getName();
 
