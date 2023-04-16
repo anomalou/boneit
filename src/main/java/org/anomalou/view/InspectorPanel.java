@@ -33,42 +33,41 @@ public class InspectorPanel extends JPanel {
 
     private void initialize(){
         setLayout(new BorderLayout());
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        add(new JLabel("Inspector"), BorderLayout.PAGE_START);
+        container.setLayout(new GridBagLayout());
         add(new JScrollPane(container), BorderLayout.CENTER);
     }
 
     public void updateFields(){
+        container.removeAll();
+
         if(canvasController.getSelection() != null)
             buildFieldsEditor();
-        else{
-            container.removeAll();
-            revalidate();
-        }
+
+        revalidate();
     }
 
     private void buildFieldsEditor(){
-        container.removeAll();
-
         SceneObject selected = canvasController.getSelection();
 
         Field[] fields = unpackFields(selected.getClass());
 
-        Box verticalBox = Box.createVerticalBox();
-
-        for(Field f : fields){
-            if(f.isAnnotationPresent(Editable.class)) {
-                Component component = getFieldEditor(f, selected);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1.0d;
+        constraints.gridx = 0;
+        for(int i = 0; i < fields.length; i++){
+            if(fields[i].isAnnotationPresent(Editable.class)) {
+                Component component = getFieldEditor(fields[i], selected);
                 if(component != null){
-                    verticalBox.add(component);
+                    container.add(component, constraints);
                 }
             }
         }
 
-        verticalBox.add(Box.createGlue());
-
-        container.add(verticalBox);
-
-        revalidate();
+        constraints.gridheight = GridBagConstraints.REMAINDER;
+        constraints.weighty = 1.0d;
+        container.add(new JPanel(), constraints);
     }
 
     private Field[] unpackFields(Class<?> clazz){

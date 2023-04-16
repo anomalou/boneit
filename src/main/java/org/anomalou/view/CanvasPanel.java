@@ -8,6 +8,10 @@ import org.anomalou.model.FPoint;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -45,15 +49,25 @@ public class CanvasPanel extends JPanel {
 
     private boolean isScrollPressed;
 
+    private Color xAxisColor;
+    private Color directionColor;
+
     public CanvasPanel(UIManager uiManager){
         this.uiManager = uiManager;
         this.canvasController = uiManager.getCanvasController();
         this.propertiesController = uiManager.getPropertiesController();
         this.toolPanelController = uiManager.getToolPanelController();
+
         offset = new Point(0, 0);
         scale = 1;
 
         isScrollPressed = false;
+
+        xAxisColor = new Color(255, 100, 100);
+        directionColor = new Color(100, 255, 100);
+
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        setBorder(new LineBorder(Color.lightGray));
 
         loadGraphics();
         loadProperties();
@@ -98,13 +112,21 @@ public class CanvasPanel extends JPanel {
         objects.forEach(object -> {
             if(object instanceof Layer){
                 if(((Layer) object).isVisible()){
-                    drawLayer((Layer) object, g);
+                    drawLayer(g, (Layer) object);
+                }
+            }
+        });
+
+        objects.forEach(object -> {
+            if(object instanceof Bone){
+                if(((Bone) object).isBoneVisible()){
+                    drawTransformObject(g, (TransformObject) object);
                 }
             }
         });
     }
 
-    private void drawLayer(Layer layer, Graphics g){
+    private void drawLayer(Graphics g, Layer layer){
         g.drawImage(layer.getResultBitmap(), scale * (offset.x + (int)layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + (int)layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
     }
 
@@ -151,7 +173,7 @@ public class CanvasPanel extends JPanel {
             drawSelectedLayer(g, (Layer) object);
         }
         if(object instanceof TransformObject){
-            drawSelectedTransformObject(g, (TransformObject) object);
+            drawTransformObjects(g, (TransformObject) object);
         }
     }
 
@@ -161,25 +183,22 @@ public class CanvasPanel extends JPanel {
                 scale * object.getSourceBitmap().getWidth(), scale * object.getSourceBitmap().getHeight());
     }
 
-    private void drawSelectedSkeleton(Graphics g, SceneObject object){ //TODO useless
-        Bone bone = (Bone) object;
-//        Point bonePosition = new Point(offset.x + bone.getPosition().x - bone.getRootVectorOrigin().x, offset.y + bone.getPosition().y - bone.getRootVectorOrigin().y);
-//        g.drawRect(scale * (bonePosition.x),
-//                scale * (bonePosition.y),
-//                scale * (bone.getSourceBitmap().getWidth()), scale * (bone.getSourceBitmap().getHeight()));
-
-        drawSelectedTransformObject(g, bone);
-    }
-
-    private void drawSelectedTransformObject(Graphics g, TransformObject transformObject){
+    private void drawTransformObjects(Graphics g, TransformObject transformObject){
         if(transformObject instanceof Group<?>){
             ((Group<SceneObject>) transformObject).getChildren().forEach(object -> {
                 if(object instanceof Bone)
-                    drawSelectedTransformObject(g, (Bone) object);
+                    drawTransformObjects(g, (Bone) object);
             });
         }
 
-        g.setColor(Color.green);
+        drawTransformObject(g, transformObject);
+    }
+
+    private void drawTransformObject(Graphics g, TransformObject transformObject){
+        Graphics2D graphics2D = (Graphics2D) g;
+        graphics2D.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)); //TODO magic number
+
+        graphics2D.setColor(xAxisColor);
 
         //TODO add more adaptivity. You too dump to remember all spots like this
         Point position = new Point((int)transformObject.getGlobalPosition().x, (int)transformObject.getGlobalPosition().y);
@@ -187,18 +206,17 @@ public class CanvasPanel extends JPanel {
         //Vectors
         //rootDirection
         FPoint parentRotationVector = transformObject.calculateParentRotationVector();
-        g.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y),
+        graphics2D.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y),
                 (int) Math.round(scale * (offset.x + position.x + parentRotationVector.x)),
                 (int) Math.round(scale * (offset.y + position.y + parentRotationVector.y)));
 
         //rotation vector
-        g.setColor(Color.cyan);
+        graphics2D.setColor(directionColor);
 
         FPoint rotationVector = transformObject.calculateFullRotationVector();
-        g.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y),
+        graphics2D.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y),
                 (int) Math.round(scale * (offset.x + position.x + rotationVector.x)),
                 (int) Math.round(scale * (offset.y + position.y + rotationVector.y)));
-
     }
 
     private void drawLocalCoordinateOrigin(Graphics g, TransformObject object){

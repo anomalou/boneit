@@ -23,7 +23,7 @@ public class Bone extends TransformObject implements Group<SceneObject> {
     /**
      * Set this bone to end of a parents.
      */
-    @Editable(name = "Set child at end", editorType = EditorType.CHECK_BOX)
+    @Editable(name = "Set at end", editorType = EditorType.CHECK_BOX)
     @Getter
     @Setter
     private boolean setAtEnd;

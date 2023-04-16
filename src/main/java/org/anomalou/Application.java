@@ -1,5 +1,9 @@
 package org.anomalou;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.ProjectController;
@@ -34,21 +38,19 @@ public class Application {
     private ToolPanelController toolPanelController;
 
 
-
     //TODO here will be view, shortcut controller and etc
 
-    public Application(){
+    public Application() {
         propertiesController = new PropertiesController();
-        mainFrame = makeFrame();
     }
 
-    public Project createProject(){
+    public Project createProject() {
         project = new Project();
         openProject(project);
         return project;
     }
 
-    public void openProject(Project project){
+    public void openProject(Project project) {
         this.project = project;
         toolPanel = new ToolPanel(project.getCanvas());
         projectController = new ProjectController(project);
@@ -57,7 +59,7 @@ public class Application {
         uiManager = new UIManager(propertiesController, canvasController, toolPanelController);
     }
 
-    private JFrame makeFrame(){
+    private JFrame makeFrame() {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
@@ -66,16 +68,43 @@ public class Application {
         return frame;
     }
 
-    public void openInterface(){
+    public void openInterface() {
+        setUpLookAndFeel();
+
+        mainFrame = makeFrame();
         uiManager.initInterface();
         uiManager.relocateView();
 
-        if(mainFrame.getComponentCount() > 0)
+        if (mainFrame.getComponentCount() > 0)
             mainFrame.remove(uiManager);
         mainFrame.setLayout(new BorderLayout());
 
         mainFrame.add(uiManager, BorderLayout.CENTER);
         mainFrame.revalidate();
         mainFrame.setVisible(true);
+    }
+
+    private void setUpLookAndFeel() {
+        try {
+            FlatLaf theme = new FlatLightLaf();
+            System.setProperty("flatlaf.useWindowDecorations", "true");
+            System.setProperty("flatlaf.menuBarEmbedded", "true");
+            System.setProperty("flatlaf.animation", "true");
+            System.setProperty("flatlaf.uiScale", "1.2");
+
+            javax.swing.UIManager.put("Button.arc", 5);
+            javax.swing.UIManager.put("Component.arc", 5);
+            javax.swing.UIManager.put("ProgressBar.arc", 5);
+            javax.swing.UIManager.put("TextComponent.arc", 5);
+
+            javax.swing.UIManager.put("ScrollBar.trackArc", 999);
+            javax.swing.UIManager.put("ScrollBar.thumbArc", 999);
+            javax.swing.UIManager.put("ScrollBar.trackInsets", new Insets(2, 4, 2, 4));
+            javax.swing.UIManager.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2));
+
+            javax.swing.UIManager.setLookAndFeel(theme);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

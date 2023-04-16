@@ -1,5 +1,8 @@
 package org.anomalou.view;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
@@ -40,7 +43,12 @@ public class UIManager extends JPanel {
     public void relocateView(){
         this.removeAll();
 
-        JSplitPane rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, canvasPanel, objectTreePanel);
+        JPanel canvasContainer = new JPanel();
+        canvasContainer.setLayout(new BorderLayout());
+        canvasContainer.add(new JLabel("Scene"), BorderLayout.PAGE_START);
+        canvasContainer.add(canvasPanel, BorderLayout.CENTER);
+
+        JSplitPane rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, canvasContainer, objectTreePanel);
         rightSplitPane.setResizeWeight(0.9);
         JSplitPane leftSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, inspectorPanel, rightSplitPane);
         leftSplitPane.setResizeWeight(0.1);
@@ -49,7 +57,7 @@ public class UIManager extends JPanel {
 
         this.add(toolbar, BorderLayout.PAGE_START);
         this.add(leftSplitPane, BorderLayout.CENTER);
-        this.add(new JLabel("Info panel"), BorderLayout.PAGE_END);
+        this.add(new JLabel("by anomalou"), BorderLayout.PAGE_END);
         this.revalidate();
     }
 

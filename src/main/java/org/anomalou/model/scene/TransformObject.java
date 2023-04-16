@@ -11,7 +11,7 @@ import java.awt.*;
 /**
  * Default scene object that can applies various transformation to itself
  */
-public class TransformObject extends SceneObject{
+public class TransformObject extends SceneObject {
     /**
      * Source of normal vector of the bone.
      */
@@ -40,7 +40,7 @@ public class TransformObject extends SceneObject{
     @Setter
     protected Double parentRotationAngle;
 
-    public TransformObject(){
+    public TransformObject() {
         super();
 
         name = "Transform object";
@@ -50,7 +50,7 @@ public class TransformObject extends SceneObject{
         parentRotationAngle = 0d;
     }
 
-    public Double getFullRotationAngle(){
+    public Double getFullRotationAngle() {
         return rotationAngle + parentRotationAngle;
     }
 
@@ -66,9 +66,10 @@ public class TransformObject extends SceneObject{
 
     /**
      * Get angle between direction and rootDirectionPosition vectors, as it began in (0, 0)
+     *
      * @return double
      */
-    public double calculateRotationAngle(FPoint direction){
+    public double calculateRotationAngle(FPoint direction) {
         FPoint normalizedRootDirectionVector = normalizeSourceVector();
 
         double side = (direction.x) * (normalizedRootDirectionVector.y) - (direction.y) * (normalizedRootDirectionVector.x);
@@ -79,8 +80,8 @@ public class TransformObject extends SceneObject{
                 (Math.sqrt(Math.pow(direction.x, 2) + Math.pow(direction.y, 2)) * Math.sqrt(Math.pow(normalizedRootDirectionVector.x, 2) + Math.pow(normalizedRootDirectionVector.y, 2)));
         cos = Math.abs(cos) > 1d ? 1d : cos;
 
-        double resultAngle =  Math.acos(cos) * side;
-        if(Double.isNaN(resultAngle))
+        double resultAngle = Math.acos(cos) * side;
+        if (Double.isNaN(resultAngle))
             resultAngle = 0d;
 
         setRotationAngle(resultAngle);
@@ -90,35 +91,38 @@ public class TransformObject extends SceneObject{
 
     /**
      * Normalize rootDirection vector. Move it to (0; 0) coordinates.
+     *
      * @return FPoint normalized vector
      */
-    public FPoint normalizeSourceVector(){
+    public FPoint normalizeSourceVector() {
         return new FPoint(getRootVectorDirection().x - getRootVectorOrigin().x, (getRootVectorDirection().y - getRootVectorOrigin().y) * -1);
     }
 
-    public FPoint calculateRotationVector(){
+    public FPoint calculateRotationVector() {
         return calculateRotationVectorForAngle(normalizeSourceVector(), getRotationAngle());
     }
 
     /**
      * New vector, result of rotation rootDirection vector. Returns vector that start from (0; 0) coordinates.
+     *
      * @return FPoint vector
      */
-    public FPoint calculateParentRotationVector(){
+    public FPoint calculateParentRotationVector() {
         return calculateRotationVectorForAngle(normalizeSourceVector(), getParentRotationAngle());
     }
 
-    public FPoint calculateFullRotationVector(){
+    public FPoint calculateFullRotationVector() {
         return calculateRotationVectorForAngle(normalizeSourceVector(), getRotationAngle() + getParentRotationAngle());
     }
 
     /**
      * Calculate new vector like if vector (begins in (0, 0)) would be rotated to some angle
+     *
      * @param vector vector to rotate (source in (0,0))
-     * @param angle angle to rotate
+     * @param angle  angle to rotate
      * @return FPoint
      */
-    public FPoint calculateRotationVectorForAngle(FPoint vector, Double angle){
+    public FPoint calculateRotationVectorForAngle(FPoint vector, Double angle) {
         FPoint rotatedVector = new FPoint(vector.x * Math.cos(angle) - vector.y * Math.sin(angle),
                 vector.x * Math.sin(angle) + vector.y * Math.cos(angle));
 
@@ -127,21 +131,22 @@ public class TransformObject extends SceneObject{
         return rotatedVector;
     }
 
-    public FPoint calculateRotationVectorForAngle(Point vector, Double angle){
+    public FPoint calculateRotationVectorForAngle(Point vector, Double angle) {
         return calculateRotationVectorForAngle(new FPoint(vector), angle);
     }
 
     /**
      * Check if point is hit in bound of object (object, bone etc)
+     *
      * @param point point to check
      * @return boolean
      */
-    public boolean isInBounds(Point point){
+    public boolean isInBounds(Point point) {
         return isInRectangle(point, new Rectangle((int) getGlobalPosition().x, (int) getGlobalPosition().y, rootVectorDirection.x, rootVectorDirection.x));
     }
 
-    protected boolean isInRectangle(Point point, Rectangle rectangle){
-        if(point.x >= rectangle.x && point.x < (rectangle.x + rectangle.width)){
+    protected boolean isInRectangle(Point point, Rectangle rectangle) {
+        if (point.x >= rectangle.x && point.x < (rectangle.x + rectangle.width)) {
             return point.y >= rectangle.y && point.y < (rectangle.y + rectangle.height);
         }
 
