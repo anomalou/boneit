@@ -42,25 +42,6 @@ public class TransformTool implements Tool {
         rotate(position);
     }
 
-    /**
-     * Check all objects in cache, that can be in mouse pointer hit area.
-     * @param clickPosition mouse click position in screen coordinates (raw position)
-     */
-    private void select(Point clickPosition){
-        boolean selected = false;
-        for(SceneObject object : canvas.sort()){
-            if(object instanceof TransformObject){
-                if(((TransformObject) object).isInBounds(clickPosition)){
-                    canvas.setSelection(object.getUuid());
-                    selected = true;
-                }
-            }
-        }
-
-        if(!selected)
-            canvas.setSelection(null);
-    }
-
     private void rotate(Point direction){
         TransformObject object = (TransformObject) canvas.getSelection();
         if(object == null)

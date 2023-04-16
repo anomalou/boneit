@@ -21,6 +21,7 @@ public class UIManager extends JPanel {
     private CanvasPanel canvasPanel;
     private InspectorPanel inspectorPanel;
     private ObjectTreePanel objectTreePanel;
+    private Toolbar toolbar;
 
     public UIManager(PropertiesController propertiesController, CanvasController canvasController, ToolPanelController toolPanelController) {
         super();
@@ -33,6 +34,7 @@ public class UIManager extends JPanel {
         canvasPanel = new CanvasPanel(this);
         inspectorPanel = new InspectorPanel(this);
         objectTreePanel = new ObjectTreePanel(this);
+        toolbar = new Toolbar(this);
     }
 
     public void relocateView(){
@@ -45,6 +47,7 @@ public class UIManager extends JPanel {
 
         this.setLayout(new BorderLayout());
 
+        this.add(toolbar, BorderLayout.PAGE_START);
         this.add(leftSplitPane, BorderLayout.CENTER);
         this.add(new JLabel("Info panel"), BorderLayout.PAGE_END);
         this.revalidate();
