@@ -1,11 +1,11 @@
 package org.anomalou.controller;
 
 import java.io.*;
+import java.net.URL;
 import java.util.Properties;
 
 public class PropertiesController extends Controller {
-    private final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath(); //TODO move it to resources
-    private final String propertiesPath = rootPath + "config.properties";
+    private final URL propertiesPath = getClass().getResource("config.properties"); //TODO move it to resources
 
     private final Properties properties;
 
@@ -60,25 +60,26 @@ public class PropertiesController extends Controller {
     }
 
     private void loadPropertiesFile() {
-        File file = new File(propertiesPath);
-        System.out.print(propertiesPath);
+        try {
+            InputStream inputStream;
+            try{
+                inputStream = new FileInputStream("config.properties");
+            }catch (FileNotFoundException exception){
+                inputStream = getClass().getResourceAsStream("default_config.properties");
+                File file = new File("config.properties");
+                file.createNewFile();
+                FileOutputStream outputStream = new FileOutputStream(file);
+                outputStream.write(inputStream.readAllBytes());
+                outputStream.close();
+                FileInputStream fileInputStream = new FileInputStream(file);
+                properties.load(fileInputStream);
+                fileInputStream.close();
+            }
 
-        if (!file.exists()) {
-            try {
-                if (file.createNewFile())
-                    writeDefaultProperties(new FileOutputStream(file));
-            } catch (FileNotFoundException exception) {
-                logger.severe(String.format("File with path %s not founded!", propertiesPath));
-            } catch (IOException exception) {
-                logger.severe(String.format("IO exception! Message:\n%s", exception.getMessage()));
-            }
-        } else {
-            try {
-                properties.load(new FileInputStream(file));
-                logger.fine("Properties file loaded successfully!");
-            } catch (IOException exception) {
-                logger.severe(String.format("Properties file with path \"%s\" was not found! Check write/read rights! Error message:\n%s", propertiesPath, exception.getMessage()));
-            }
+            properties.load(inputStream);
+            logger.fine("Properties file loaded successfully!");
+        } catch (Exception exception) {
+            logger.warning(exception.getMessage());
         }
     }
 
