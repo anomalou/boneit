@@ -14,6 +14,7 @@ out
 *.iws
 *.iml
 *.ipr
+config.properties
 
 ### Eclipse ###
 .apt_generated
