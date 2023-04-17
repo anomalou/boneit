@@ -39,11 +39,25 @@ public class Layer extends TransformObject { //a base class for layers or bones
 
 
     public Layer() {
+        this(1, 1);
+    }
+
+    public Layer(int width, int height) {
         super();
 
         name = "NewLayer";
-        sourceBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        resultBitmap = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        sourceBitmap = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        resultBitmap = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        isVisible = true;
+        logger.fine(String.format("Entity (%s) created!", getUuid().toString()));
+    }
+
+    public Layer(BufferedImage image){
+        super();
+
+        name = "NewLayer";
+        sourceBitmap = image;
+        resultBitmap = image;
         isVisible = true;
         logger.fine(String.format("Entity (%s) created!", getUuid().toString()));
     }

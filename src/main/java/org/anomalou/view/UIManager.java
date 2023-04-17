@@ -71,7 +71,7 @@ public class UIManager {
             System.setProperty("flatlaf.useWindowDecorations", "true");
             System.setProperty("flatlaf.menuBarEmbedded", "true");
             System.setProperty("flatlaf.animation", "true");
-            System.setProperty("flatlaf.uiScale", "1.2");
+            System.setProperty("flatlaf.uiScale", "1");
 
             javax.swing.UIManager.put("Button.arc", 5);
             javax.swing.UIManager.put("Component.arc", 5);
@@ -102,7 +102,7 @@ public class UIManager {
         return frame;
     }
 
-    private JMenuBar createMenuBar(){
+    private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
