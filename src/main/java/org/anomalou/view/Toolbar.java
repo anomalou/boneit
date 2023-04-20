@@ -2,9 +2,13 @@ package org.anomalou.view;
 
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.controller.ToolPanelController;
+import org.anomalou.model.scene.Bone;
+import org.anomalou.model.tools.Palette;
 import org.anomalou.model.tools.Tool;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,9 +41,12 @@ public class Toolbar extends JPanel {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;
         constraints.insets = new Insets(5, 5, 5, 5);
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < tools.size(); i++) {
             content.add(createTool(tools.get(i)), constraints);
         }
+
+        content.add((createPalette()));
+
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.weightx = 1.0d;
         content.add(new JPanel(), constraints);
@@ -68,6 +75,53 @@ public class Toolbar extends JPanel {
         });
 
         return toolButton;
+    }
+
+    private Component createPalette(){
+        JPanel paletteContent = new JPanel();
+
+        Palette palette = toolPanelController.getPalette();
+
+        JButton foreground = new JButton(" ");
+        JButton background = new JButton(" ");
+
+        foreground.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color color = JColorChooser.showDialog(foreground, "Select foreground", palette.getForegroundColor());
+                if(color == null)
+                    return;
+                foreground.setBackground(color);
+                palette.setForegroundColor(color);
+            }
+        });
+
+        background.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color color = JColorChooser.showDialog(background, "Select background", palette.getBackgroundColor());
+                if(color == null)
+                    return;
+                background.setBackground(color);
+                palette.setBackgroundColor(color);
+            }
+        });
+
+        foreground.setBackground(palette.getForegroundColor());
+        background.setBackground(palette.getBackgroundColor());
+
+        paletteContent.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 1.0d;
+        constraints.weighty = 1.0d;
+
+        paletteContent.add(foreground, constraints);
+        paletteContent.add(background, constraints);
+
+        paletteContent.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0), "Palette"));
+
+        return paletteContent;
     }
 
     private void loadProperties() {

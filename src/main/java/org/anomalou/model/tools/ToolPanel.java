@@ -1,6 +1,7 @@
 package org.anomalou.model.tools;
 
 import java.awt.*;
+import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.ArrayList;
 
 import lombok.Getter;
@@ -23,10 +24,14 @@ public class ToolPanel {
     @Setter
     private Tool currentTool;
 
+    @Getter
+    private Palette palette;
+
     public ToolPanel(Canvas canvas){
         this.canvas = canvas;
         tools = new ArrayList<>();
         currentTool = null;
+        palette = new Palette();
 
         loadDefaultTools();
     }
@@ -52,6 +57,7 @@ public class ToolPanel {
     private void loadDefaultTools(){
         tools.add(new PointerTool(canvas));
         tools.add(new TransformTool(canvas));
+        tools.add(new BrushTool(canvas, palette));
 
         currentTool = tools.get(0);
     }

@@ -12,6 +12,7 @@ import java.awt.*;
  * Default scene object that can applies various transformation to itself
  */
 public class TransformObject extends SceneObject {
+    //TODO replace to Vector2D
     /**
      * Source of normal vector of the bone.
      */

@@ -1,5 +1,6 @@
 package org.anomalou.controller;
 
+import org.anomalou.model.tools.Palette;
 import org.anomalou.model.tools.Tool;
 import org.anomalou.model.tools.ToolPanel;
 
@@ -23,6 +24,10 @@ public class ToolPanelController extends Controller {
 
     public ArrayList<Tool> getToolList() {
         return toolPanel.getToolList();
+    }
+
+    public Palette getPalette(){
+        return toolPanel.getPalette();
     }
 
     public void primaryUseTool(Graphics g, Point point) {

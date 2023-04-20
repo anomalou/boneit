@@ -25,7 +25,13 @@ public class ObjectTreeCellRenderer extends DefaultTreeCellRenderer {
 
         if (object instanceof Layer layer) {
             setIcon(new ImageIcon(layer.getSourceBitmap().getScaledInstance(width, height, Image.SCALE_FAST)));
-            setText(layer.toString());
+            String text = "";
+            if(!layer.isVisible())
+                text += "(H)";
+            if(layer.isShowSourceImage())
+                text += "(R)";
+            text += layer.toString();
+            setText(text);
         } else {
             setIcon(null);
             setText(value.toString());

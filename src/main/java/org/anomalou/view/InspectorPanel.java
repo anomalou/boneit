@@ -8,11 +8,13 @@ import org.anomalou.model.scene.SceneObject;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,6 +94,9 @@ public class InspectorPanel extends JPanel {
         }
         if (field.getAnnotation(Editable.class).editorType() == EditorType.VECTOR_EDITOR) {
             return createVectorField(field, object);
+        }
+        if(field.getAnnotation(Editable.class).editorType() == EditorType.IMAGE_PREVIEW){
+            return createImagePreview(field, object);
         }
 
         return null;
@@ -252,5 +257,22 @@ public class InspectorPanel extends JPanel {
         panel.add(yTextField);
 
         return panel;
+    }
+
+    private JPanel createImagePreview(Field field, Object object){
+        JPanel content = new JPanel();
+        BufferedImage image = (BufferedImage) getFieldValue(field, object);
+        ImagePreview preview = new ImagePreview(image);
+        preview.setBackground(Color.white);
+        preview.setBorder(new LineBorder(Color.black));
+
+        content.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 1.0d;
+        constraints.weighty = 1.0d;
+
+        content.add(preview, constraints);
+        return content;
     }
 }

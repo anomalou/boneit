@@ -129,10 +129,14 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawLayer(Graphics g, Layer layer) {
-        g.drawImage(layer.getResultBitmap(), scale * (offset.x + (int) layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + (int) layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
+        if(!layer.isShowSourceImage())
+            g.drawImage(layer.getResultBitmap(), scale * (offset.x + (int) layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + (int) layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
+        else
+            g.drawImage(layer.getSourceBitmap(), scale * (offset.x + (int) layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + (int) layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
     }
 
     private void drawInterface(Graphics g) {
+        Color oldColor = g.getColor();
         g.setColor(Color.gray);
 
         //Draw ruler
@@ -160,7 +164,7 @@ public class CanvasPanel extends JPanel {
         g.drawString(String.format("%d", getWidth() / scale - offset.x - canvasController.getWidth()), getWidth() - rulerCornerOffsetUX, rulerCornerOffsetUY);
         g.drawString(String.format("%d", getHeight() / scale - offset.y - canvasController.getHeight()), rulerCornerOffsetLX, getHeight() - rulerCornerOffsetLY);
 
-        g.setColor(Color.black);
+        g.setColor(oldColor);
     }
 
     private void drawSelection(Graphics g) {

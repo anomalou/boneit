@@ -24,6 +24,7 @@ public class Layer extends TransformObject { //a base class for layers or bones
     /**
      * Result image after all transformations.
      */
+    @Editable(name = "Result preview", description = "Result image after all transformations", editorType = EditorType.IMAGE_PREVIEW)
     @Getter
     @Setter
     private transient BufferedImage resultBitmap;
@@ -34,6 +35,11 @@ public class Layer extends TransformObject { //a base class for layers or bones
     @Getter
     @Setter
     protected boolean isVisible;
+
+    @Editable(name = "Show source image", description = "Show source image over its rotated variant", editorType = EditorType.CHECK_BOX)
+    @Getter
+    @Setter
+    protected boolean showSourceImage;
 
     private SceneObject parent;
 
@@ -49,6 +55,8 @@ public class Layer extends TransformObject { //a base class for layers or bones
         sourceBitmap = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         resultBitmap = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         isVisible = true;
+        showSourceImage = false;
+
         logger.fine(String.format("Entity (%s) created!", getUuid().toString()));
     }
 
