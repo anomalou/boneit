@@ -1,11 +1,8 @@
 package org.anomalou.view;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
-import org.anomalou.Main;
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.controller.ToolPanelController;
@@ -15,8 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class UIManager {
-    private JFrame mainFrame;
-    private JPanel content;
+    private JFrame startupFrame;
+    private JFrame sessionFrame;
     @Getter
     private PropertiesController propertiesController;
     @Getter
@@ -32,37 +29,11 @@ public class UIManager {
     private Toolbar toolbar;
 
     public UIManager(PropertiesController propertiesController, CanvasController canvasController, ToolPanelController toolPanelController) {
-        content = new JPanel();
+        setUpLookAndFeel();
 
         this.propertiesController = propertiesController;
         this.canvasController = canvasController;
         this.toolPanelController = toolPanelController;
-    }
-
-    /**
-     * Use it for open your application interface
-     */
-    public void openInterface() {
-        setUpLookAndFeel();
-
-        mainFrame = makeFrame();
-        initInterface();
-        relocateView();
-
-        if (mainFrame.getComponentCount() > 0)
-            mainFrame.remove(content);
-        mainFrame.setLayout(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.weightx = 1.0d;
-        constraints.weighty = 1.0d;
-        constraints.insets = new Insets(0, 5, 0, 5);
-        mainFrame.add(content, constraints);
-
-        mainFrame.setJMenuBar(createMenuBar());
-
-        mainFrame.revalidate();
-        mainFrame.setVisible(true);
     }
 
     private void setUpLookAndFeel() {
@@ -89,10 +60,19 @@ public class UIManager {
         }
     }
 
-    private JFrame makeFrame() {
+    public void openStartup(){
+        startupFrame = createStartupFrame();
+    }
+
+    public void openSession(){
+        sessionFrame = createSessionFrame();
+        sessionFrame.setVisible(true);
+    }
+
+    private JFrame createFrame(int width, int height) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
+        frame.setSize(width, height);
         frame.setTitle("Boneto");
         try {
             frame.setIconImage(ImageIO.read(this.getClass().getResource("icon.png")));
@@ -100,6 +80,33 @@ public class UIManager {
             ex.printStackTrace();
         }
         return frame;
+    }
+
+    /**
+     * Use it for open your application interface
+     */
+    private JFrame createSessionFrame() {
+        JFrame frame = createFrame(400, 400);
+
+        frame.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 1.0d;
+        constraints.weighty = 1.0d;
+        constraints.insets = new Insets(0, 5, 0, 5);
+        frame.add(getSessionInterface(), constraints);
+
+        frame.setJMenuBar(createMenuBar());
+
+        return frame;
+    }
+
+    private JFrame createStartupFrame(){
+        JFrame content = new JFrame();
+
+
+
+        return content;
     }
 
     private JMenuBar createMenuBar() {
@@ -112,15 +119,13 @@ public class UIManager {
         return menuBar;
     }
 
-    public void initInterface() {
+    private JComponent getSessionInterface() {
+        JPanel content = new JPanel();
+
         canvasPanel = new CanvasPanel(this);
         inspectorPanel = new InspectorPanel(this);
         objectTreePanel = new ObjectTreePanel(this);
         toolbar = new Toolbar(this);
-    }
-
-    public void relocateView() {
-        content.removeAll();
 
         JPanel canvasContainer = new JPanel();
         canvasContainer.setLayout(new BorderLayout());
@@ -137,20 +142,21 @@ public class UIManager {
         content.add(toolbar, BorderLayout.PAGE_START);
         content.add(leftSplitPane, BorderLayout.CENTER);
         content.add(new JLabel("by anomalou"), BorderLayout.PAGE_END);
-        content.revalidate();
+
+        return content;
     }
 
-    public void updateCanvas() {
+    public void updateCanvas() { //TODO need optimization
         canvasController.updateObjects();
         canvasPanel.repaint();
     }
 
-    public void updateInspector() {
+    public void updateInspector() { //TODO need optimization
         inspectorPanel.repaint();
         inspectorPanel.updateFields();
     }
 
-    public void updateTree() {
+    public void updateTree() { //TODO need optimization
         objectTreePanel.repaint();
     }
 }
