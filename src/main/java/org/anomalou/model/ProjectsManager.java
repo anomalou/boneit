@@ -5,10 +5,7 @@ import lombok.Setter;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.model.tools.ToolsManager;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -65,7 +62,11 @@ public class ProjectsManager {
         try {
             try (Stream<Path> stream = Files.list(Paths.get(projectsDirectory))) {
                 projects = stream.filter(file -> !Files.isDirectory(file)).filter(file -> file.toString().endsWith("boneto")).
-                        collect(Collectors.toMap(name -> name.getFileName().toString(), path -> path.toAbsolutePath().toString()));
+                        collect(Collectors.toMap(name -> {
+                            String value = name.getFileName().toString();
+                            value = value.substring(0, value.lastIndexOf('.'));
+                            return value;
+                        }, path -> path.toAbsolutePath().toString()));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -87,5 +88,14 @@ public class ProjectsManager {
 
     public void close() {
         project = null;
+    }
+
+    public void delete(String path){
+        try{
+            File project = new File(path);
+            project.delete(); //TODO
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }

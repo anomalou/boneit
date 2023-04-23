@@ -83,8 +83,16 @@ public class Canvas implements Serializable {
         }
     }
 
-    public void addObject(SceneObject object) {
-        sceneObjects.add(object);
+    public void addObject(SceneObject parent, SceneObject object) {
+        if(parent == null){
+            sceneObjects.add(object);
+        }else{
+            if(parent instanceof Group<?>){
+                ((Group<SceneObject>) parent).addObject(object);
+            }else{
+                sceneObjects.add(object);
+            }
+        }
     }
 
     public SceneObject getObject(UUID uuid) {

@@ -81,11 +81,11 @@ public class UIManager {
         startupFrame.dispose();
     }
 
-    private JFrame createFrame(int width, int height) {
+    private JFrame createFrame(int width, int height, String name) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(width, height);
-        frame.setTitle("Boneto");
+        frame.setTitle(name);
         try {
             frame.setIconImage(ImageIO.read(this.getClass().getResource("icon.png")));
         } catch (Exception ex) {
@@ -95,7 +95,7 @@ public class UIManager {
     }
 
     private JFrame createStartupFrame(){
-        JFrame frame = createFrame(400, 400);
+        JFrame frame = createFrame(400, 400, "Boneto");
 
         frame.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -112,7 +112,7 @@ public class UIManager {
      * Use it for open your application interface
      */
     private JFrame createSessionFrame() {
-        JFrame frame = createFrame(400, 400);
+        JFrame frame = createFrame(400, 400, projectsManagerController.getProject().getName());
 
         frame.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();

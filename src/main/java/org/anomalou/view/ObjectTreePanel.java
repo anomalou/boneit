@@ -198,16 +198,10 @@ public class ObjectTreePanel extends JPanel {
                 SceneObject selection = canvasController.getSelection();
                 SceneObject newLayer = new Layer(width, height);
                 canvasController.registerObject(newLayer);
-                if (selection != null) {
-                    if (selection instanceof Group<?>) {
-                        ((Group<SceneObject>) selection).addObject(newLayer);
-                    } else {
-                        canvasController.addObject(newLayer);
-                        selection = null;
-                    }
-                } else {
-                    canvasController.addObject(newLayer);
-                }
+                canvasController.addObject(selection, newLayer);
+                if(!(selection instanceof Group<?>))
+                    selection = null;
+
                 appendSelection(selection, newLayer);
             }
         });
@@ -223,16 +217,10 @@ public class ObjectTreePanel extends JPanel {
                             SceneObject selection = canvasController.getSelection();
                             SceneObject newLayer = new Layer(ImageIO.read(file));
                             canvasController.registerObject(newLayer);
-                            if (selection != null) {
-                                if (selection instanceof Group<?>) {
-                                    ((Group<SceneObject>) selection).addObject(newLayer);
-                                } else {
-                                    canvasController.addObject(newLayer);
-                                    selection = null;
-                                }
-                            } else {
-                                canvasController.addObject(newLayer);
-                            }
+                            canvasController.addObject(selection, newLayer);
+                            if(!(selection instanceof Group<?>))
+                                selection = null;
+
                             appendSelection(selection, newLayer);
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -252,9 +240,10 @@ public class ObjectTreePanel extends JPanel {
                 SceneObject selection = canvasController.getSelection();
                 SceneObject newBone = new Bone();
                 canvasController.registerObject(newBone);
-                if (selection instanceof Group<?>) {
-                    ((Group<SceneObject>) selection).addObject(newBone);
-                }
+                canvasController.addObject(selection, newBone);
+                if(!(selection instanceof Group<?>))
+                    selection = null;
+
                 appendSelection(selection, newBone);
             }
         });

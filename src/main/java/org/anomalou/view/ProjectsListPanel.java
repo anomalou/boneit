@@ -1,15 +1,13 @@
 package org.anomalou.view;
 
 import org.anomalou.controller.ProjectsManagerController;
-import org.anomalou.model.Project;
 
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
+import javax.swing.plaf.IconUIResource;
+import javax.swing.text.IconView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.KeyPair;
 import java.util.Map;
 
 public class ProjectsListPanel extends JPanel {
@@ -21,8 +19,12 @@ public class ProjectsListPanel extends JPanel {
         this.uiManager = uiManager;
         projectsManagerController = uiManager.getProjectsManagerController();
 
-        initLayout();
         build();
+    }
+
+    private void build(){
+        initLayout();
+        createInterface();
     }
 
     private void initLayout(){
@@ -30,7 +32,7 @@ public class ProjectsListPanel extends JPanel {
         projectsManagerController.scan();
     }
 
-    private void build(){
+    private void createInterface(){
         Map<String, String> projects = projectsManagerController.getProjects();
 
         JPanel panel = new JPanel();
@@ -42,24 +44,13 @@ public class ProjectsListPanel extends JPanel {
         constraints.gridx = 0;
 
         for(Map.Entry<String, String> entry : projects.entrySet()){
-            panel.add(createProjectButton(entry.getKey(), entry.getValue()), constraints);
+            panel.add(createProjectItem(entry.getKey(), entry.getValue()), constraints);
         }
 
         constraints.weighty = 1.0d;
         constraints.gridheight = GridBagConstraints.REMAINDER;
 
         panel.add(new JPanel(), constraints);
-
-        JButton createButton = new JButton("Create project");
-        createButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                projectsManagerController.create("New project", 400, 400);
-                uiManager.openSession();
-            }
-        });
-
-        JButton configButton = new JButton("Config");
 
         GridBagConstraints contentConstraints = new GridBagConstraints();
         contentConstraints.fill = GridBagConstraints.BOTH;
@@ -73,15 +64,24 @@ public class ProjectsListPanel extends JPanel {
         contentConstraints.gridwidth = 1;
         contentConstraints.weighty = 0.0d;
 
-        add(createButton, contentConstraints);
+        add(createCreateButton(), contentConstraints);
 
         contentConstraints.gridx = 1;
         contentConstraints.weightx = 0.0d;
 
-        add(configButton, contentConstraints);
+        add(createConfigButton(), contentConstraints);
     }
 
-    private JButton createProjectButton(String name, String path){
+    private JPanel createProjectItem(String name, String path){
+        JPanel panel = new JPanel();
+
+        panel.setLayout(new GridBagLayout());
+
+        GridBagConstraints panelConst = new GridBagConstraints();
+        panelConst.weightx = 1.0d;
+        panelConst.weighty = 1.0d;
+        panelConst.fill = GridBagConstraints.BOTH;
+
         JButton button = new JButton();
 
         button.setLayout(new GridBagLayout());
@@ -111,6 +111,77 @@ public class ProjectsListPanel extends JPanel {
             }
         });
 
-        return button;
+        panel.add(button, panelConst);
+
+        //TODO
+        JButton delete = new JButton("X");
+        delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //TODO
+            }
+        });
+
+
+        return panel;
+    }
+
+    private JButton createCreateButton(){
+        JButton createButton = new JButton("Create project");
+
+        JPanel setupPanel = new JPanel();
+        JTextField projectName = new JTextField();
+        JSpinner width = new JSpinner(new SpinnerNumberModel());
+        JSpinner height = new JSpinner(new SpinnerNumberModel());
+
+        setupPanel.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.gridx = 0;
+        constraints.weightx = 1.0d;
+        constraints.gridwidth = 2;
+
+        setupPanel.add(new JLabel("Project name:"), constraints);
+        setupPanel.add(projectName, constraints);
+
+        constraints.gridwidth = 1;
+
+        setupPanel.add(new JLabel("Width:"), constraints);
+        setupPanel.add(width, constraints);
+
+        constraints.gridx = 1;
+
+        setupPanel.add(new JLabel("Height:"), constraints);
+        setupPanel.add(height, constraints);
+        createButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int answer = JOptionPane.showConfirmDialog(createButton, setupPanel, "New project", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+                if(answer == JOptionPane.CANCEL_OPTION || answer == JOptionPane.CLOSED_OPTION)
+                    return;
+
+                int w = (int) width.getValue();
+                int h = (int) height.getValue();
+
+                if(w <= 0 || h <= 0)
+                    return;
+
+                String name = projectName.getText();
+                if(name.isEmpty() || name.isBlank())
+                    name = "New project";
+
+                projectsManagerController.create(name, w, h);
+                uiManager.openSession();
+            }
+        });
+
+        return createButton;
+    }
+
+    private JButton createConfigButton(){
+        JButton configButton = new JButton("Config");
+
+        return configButton;
     }
 }

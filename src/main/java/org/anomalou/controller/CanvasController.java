@@ -87,8 +87,8 @@ public class CanvasController extends Controller {
             return;
     }
 
-    public void addObject(SceneObject object) {
-        canvas.addObject(object);
+    public void addObject(SceneObject parent, SceneObject object) {
+        canvas.addObject(parent, object);
     }
 
     public SceneObject getObject(UUID uuid) {

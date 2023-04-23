@@ -48,4 +48,8 @@ public class ProjectsManagerController extends Controller{
     public void close(){
         projectsManager.close();
     }
+
+    public void delete(String path){
+        projectsManager.delete(path);
+    }
 }

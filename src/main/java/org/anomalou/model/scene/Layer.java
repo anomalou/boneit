@@ -95,15 +95,36 @@ public class Layer extends TransformObject { //a base class for layers or bones
     @Serial
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        ImageIO.write(sourceBitmap, "png", out);
-        ImageIO.write(resultBitmap, "png", out);
+
+        writeBufferedImage(sourceBitmap, out);
+        writeBufferedImage(resultBitmap, out);
+    }
+
+    private void writeBufferedImage(BufferedImage image, ObjectOutputStream out) throws IOException{
+        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()){
+            ImageIO.write(image, "png", byteArrayOutputStream);
+
+            out.writeInt(byteArrayOutputStream.size());
+            byteArrayOutputStream.writeTo(out);
+            out.flush();
+        }
     }
 
     @Serial
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        sourceBitmap = ImageIO.read(in);
-        while (resultBitmap == null)
-            resultBitmap = ImageIO.read(in);
+
+        sourceBitmap = readBufferedImage(in);
+        resultBitmap = readBufferedImage(in);
+    }
+
+    private BufferedImage readBufferedImage(ObjectInputStream in) throws IOException, ClassNotFoundException{
+        int size = in.readInt();
+
+        byte[] inputBuffer = new byte[size];
+        in.readFully(inputBuffer);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(inputBuffer);
+
+        return ImageIO.read(byteArrayInputStream);
     }
 }
