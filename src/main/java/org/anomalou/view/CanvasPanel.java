@@ -2,7 +2,7 @@ package org.anomalou.view;
 
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
-import org.anomalou.controller.ToolPanelController;
+import org.anomalou.controller.ToolsManagerController;
 import org.anomalou.model.scene.*;
 import org.anomalou.model.FPoint;
 
@@ -19,7 +19,7 @@ public class CanvasPanel extends JPanel {
     private final UIManager uiManager;
     private final CanvasController canvasController;
     private final PropertiesController propertiesController;
-    private final ToolPanelController toolPanelController;
+    private final ToolsManagerController toolsManagerController;
 
     private BufferedImage horizontalRulerImage;
     private BufferedImage verticalRulerImage;
@@ -53,7 +53,7 @@ public class CanvasPanel extends JPanel {
         this.uiManager = uiManager;
         this.canvasController = uiManager.getCanvasController();
         this.propertiesController = uiManager.getPropertiesController();
-        this.toolPanelController = uiManager.getToolPanelController();
+        this.toolsManagerController = uiManager.getToolsManagerController();
 
         offset = new Point(0, 0);
         scale = 1;
@@ -266,9 +266,9 @@ public class CanvasPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e))
-                    toolPanelController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
+                    toolsManagerController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
                 if (SwingUtilities.isRightMouseButton(e))
-                    toolPanelController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
+                    toolsManagerController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
                 uiManager.updateInspector(); //TODO optimization
 
                 repaint();
@@ -319,9 +319,9 @@ public class CanvasPanel extends JPanel {
                 calculateDirection(e.getPoint());
 
                 if (SwingUtilities.isLeftMouseButton(e))
-                    toolPanelController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
+                    toolsManagerController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
                 if (SwingUtilities.isRightMouseButton(e))
-                    toolPanelController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
+                    toolsManagerController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
 
                 uiManager.updateTree();//TODO optimization
                 uiManager.updateInspector();

@@ -1,8 +1,7 @@
 package org.anomalou.view;
 
 import org.anomalou.controller.PropertiesController;
-import org.anomalou.controller.ToolPanelController;
-import org.anomalou.model.scene.Bone;
+import org.anomalou.controller.ToolsManagerController;
 import org.anomalou.model.tools.Palette;
 import org.anomalou.model.tools.Tool;
 
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 public class Toolbar extends JPanel {
     private final UIManager uiManager;
     private final PropertiesController propertiesController;
-    private final ToolPanelController toolPanelController;
+    private final ToolsManagerController toolsManagerController;
 
     private JPanel content;
 
@@ -26,7 +25,7 @@ public class Toolbar extends JPanel {
     public Toolbar(UIManager uiManager) {
         this.uiManager = uiManager;
         this.propertiesController = uiManager.getPropertiesController();
-        this.toolPanelController = uiManager.getToolPanelController();
+        this.toolsManagerController = uiManager.getToolsManagerController();
 
         loadProperties();
         setupPanel();
@@ -36,7 +35,7 @@ public class Toolbar extends JPanel {
     private void createToolbar() {
         GridBagLayout layout = new GridBagLayout();
         content = new JPanel();
-        ArrayList<Tool> tools = toolPanelController.getToolList();
+        ArrayList<Tool> tools = toolsManagerController.getToolList();
         content.setLayout(layout);
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;
@@ -70,7 +69,7 @@ public class Toolbar extends JPanel {
         toolButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                toolPanelController.setCurrentTool(tool);
+                toolsManagerController.setCurrentTool(tool);
             }
         });
 
@@ -80,7 +79,7 @@ public class Toolbar extends JPanel {
     private Component createPalette(){
         JPanel paletteContent = new JPanel();
 
-        Palette palette = toolPanelController.getPalette();
+        Palette palette = toolsManagerController.getPalette();
 
         JButton foreground = new JButton(" ");
         JButton background = new JButton(" ");

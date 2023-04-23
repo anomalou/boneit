@@ -5,7 +5,12 @@ import lombok.Setter;
 import org.anomalou.annotation.Editable;
 import org.anomalou.annotation.EditorType;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -41,9 +46,6 @@ public class Layer extends TransformObject { //a base class for layers or bones
     @Setter
     protected boolean showSourceImage;
 
-    private SceneObject parent;
-
-
     public Layer() {
         this(1, 1);
     }
@@ -57,7 +59,7 @@ public class Layer extends TransformObject { //a base class for layers or bones
         isVisible = true;
         showSourceImage = false;
 
-        logger.fine(String.format("Entity (%s) created!", getUuid().toString()));
+//        logger.fine(String.format("Entity (%s) created!", getUuid().toString())); //TODO
     }
 
     public Layer(BufferedImage image){
@@ -67,7 +69,7 @@ public class Layer extends TransformObject { //a base class for layers or bones
         sourceBitmap = image;
         resultBitmap = image;
         isVisible = true;
-        logger.fine(String.format("Entity (%s) created!", getUuid().toString()));
+//        logger.fine(String.format("Entity (%s) created!", getUuid().toString())); //TODO
     }
 
     @Override
@@ -75,11 +77,12 @@ public class Layer extends TransformObject { //a base class for layers or bones
         setResultBitmap(new BufferedImage(getSourceBitmap().getWidth(), getSourceBitmap().getHeight(), BufferedImage.TYPE_INT_ARGB));
         Graphics2D g2d = getResultBitmap().createGraphics();
         double angle = (rotationAngle + parentRotationAngle) * -1;
+//        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.rotate(angle, getRootVectorOrigin().x, getRootVectorOrigin().y);
         g2d.drawImage(getSourceBitmap(), null, 0, 0);
         g2d.dispose();
 
-        logger.fine(String.format("Bone %s rotated to %f angle!", getUuid(), -angle));
+//        logger.fine(String.format("Bone %s rotated to %f angle!", getUuid(), -angle)); //TODO
     }
 
     @Override
@@ -100,6 +103,7 @@ public class Layer extends TransformObject { //a base class for layers or bones
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         sourceBitmap = ImageIO.read(in);
-        resultBitmap = ImageIO.read(in);
+        while (resultBitmap == null)
+            resultBitmap = ImageIO.read(in);
     }
 }

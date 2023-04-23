@@ -56,7 +56,7 @@ public class TransformObject extends SceneObject {
     }
 
     public void applyTransformation() {
-        logger.info("I'm not implemented! :3");
+//        logger.info("I'm not implemented! :3"); //TODO temporary
     }
 
     @Override

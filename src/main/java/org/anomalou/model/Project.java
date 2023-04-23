@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * Object that store all project settings, canvas, etc
  */
 public class Project implements Serializable {
-    private final Logger logger = Logger.getLogger(Project.class.getName());
+//    private transient final Logger logger = Logger.getLogger(Project.class.getName());
 
     @Getter
     @Setter

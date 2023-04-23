@@ -1,7 +1,6 @@
 package org.anomalou.model.tools;
 
 import java.awt.*;
-import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.ArrayList;
 
 import lombok.Getter;
@@ -11,7 +10,7 @@ import org.anomalou.model.Canvas;
 /**
  * Core for tools. Use it and load all available tools. Also save its params.
  */
-public class ToolPanel {
+public class ToolsManager {
     private final Canvas canvas;
     /**
      * Array of all available tools
@@ -27,7 +26,7 @@ public class ToolPanel {
     @Getter
     private Palette palette;
 
-    public ToolPanel(Canvas canvas){
+    public ToolsManager(Canvas canvas){
         this.canvas = canvas;
         tools = new ArrayList<>();
         currentTool = null;

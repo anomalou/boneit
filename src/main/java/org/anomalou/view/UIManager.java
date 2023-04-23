@@ -4,12 +4,15 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
 import org.anomalou.controller.CanvasController;
+import org.anomalou.controller.ProjectsManagerController;
 import org.anomalou.controller.PropertiesController;
-import org.anomalou.controller.ToolPanelController;
+import org.anomalou.controller.ToolsManagerController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class UIManager {
     private JFrame startupFrame;
@@ -17,23 +20,25 @@ public class UIManager {
     @Getter
     private PropertiesController propertiesController;
     @Getter
+    private ProjectsManagerController projectsManagerController;
+    @Getter
     private CanvasController canvasController;
     @Getter
-    private ToolPanelController toolPanelController;
+    private ToolsManagerController toolsManagerController;
 
 
-    @Getter
+    private ProjectsListPanel projectsListPanel;
+
     private CanvasPanel canvasPanel;
     private InspectorPanel inspectorPanel;
     private ObjectTreePanel objectTreePanel;
     private Toolbar toolbar;
 
-    public UIManager(PropertiesController propertiesController, CanvasController canvasController, ToolPanelController toolPanelController) {
+    public UIManager(PropertiesController propertiesController, ProjectsManagerController projectsManagerController) {
         setUpLookAndFeel();
 
         this.propertiesController = propertiesController;
-        this.canvasController = canvasController;
-        this.toolPanelController = toolPanelController;
+        this.projectsManagerController = projectsManagerController;
     }
 
     private void setUpLookAndFeel() {
@@ -62,11 +67,18 @@ public class UIManager {
 
     public void openStartup(){
         startupFrame = createStartupFrame();
+
+        startupFrame.setVisible(true);
     }
 
     public void openSession(){
+        createControllers();
+
         sessionFrame = createSessionFrame();
         sessionFrame.setVisible(true);
+
+        startupFrame.setVisible(false);
+        startupFrame.dispose();
     }
 
     private JFrame createFrame(int width, int height) {
@@ -79,6 +91,20 @@ public class UIManager {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return frame;
+    }
+
+    private JFrame createStartupFrame(){
+        JFrame frame = createFrame(400, 400);
+
+        frame.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 1.0d;
+        constraints.weighty = 1.0d;
+
+        frame.add(getStartupInterface(), constraints);
+
         return frame;
     }
 
@@ -101,22 +127,40 @@ public class UIManager {
         return frame;
     }
 
-    private JFrame createStartupFrame(){
-        JFrame content = new JFrame();
-
-
-
-        return content;
-    }
-
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
-        fileMenu.add(new JMenuItem("Open"));
+        JMenuItem saveItem = new JMenuItem("Save");
+
+        saveItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectsManagerController.save();
+            }
+        });
+
+        fileMenu.add(saveItem);
         menuBar.add(fileMenu);
 
         return menuBar;
+    }
+
+    private JComponent getStartupInterface(){
+        JPanel content = new JPanel();
+
+        content.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 1.0d;
+        constraints.weighty = 1.0d;
+
+        projectsListPanel = new ProjectsListPanel(this);
+
+        content.add(projectsListPanel, constraints);
+
+
+        return content;
     }
 
     private JComponent getSessionInterface() {
@@ -144,6 +188,14 @@ public class UIManager {
         content.add(new JLabel("by anomalou"), BorderLayout.PAGE_END);
 
         return content;
+    }
+
+    private void createControllers(){
+        if(!projectsManagerController.isOpened())
+            return;
+
+        canvasController = new CanvasController(projectsManagerController.getProject().getCanvas());
+        toolsManagerController = new ToolsManagerController(projectsManagerController.getToolPanel());
     }
 
     public void updateCanvas() { //TODO need optimization

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * Object that compose all scene objects to solid image
  */
 public class Canvas implements Serializable {
-    private final Logger logger = Logger.getLogger(Canvas.class.getName());
+//    private transient final Logger logger = Logger.getLogger(Canvas.class.getName()); //TODO
 
     @Getter
     @Setter
@@ -43,7 +43,7 @@ public class Canvas implements Serializable {
         objectCache = new ObjectCache();
         selection = null;
 
-        logger.fine("Workspace is created!");
+//        logger.fine("Workspace is created!");//TODO
     }
 
     public void reshape(int width, int height) {
@@ -59,9 +59,9 @@ public class Canvas implements Serializable {
         try {
             getObjectCache().registerObject(object.getUuid(), object);
 
-            logger.fine(String.format("Object %s created!", object.getUuid()));
+//            logger.fine(String.format("Object %s created!", object.getUuid()));//TODO
         } catch (NullPointerException ex) {
-            logger.warning(ex.getMessage());
+//            logger.warning(ex.getMessage());//TODO
         }
     }
 
@@ -79,7 +79,7 @@ public class Canvas implements Serializable {
                 }
             }
         } catch (NullPointerException ex) {
-            logger.warning(ex.getMessage());
+//            logger.warning(ex.getMessage());//TODO
         }
     }
 

@@ -27,7 +27,6 @@ public class Bone extends TransformObject implements Group<SceneObject> {
     @Getter
     @Setter
     private boolean setAtEnd;
-    private SceneObject parent;
     /**
      * Children of the layer, follows for its parent
      */
@@ -43,7 +42,6 @@ public class Bone extends TransformObject implements Group<SceneObject> {
         parentRotationAngle = 0d;
         isBoneVisible = false;
         setAtEnd = true;
-        parent = null;
         children = new ArrayList<>();
     }
 
@@ -67,7 +65,7 @@ public class Bone extends TransformObject implements Group<SceneObject> {
             }
         });
 
-        logger.fine(String.format("Bone %s position applied!", getUuid()));
+//        logger.fine(String.format("Bone %s position applied!", getUuid())); //TODO
     }
 
     @Override
@@ -76,7 +74,7 @@ public class Bone extends TransformObject implements Group<SceneObject> {
             try {
                 object.setParent(this);
             } catch (Exception ex) {
-                logger.warning(ex.getMessage());
+//                logger.warning(ex.getMessage()); //TODO
             }
         }
         children.add(object);
@@ -88,7 +86,7 @@ public class Bone extends TransformObject implements Group<SceneObject> {
             try {
                 object.setParent(null);
             } catch (Exception ex) {
-                logger.warning(ex.getMessage());
+//                logger.warning(ex.getMessage()); //TODO
             }
         }
         children.remove(object);
