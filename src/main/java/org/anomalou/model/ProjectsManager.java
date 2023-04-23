@@ -64,7 +64,7 @@ public class ProjectsManager {
     public void scan() {
         try {
             try (Stream<Path> stream = Files.list(Paths.get(projectsDirectory))) {
-                projects = stream.filter(file -> !Files.isDirectory(file)).
+                projects = stream.filter(file -> !Files.isDirectory(file)).filter(file -> file.toString().endsWith("boneto")).
                         collect(Collectors.toMap(name -> name.getFileName().toString(), path -> path.toAbsolutePath().toString()));
             }
         } catch (Exception ex) {
