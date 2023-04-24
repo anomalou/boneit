@@ -17,6 +17,10 @@ public class ProjectsManagerController extends Controller{
         return projectsManager.isOpened();
     }
 
+    public String getProjectsDirectory(){
+        return projectsManager.getProjectsDirectory();
+    }
+
     public Project getProject(){
         return projectsManager.getProject();
     }

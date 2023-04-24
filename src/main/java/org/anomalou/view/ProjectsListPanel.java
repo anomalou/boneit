@@ -3,11 +3,13 @@ package org.anomalou.view;
 import org.anomalou.controller.ProjectsManagerController;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.IconUIResource;
 import javax.swing.text.IconView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Map;
 
 public class ProjectsListPanel extends JPanel {
@@ -23,6 +25,8 @@ public class ProjectsListPanel extends JPanel {
     }
 
     private void build(){
+        removeAll();
+
         initLayout();
         createInterface();
     }
@@ -42,9 +46,20 @@ public class ProjectsListPanel extends JPanel {
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 1.0d;
         constraints.gridx = 0;
+        constraints.insets = new Insets(0, 0, 3, 0);
 
-        for(Map.Entry<String, String> entry : projects.entrySet()){
-            panel.add(createProjectItem(entry.getKey(), entry.getValue()), constraints);
+        if(projects.entrySet().isEmpty()){
+            constraints.fill = GridBagConstraints.VERTICAL;
+            JLabel emptyLabel = new JLabel("Empty! Try create new project! :3");
+            Font font = emptyLabel.getFont();
+            emptyLabel.setFont(new Font(font.getName(), font.getStyle(), 20));
+
+            panel.add(emptyLabel, constraints);
+            panel.add(createCreateButton(), constraints);
+        }else{
+            for(Map.Entry<String, String> entry : projects.entrySet()){
+                panel.add(createProjectItem(entry.getKey(), entry.getValue()), constraints);
+            }
         }
 
         constraints.weighty = 1.0d;
@@ -59,7 +74,10 @@ public class ProjectsListPanel extends JPanel {
         contentConstraints.weightx = 1.0d;
         contentConstraints.weighty = 1.0d;
 
-        add(new JScrollPane(panel), contentConstraints);
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+
+        add(scrollPane, contentConstraints);
 
         contentConstraints.gridwidth = 1;
         contentConstraints.weighty = 0.0d;
@@ -70,6 +88,8 @@ public class ProjectsListPanel extends JPanel {
         contentConstraints.weightx = 0.0d;
 
         add(createConfigButton(), contentConstraints);
+
+        revalidate();
     }
 
     private JPanel createProjectItem(String name, String path){
@@ -113,15 +133,29 @@ public class ProjectsListPanel extends JPanel {
 
         panel.add(button, panelConst);
 
-        //TODO
-        JButton delete = new JButton("X");
+        JButton delete = new JButton("Delete");
+        delete.setBackground(new Color(255, 230, 230));
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO
+                File file = new File(path);
+                try{
+                    if(file.delete()){
+                        build();
+                        invalidate();
+                        repaint();
+                    }
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }
         });
 
+        panelConst.weightx = 0.0d;
+        panelConst.weighty = 0.0d;
+        panelConst.insets = new Insets(0, 3, 0, 0);
+
+        panel.add(delete, panelConst);
 
         return panel;
     }

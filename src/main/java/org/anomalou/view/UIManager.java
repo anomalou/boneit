@@ -102,6 +102,7 @@ public class UIManager {
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 1.0d;
         constraints.weighty = 1.0d;
+        constraints.insets = new Insets(5, 10, 5, 10);
 
         frame.add(getStartupInterface(), constraints);
 
@@ -152,13 +153,27 @@ public class UIManager {
         content.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;
-        constraints.weightx = 1.0d;
-        constraints.weighty = 1.0d;
+        constraints.gridx = 0;
+
+        JLabel title = new JLabel("Projects");
+        Font font = title.getFont();
+        title.setFont(new Font(font.getName(), Font.BOLD, 25));
+
+        JLabel projectDirectory = new JLabel(String.format("Current project directory: %s", projectsManagerController.getProjectsDirectory()));
+        font = projectDirectory.getFont();
+        projectDirectory.setFont(new Font(font.getName(), font.getStyle(), 12));
+        projectDirectory.setForeground(Color.lightGray);
 
         projectsListPanel = new ProjectsListPanel(this);
 
-        content.add(projectsListPanel, constraints);
+        content.add(title, constraints);
+        content.add(projectDirectory, constraints);
+        content.add(new JSeparator());
 
+        constraints.weightx = 1.0d;
+        constraints.weighty = 1.0d;
+
+        content.add(projectsListPanel, constraints);
 
         return content;
     }
