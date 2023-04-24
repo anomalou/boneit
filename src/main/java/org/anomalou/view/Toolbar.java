@@ -39,7 +39,7 @@ public class Toolbar extends JPanel {
         content.setLayout(layout);
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;
-        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.insets = new Insets(5, 1, 5, 0);
         for (int i = 0; i < tools.size(); i++) {
             content.add(createTool(tools.get(i)), constraints);
         }

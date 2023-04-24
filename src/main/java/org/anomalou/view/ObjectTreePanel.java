@@ -152,7 +152,9 @@ public class ObjectTreePanel extends JPanel {
 
         JPanel dialogContent = new JPanel();
         JSpinner layerWidth = new JSpinner(new SpinnerNumberModel());
+        layerWidth.setValue(canvasController.getWidth());
         JSpinner layerHeight = new JSpinner(new SpinnerNumberModel());
+        layerHeight.setValue(canvasController.getHeight());
 
         dialogContent.setLayout(new GridBagLayout());
         layerWidth.setToolTipText("Width");

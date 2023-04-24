@@ -46,7 +46,7 @@ public class ProjectsListPanel extends JPanel {
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 1.0d;
         constraints.gridx = 0;
-        constraints.insets = new Insets(0, 0, 3, 0);
+        constraints.insets = new Insets(3, 0, 0, 0);
 
         if(projects.entrySet().isEmpty()){
             constraints.fill = GridBagConstraints.VERTICAL;
@@ -86,6 +86,7 @@ public class ProjectsListPanel extends JPanel {
 
         contentConstraints.gridx = 1;
         contentConstraints.weightx = 0.0d;
+        contentConstraints.insets = new Insets(0, 3, 0, 0);
 
         add(createConfigButton(), contentConstraints);
 

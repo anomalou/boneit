@@ -263,8 +263,6 @@ public class InspectorPanel extends JPanel {
         JPanel content = new JPanel();
         BufferedImage image = (BufferedImage) getFieldValue(field, object);
         ImagePreview preview = new ImagePreview(image);
-        preview.setBackground(Color.white);
-        preview.setBorder(new LineBorder(Color.black));
 
         content.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();

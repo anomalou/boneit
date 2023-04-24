@@ -48,6 +48,16 @@ public class PointerTool implements Tool{
 
     }
 
+    @Override
+    public void startUse() {
+
+    }
+
+    @Override
+    public void endUse() {
+
+    }
+
     /**
      * Check all objects in cache, that can be in mouse pointer hit area.
      * @param clickPosition mouse click position in screen coordinates (raw position)

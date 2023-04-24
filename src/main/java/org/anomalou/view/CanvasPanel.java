@@ -279,6 +279,8 @@ public class CanvasPanel extends JPanel {
                 if (e.getButton() == MouseEvent.BUTTON2) {
                     isScrollPressed = true;
                 }
+
+                toolsManagerController.startUse();
             }
 
             @Override
@@ -286,6 +288,8 @@ public class CanvasPanel extends JPanel {
                 if (e.getButton() == MouseEvent.BUTTON2) {
                     isScrollPressed = false;
                 }
+
+                toolsManagerController.endUse();
             }
 
             @Override
@@ -295,7 +299,7 @@ public class CanvasPanel extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent e) {
-
+                toolsManagerController.endUse();
             }
         });
 

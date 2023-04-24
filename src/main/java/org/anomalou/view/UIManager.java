@@ -44,20 +44,24 @@ public class UIManager {
     private void setUpLookAndFeel() {
         try {
             FlatLaf theme = new FlatLightLaf();
+
             System.setProperty("flatlaf.useWindowDecorations", "true");
             System.setProperty("flatlaf.menuBarEmbedded", "true");
             System.setProperty("flatlaf.animation", "true");
             System.setProperty("flatlaf.uiScale", "1");
 
-            javax.swing.UIManager.put("Button.arc", 5);
-            javax.swing.UIManager.put("Component.arc", 5);
-            javax.swing.UIManager.put("ProgressBar.arc", 5);
-            javax.swing.UIManager.put("TextComponent.arc", 5);
+            javax.swing.UIManager.put("Button.arc", 10);
+            javax.swing.UIManager.put("Component.arc", 10);
+            javax.swing.UIManager.put("ProgressBar.arc", 10);
+            javax.swing.UIManager.put("TextComponent.arc", 10);
 
             javax.swing.UIManager.put("ScrollBar.trackArc", 999);
             javax.swing.UIManager.put("ScrollBar.thumbArc", 999);
             javax.swing.UIManager.put("ScrollBar.trackInsets", new Insets(2, 4, 2, 4));
             javax.swing.UIManager.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2));
+
+//            javax.swing.UIManager.put("Component.innerFocusWidth", 5);
+
 
             javax.swing.UIManager.setLookAndFeel(theme);
         } catch (Exception ex) {
@@ -65,13 +69,13 @@ public class UIManager {
         }
     }
 
-    public void openStartup(){
+    public void openStartup() {
         startupFrame = createStartupFrame();
 
         startupFrame.setVisible(true);
     }
 
-    public void openSession(){
+    public void openSession() {
         createControllers();
 
         sessionFrame = createSessionFrame();
@@ -94,7 +98,7 @@ public class UIManager {
         return frame;
     }
 
-    private JFrame createStartupFrame(){
+    private JFrame createStartupFrame() {
         JFrame frame = createFrame(400, 400, "Boneto");
 
         frame.setLayout(new GridBagLayout());
@@ -147,7 +151,7 @@ public class UIManager {
         return menuBar;
     }
 
-    private JComponent getStartupInterface(){
+    private JComponent getStartupInterface() {
         JPanel content = new JPanel();
 
         content.setLayout(new GridBagLayout());
@@ -168,7 +172,7 @@ public class UIManager {
 
         content.add(title, constraints);
         content.add(projectDirectory, constraints);
-        content.add(new JSeparator());
+        content.add(new JSeparator(), constraints);
 
         constraints.weightx = 1.0d;
         constraints.weighty = 1.0d;
@@ -205,8 +209,8 @@ public class UIManager {
         return content;
     }
 
-    private void createControllers(){
-        if(!projectsManagerController.isOpened())
+    private void createControllers() {
+        if (!projectsManagerController.isOpened())
             return;
 
         canvasController = new CanvasController(projectsManagerController.getProject().getCanvas());

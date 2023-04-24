@@ -16,11 +16,15 @@ public class BrushTool implements Tool {
 
     private Canvas canvas;
     private Palette palette;
+    private Point oldPosition;
+    private boolean useStatus;
 
     public BrushTool(Canvas canvas, Palette palette) {
         name = "Brush";
         this.canvas = canvas;
         this.palette = palette;
+        oldPosition = new Point();
+        useStatus = false;
 
         loadResources();
     }
@@ -50,6 +54,16 @@ public class BrushTool implements Tool {
         draw(palette.getBackgroundColor(), position);
     }
 
+    @Override
+    public void startUse() {
+        useStatus = true;
+    }
+
+    @Override
+    public void endUse() {
+        useStatus = false;
+    }
+
     private void loadResources() {
         try {
             icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("brush.png")));
@@ -63,7 +77,10 @@ public class BrushTool implements Tool {
 
         if (sceneObject instanceof Layer) {
             Layer layer = (Layer) sceneObject;
-            position = new Point(position.x - (int) layer.getGlobalPosition().x + layer.getRootVectorOrigin().x, position.y - (int) layer.getGlobalPosition().y + layer.getRootVectorOrigin().y);
+            position = new Point(position.x - (int) layer.getGlobalPosition().x + layer.getRootVectorOrigin().x,
+                                 position.y - (int) layer.getGlobalPosition().y + layer.getRootVectorOrigin().y);
+
+
 //            FPoint rotatedPoint = layer.calculateRotationVectorForAngle(position, -layer.getFullRotationAngle());
 //            rotatedPoint = new FPoint(rotatedPoint.x + layer.getRootVectorOrigin().x, (rotatedPoint.y) + layer.getRootVectorOrigin().y);
 //            position = new Point((int) Math.round((int) rotatedPoint.x + layer.getRootVectorOrigin().x), (int) Math.round((int) (rotatedPoint.y) + layer.getRootVectorOrigin().y));

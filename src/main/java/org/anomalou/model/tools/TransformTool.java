@@ -19,10 +19,13 @@ public class TransformTool implements Tool {
 
     private Point oldPosition;
 
+    private boolean useStatus;
+
     public TransformTool(Canvas canvas){
         this.canvas = canvas;
 
         oldPosition = new Point();
+        useStatus = false;
 
         loadResources();
     }
@@ -50,6 +53,16 @@ public class TransformTool implements Tool {
     @Override
     public void secondaryUse(Graphics g, Point position) {
         rotate(position);
+    }
+
+    @Override
+    public void startUse() {
+        useStatus = true;
+    }
+
+    @Override
+    public void endUse() {
+        useStatus = false;
     }
 
     private void rotate(Point direction){

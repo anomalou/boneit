@@ -53,6 +53,20 @@ public class ToolsManager {
         currentTool.secondaryUse(g, point);
     }
 
+    public void startUse(){
+        if(currentTool == null)
+            return;
+
+        currentTool.startUse();
+    }
+
+    public void endUse(){
+        if(currentTool == null)
+            return;
+
+        currentTool.endUse();
+    }
+
     private void loadDefaultTools(){
         tools.add(new PointerTool(canvas));
         tools.add(new TransformTool(canvas));

@@ -18,4 +18,6 @@ public interface Tool {
     Rectangle drawInterface(Graphics g, Point position);
     void primaryUse(Graphics g, Point position);
     void secondaryUse(Graphics g, Point position);
+    void startUse();
+    void endUse();
 }

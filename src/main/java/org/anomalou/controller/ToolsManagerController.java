@@ -37,4 +37,12 @@ public class ToolsManagerController extends Controller {
     public void secondaryUseTool(Graphics g, Point point) {
         toolsManager.secondaryUseTool(g, point);
     }
+
+    public void startUse(){
+        toolsManager.startUse();
+    }
+
+    public void endUse(){
+        toolsManager.endUse();
+    }
 }
