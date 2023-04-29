@@ -3,8 +3,13 @@ package org.anomalou.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.anomalou.controller.PropertiesController;
+import org.anomalou.model.scene.Layer;
+import org.anomalou.model.scene.SceneObject;
 import org.anomalou.model.tools.ToolsManager;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -94,6 +99,31 @@ public class ProjectsManager {
         try{
             File project = new File(path);
             project.delete(); //TODO
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public void exportPng(String path){
+        BufferedImage canvas = new BufferedImage(project.getCanvas().getWidth(), project.getCanvas().getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = canvas.createGraphics();
+
+        for(SceneObject object : project.getCanvas().sort()){
+            if(object instanceof Layer layer){
+                g2d.drawImage(layer.getResultBitmap(), (int) Math.round(layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), (int) Math.round(layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), null);
+            }
+        }
+
+        g2d.dispose();
+
+        if(!path.endsWith(".png"))
+            path += ".png";
+
+        try{
+            File file = new File(path);
+            file.createNewFile();
+            ImageIO.write(canvas, "png", file);
         }catch (Exception ex){
             ex.printStackTrace();
         }

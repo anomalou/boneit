@@ -10,6 +10,7 @@ import org.anomalou.controller.ToolsManagerController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -136,7 +137,8 @@ public class UIManager {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
-        JMenuItem saveItem = new JMenuItem("Save");
+        JMenuItem saveItem = new JMenuItem(String.format("Save as \"%s.boneto\"", projectsManagerController.getProject().getName()));
+        JMenuItem exportItem = new JMenuItem("Export as png");
 
         saveItem.addActionListener(new ActionListener() {
             @Override
@@ -145,7 +147,23 @@ public class UIManager {
             }
         });
 
+        exportItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(".png", "png");
+                fileChooser.setFileFilter(fileNameExtensionFilter);
+
+                //TODO ask for file override
+
+                if(fileChooser.showSaveDialog(exportItem) == JFileChooser.APPROVE_OPTION){
+                    projectsManagerController.exportPng(fileChooser.getSelectedFile().getPath());
+                }
+            }
+        });
+
         fileMenu.add(saveItem);
+        fileMenu.add(exportItem);
         menuBar.add(fileMenu);
 
         return menuBar;

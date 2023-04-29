@@ -56,4 +56,8 @@ public class ProjectsManagerController extends Controller{
     public void delete(String path){
         projectsManager.delete(path);
     }
+
+    public void exportPng(String path){
+        projectsManager.exportPng(path);
+    }
 }
