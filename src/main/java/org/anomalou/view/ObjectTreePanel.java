@@ -219,9 +219,6 @@ public class ObjectTreePanel extends JPanel {
                     return;
                 }
 
-                layerWidth.setValue(0);
-                layerHeight.setValue(0);
-
                 SceneObject selection = canvasController.getSelection();
                 SceneObject newLayer = new Layer(width, height);
                 canvasController.registerObject(newLayer);

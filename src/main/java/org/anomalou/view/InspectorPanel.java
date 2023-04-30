@@ -178,6 +178,7 @@ public class InspectorPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 setFieldValue(field, object, checkBox.isSelected());
                 uiManager.updateCanvas();
+                uiManager.updateTree();
             }
         });
 
