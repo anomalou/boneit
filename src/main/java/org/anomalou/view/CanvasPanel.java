@@ -129,7 +129,7 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawLayer(Graphics g, Layer layer) {
-        if(!layer.isShowSourceImage())
+        if (!layer.isShowSourceImage())
             g.drawImage(layer.getResultBitmap(), scale * (offset.x + (int) layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + (int) layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
         else
             g.drawImage(layer.getSourceBitmap(), scale * (offset.x + (int) layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), scale * (offset.y + (int) layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), scale * layer.getSourceBitmap().getWidth(), scale * layer.getSourceBitmap().getHeight(), null);
@@ -290,6 +290,9 @@ public class CanvasPanel extends JPanel {
                 }
 
                 toolsManagerController.endUse();
+
+                uiManager.updateTree();//TODO optimization
+                uiManager.updateInspector();
             }
 
             @Override
@@ -322,14 +325,6 @@ public class CanvasPanel extends JPanel {
             public void mouseDragged(MouseEvent e) {
                 calculateDirection(e.getPoint());
 
-                if (SwingUtilities.isLeftMouseButton(e))
-                    toolsManagerController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
-                if (SwingUtilities.isRightMouseButton(e))
-                    toolsManagerController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
-
-                uiManager.updateTree();//TODO optimization
-                uiManager.updateInspector();
-
                 //LOCKED! CAN NOT BE IN TOOLS! IMPORTANT FUNCTION!
                 pixelsPassed += 1;
 
@@ -341,6 +336,14 @@ public class CanvasPanel extends JPanel {
                     pixelsPassed = 0;
                     repaint();
                 }
+
+                if (isScrollPressed)
+                    return;
+
+                if (SwingUtilities.isLeftMouseButton(e))
+                    toolsManagerController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
+                if (SwingUtilities.isRightMouseButton(e))
+                    toolsManagerController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
             }
 
             @Override
