@@ -55,12 +55,14 @@ public class BrushTool implements Tool {
     }
 
     @Override
-    public void startUse() {
+    public void startUse(Point position) {
+        oldPosition = position;
         useStatus = true;
     }
 
     @Override
-    public void endUse() {
+    public void endUse(Point position) {
+        oldPosition = position;
         useStatus = false;
     }
 
@@ -80,13 +82,20 @@ public class BrushTool implements Tool {
             position = new Point(position.x - (int) layer.getGlobalPosition().x + layer.getRootVectorOrigin().x,
                                  position.y - (int) layer.getGlobalPosition().y + layer.getRootVectorOrigin().y);
 
+            Graphics2D g2d = layer.getSourceBitmap().createGraphics();
+            Color oldColor = g2d.getColor();
+            g2d.setColor(color);
+            g2d.drawLine(oldPosition.x, oldPosition.y, position.x, position.y);
+            g2d.setColor(oldColor);
+
+            oldPosition = position;
 
 //            FPoint rotatedPoint = layer.calculateRotationVectorForAngle(position, -layer.getFullRotationAngle());
 //            rotatedPoint = new FPoint(rotatedPoint.x + layer.getRootVectorOrigin().x, (rotatedPoint.y) + layer.getRootVectorOrigin().y);
 //            position = new Point((int) Math.round((int) rotatedPoint.x + layer.getRootVectorOrigin().x), (int) Math.round((int) (rotatedPoint.y) + layer.getRootVectorOrigin().y));
 //            System.out.printf("%s\n", rotatedPoint);
 
-            layer.getSourceBitmap().setRGB((int) position.x, (int) position.y, color.getRGB()); //TODO coordinates out of bounds
+//            layer.getSourceBitmap().setRGB((int) position.x, (int) position.y, color.getRGB()); //TODO coordinates out of bounds
 
             layer.applyTransformation();
         }

@@ -38,11 +38,11 @@ public class ToolsManagerController extends Controller {
         toolsManager.secondaryUseTool(g, point);
     }
 
-    public void startUse(){
-        toolsManager.startUse();
+    public void startUse(Point position){
+        toolsManager.startUse(position);
     }
 
-    public void endUse(){
-        toolsManager.endUse();
+    public void endUse(Point position){
+        toolsManager.endUse(position);
     }
 }

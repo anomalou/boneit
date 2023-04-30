@@ -53,18 +53,18 @@ public class ToolsManager {
         currentTool.secondaryUse(g, point);
     }
 
-    public void startUse(){
+    public void startUse(Point position){
         if(currentTool == null)
             return;
 
-        currentTool.startUse();
+        currentTool.startUse(position);
     }
 
-    public void endUse(){
+    public void endUse(Point position){
         if(currentTool == null)
             return;
 
-        currentTool.endUse();
+        currentTool.endUse(position);
     }
 
     private void loadDefaultTools(){

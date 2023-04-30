@@ -56,12 +56,12 @@ public class TransformTool implements Tool {
     }
 
     @Override
-    public void startUse() {
+    public void startUse(Point position) {
         useStatus = true;
     }
 
     @Override
-    public void endUse() {
+    public void endUse(Point position) {
         useStatus = false;
     }
 

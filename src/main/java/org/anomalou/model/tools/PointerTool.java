@@ -49,12 +49,12 @@ public class PointerTool implements Tool{
     }
 
     @Override
-    public void startUse() {
+    public void startUse(Point position) {
 
     }
 
     @Override
-    public void endUse() {
+    public void endUse(Point position) {
 
     }
 

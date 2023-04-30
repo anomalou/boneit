@@ -265,10 +265,13 @@ public class CanvasPanel extends JPanel {
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                toolsManagerController.startUse(screenToCanvas(e.getPoint()));
                 if (SwingUtilities.isLeftMouseButton(e))
                     toolsManagerController.primaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
                 if (SwingUtilities.isRightMouseButton(e))
                     toolsManagerController.secondaryUseTool(getGraphics(), screenToCanvas(e.getPoint()));
+                toolsManagerController.endUse(screenToCanvas(e.getPoint()));
+
                 uiManager.updateInspector(); //TODO optimization
 
                 repaint();
@@ -280,7 +283,7 @@ public class CanvasPanel extends JPanel {
                     isScrollPressed = true;
                 }
 
-                toolsManagerController.startUse();
+                toolsManagerController.startUse(screenToCanvas(e.getPoint()));
             }
 
             @Override
@@ -289,7 +292,7 @@ public class CanvasPanel extends JPanel {
                     isScrollPressed = false;
                 }
 
-                toolsManagerController.endUse();
+                toolsManagerController.endUse(screenToCanvas(e.getPoint()));
 
                 uiManager.updateTree();//TODO optimization
                 uiManager.updateInspector();
@@ -302,7 +305,7 @@ public class CanvasPanel extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                toolsManagerController.endUse();
+                toolsManagerController.endUse(screenToCanvas(e.getPoint()));
             }
         });
 
