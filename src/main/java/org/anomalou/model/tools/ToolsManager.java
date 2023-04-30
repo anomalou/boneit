@@ -71,6 +71,7 @@ public class ToolsManager {
         tools.add(new PointerTool(canvas));
         tools.add(new TransformTool(canvas));
         tools.add(new BrushTool(canvas, palette));
+        tools.add(new BoneTool(canvas));
 
         currentTool = tools.get(0);
     }
