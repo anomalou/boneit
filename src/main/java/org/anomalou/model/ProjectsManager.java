@@ -79,8 +79,15 @@ public class ProjectsManager {
     }
 
     public void save() {
+        save(String.format("%s.boneto", project.getName()));
+    }
+
+    public void save(String path){
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(String.format("%s.boneto", project.getName()));
+            if(!path.endsWith(".boneto"))
+                path += ".boneto";
+
+            FileOutputStream fileOutputStream = new FileOutputStream(path);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 
             objectOutputStream.writeObject(project);

@@ -49,6 +49,10 @@ public class ProjectsManagerController extends Controller{
         projectsManager.save();
     }
 
+    public void save(String path){
+        projectsManager.save(path);
+    }
+
     public void close(){
         projectsManager.close();
     }

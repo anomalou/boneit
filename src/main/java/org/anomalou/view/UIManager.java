@@ -14,6 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class UIManager {
     private JFrame startupFrame;
@@ -137,8 +138,10 @@ public class UIManager {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
-        JMenuItem saveItem = new JMenuItem(String.format("Save as \"%s.boneto\"", projectsManagerController.getProject().getName()));
-        JMenuItem exportItem = new JMenuItem("Export as png");
+        JMenuItem saveItem = new JMenuItem(String.format("Save to \"%s.boneto\"", projectsManagerController.getProject().getName()));
+        JMenuItem saveAsItem = new JMenuItem("Save as...");
+        JMenu exportItem = new JMenu("Export...");
+        JMenuItem exportAsPngItem = new JMenuItem("As PNG");
 
         saveItem.addActionListener(new ActionListener() {
             @Override
@@ -147,22 +150,39 @@ public class UIManager {
             }
         });
 
-        exportItem.addActionListener(new ActionListener() {
+        saveAsItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(".boneto", "boneto");
+                fileChooser.setFileFilter(fileNameExtensionFilter);
+                fileChooser.setSelectedFile(new File(projectsManagerController.getProject().getName()));
+
+                if(fileChooser.showSaveDialog(saveAsItem) == JFileChooser.APPROVE_OPTION){
+                    projectsManagerController.save(fileChooser.getSelectedFile().getPath());
+                }
+            }
+        });
+
+        exportAsPngItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter(".png", "png");
                 fileChooser.setFileFilter(fileNameExtensionFilter);
+                fileChooser.setSelectedFile(new File(projectsManagerController.getProject().getName()));
 
                 //TODO ask for file override
 
-                if(fileChooser.showSaveDialog(exportItem) == JFileChooser.APPROVE_OPTION){
+                if(fileChooser.showSaveDialog(exportAsPngItem) == JFileChooser.APPROVE_OPTION){
                     projectsManagerController.exportPng(fileChooser.getSelectedFile().getPath());
                 }
             }
         });
 
         fileMenu.add(saveItem);
+        fileMenu.add(saveAsItem);
+        exportItem.add(exportAsPngItem);
         fileMenu.add(exportItem);
         menuBar.add(fileMenu);
 
