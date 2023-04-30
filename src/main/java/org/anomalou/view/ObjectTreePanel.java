@@ -15,11 +15,10 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 import javax.tools.JavaFileManager;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -121,10 +120,20 @@ public class ObjectTreePanel extends JPanel {
     }
 
     private void createListeners() {
-        tree.addTreeSelectionListener(new TreeSelectionListener() {
+        tree.addMouseListener(new MouseListener() {
             @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+
+                if(path == null)
+                    return;
+
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 
                 if (node == null)
                     return;
@@ -135,7 +144,22 @@ public class ObjectTreePanel extends JPanel {
                     uiManager.updateInspector();
                 }
 
-                getParent().repaint();
+                uiManager.updateCanvas();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
             }
         });
     }
