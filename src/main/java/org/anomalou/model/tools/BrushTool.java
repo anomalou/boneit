@@ -56,14 +56,22 @@ public class BrushTool implements Tool {
 
     @Override
     public void startUse(Point position) {
-        oldPosition = position;
-        useStatus = true;
+        SceneObject sceneObject = canvas.getSelection();
+
+        if(sceneObject instanceof Layer layer){
+            oldPosition = toLocalPosition(layer, position);
+            useStatus = true;
+        }
     }
 
     @Override
     public void endUse(Point position) {
-        oldPosition = position;
-        useStatus = false;
+        SceneObject sceneObject = canvas.getSelection();
+
+        if(sceneObject instanceof Layer layer){
+            oldPosition = toLocalPosition(layer, position);
+            useStatus = false;
+        }
     }
 
     private void loadResources() {
@@ -78,9 +86,10 @@ public class BrushTool implements Tool {
         SceneObject sceneObject = canvas.getSelection();
 
         if (sceneObject instanceof Layer) {
+
+
             Layer layer = (Layer) sceneObject;
-            position = new Point(position.x - (int) layer.getGlobalPosition().x + layer.getRootVectorOrigin().x,
-                                 position.y - (int) layer.getGlobalPosition().y + layer.getRootVectorOrigin().y);
+            position = toLocalPosition(layer, position);
 
             Graphics2D g2d = layer.getSourceBitmap().createGraphics();
             Color oldColor = g2d.getColor();
@@ -99,5 +108,12 @@ public class BrushTool implements Tool {
 
             layer.applyTransformation();
         }
+    }
+
+    private Point toLocalPosition(Layer layer, Point position){
+        position = new Point(position.x - (int) layer.getGlobalPosition().x + layer.getRootVectorOrigin().x,
+                position.y - (int) layer.getGlobalPosition().y + layer.getRootVectorOrigin().y);
+
+        return position;
     }
 }

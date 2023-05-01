@@ -178,8 +178,9 @@ public class CanvasPanel extends JPanel {
         if (object instanceof Layer) {
             drawSelectedLayer(g, (Layer) object);
         }
-        if (object instanceof TransformObject) {
-            drawTransformObjects(g, (TransformObject) object);
+        if (object instanceof TransformObject transformObject) {
+            drawLocalCoordinateOrigin(g, transformObject);
+            drawTransformObjects(g, transformObject);
         }
     }
 
@@ -202,7 +203,9 @@ public class CanvasPanel extends JPanel {
 
     private void drawTransformObject(Graphics g, TransformObject transformObject) {
         Graphics2D graphics2D = (Graphics2D) g;
-        graphics2D.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)); //TODO magic number
+        graphics2D.setStroke(new BasicStroke(scale, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)); //TODO magic number
+
+        Color oldColor = graphics2D.getColor();
 
         graphics2D.setColor(xAxisColor);
 
@@ -223,10 +226,17 @@ public class CanvasPanel extends JPanel {
         graphics2D.drawLine(scale * (offset.x + position.x), scale * (offset.y + position.y),
                 (int) Math.round(scale * (offset.x + position.x + rotationVector.x)),
                 (int) Math.round(scale * (offset.y + position.y + rotationVector.y)));
+
+        graphics2D.setColor(oldColor);
     }
 
     private void drawLocalCoordinateOrigin(Graphics g, TransformObject object) {
+        Color oldColor = g.getColor();
 
+        g.setColor(xAxisColor);
+        g.fillOval((int) Math.round(scale * (offset.x + object.getGlobalPosition().x) - (scale * 3 / 2)), (int) Math.round(scale * (offset.y + object.getGlobalPosition().y) - (scale * 3 / 2)), scale * 3, scale * 3); //TODO magic
+
+        g.setColor(oldColor);
     }
 
     /**

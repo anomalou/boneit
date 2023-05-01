@@ -5,6 +5,7 @@ import org.anomalou.model.scene.SceneObject;
 import org.anomalou.model.scene.TransformObject;
 
 import javax.imageio.ImageIO;
+import javax.sql.PooledConnection;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
@@ -15,10 +16,13 @@ public class BoneTool implements Tool{
 
     private Canvas canvas;
 
+    private Point oldPosition;
+
     public BoneTool(Canvas canvas){
         name = "Bone editor";
 
         this.canvas = canvas;
+        oldPosition = new Point();
 
         loadResources();
     }
@@ -43,7 +47,11 @@ public class BoneTool implements Tool{
         SceneObject sceneObject = canvas.getSelection();
 
         if(sceneObject instanceof TransformObject transformObject){
-            transformObject.setRootVectorOrigin(calculatePoint(position));
+            Point direction = new Point(oldPosition.x - position.x, oldPosition.y - position.y);
+
+            Point originPosition = transformObject.getRootVectorOrigin();
+            transformObject.setRootVectorOrigin(new Point(originPosition.x + direction.x, originPosition.y + direction.y));
+            oldPosition = position;
         }
     }
 
@@ -58,12 +66,12 @@ public class BoneTool implements Tool{
 
     @Override
     public void startUse(Point position) {
-
+        oldPosition = position;
     }
 
     @Override
     public void endUse(Point position) {
-
+        oldPosition = position;
     }
 
     private Point calculatePoint(Point point){
