@@ -137,6 +137,7 @@ public class CanvasPanel extends JPanel {
 
     private void drawInterface(Graphics g) {
         Color oldColor = g.getColor();
+
         g.setColor(Color.gray);
 
         //Draw ruler
@@ -173,8 +174,6 @@ public class CanvasPanel extends JPanel {
         if (object == null)
             return;
 
-        g.setColor(Color.black);
-
         if (object instanceof Layer) {
             drawSelectedLayer(g, (Layer) object);
         }
@@ -185,9 +184,18 @@ public class CanvasPanel extends JPanel {
     }
 
     private void drawSelectedLayer(Graphics g, Layer object) {
-        g.setColor(Color.black);
-        g.drawRect(scale * (offset.x + (int) object.getGlobalPosition().x - object.getRootVectorOrigin().x), scale * (offset.y + (int) object.getGlobalPosition().y - object.getRootVectorOrigin().y),
+        Graphics2D g2d = (Graphics2D) g;
+
+        Color oldColor = g2d.getColor();
+        Stroke oldStroke = g2d.getStroke();
+
+        g2d.setColor(Color.black);
+        g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.5f, new float[]{2f}, 0f));
+        g2d.drawRect(scale * (offset.x + (int) object.getGlobalPosition().x - object.getRootVectorOrigin().x), scale * (offset.y + (int) object.getGlobalPosition().y - object.getRootVectorOrigin().y),
                 scale * object.getSourceBitmap().getWidth(), scale * object.getSourceBitmap().getHeight());
+
+        g2d.setStroke(oldStroke);
+        g2d.setColor(oldColor);
     }
 
     private void drawTransformObjects(Graphics g, TransformObject transformObject) {
@@ -203,9 +211,11 @@ public class CanvasPanel extends JPanel {
 
     private void drawTransformObject(Graphics g, TransformObject transformObject) {
         Graphics2D graphics2D = (Graphics2D) g;
-        graphics2D.setStroke(new BasicStroke(scale, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)); //TODO magic number
 
         Color oldColor = graphics2D.getColor();
+        Stroke oldStroke = graphics2D.getStroke();
+
+        graphics2D.setStroke(new BasicStroke(scale, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)); //TODO magic number
 
         graphics2D.setColor(xAxisColor);
 
@@ -228,6 +238,7 @@ public class CanvasPanel extends JPanel {
                 (int) Math.round(scale * (offset.y + position.y + rotationVector.y)));
 
         graphics2D.setColor(oldColor);
+        graphics2D.setStroke(oldStroke);
     }
 
     private void drawLocalCoordinateOrigin(Graphics g, TransformObject object) {
@@ -283,6 +294,7 @@ public class CanvasPanel extends JPanel {
                 toolsManagerController.endUse(screenToCanvas(e.getPoint()));
 
                 uiManager.updateInspector(); //TODO optimization
+                uiManager.updateTree();
 
                 repaint();
             }
@@ -304,7 +316,6 @@ public class CanvasPanel extends JPanel {
 
                 toolsManagerController.endUse(screenToCanvas(e.getPoint()));
 
-                uiManager.updateTree();//TODO optimization
                 uiManager.updateInspector();
             }
 

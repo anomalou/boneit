@@ -9,14 +9,9 @@ import org.anomalou.model.scene.SceneObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.text.AbstractDocument;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
-import javax.tools.JavaFileManager;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -117,6 +112,19 @@ public class ObjectTreePanel extends JPanel {
 
         DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(object);
         treeModel.insertNodeInto(newNode, root, 0);
+    }
+
+    public void highlightSelectedNode(){
+        SceneObject object = canvasController.getSelection();
+
+        if(object == null)
+            return;
+
+        DefaultMutableTreeNode node = findNode((DefaultMutableTreeNode) tree.getModel().getRoot(), object);
+
+        TreePath treePath = new TreePath(node.getPath());
+        tree.setSelectionPath(treePath);
+        tree.expandPath(treePath.getParentPath());
     }
 
     private void createListeners() {

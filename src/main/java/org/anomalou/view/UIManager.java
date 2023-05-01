@@ -266,6 +266,7 @@ public class UIManager {
     }
 
     public void updateTree() { //TODO need optimization
+        objectTreePanel.highlightSelectedNode();
         objectTreePanel.repaint();
     }
 }
