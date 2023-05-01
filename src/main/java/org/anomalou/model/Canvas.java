@@ -30,7 +30,7 @@ public class Canvas implements Serializable {
     @Getter
     private final ObjectCache objectCache;
     @Setter
-    private UUID selection; //TODO not safe, invent something else
+    private transient UUID selection;
 
     public Canvas() {
         this(1, 1);
