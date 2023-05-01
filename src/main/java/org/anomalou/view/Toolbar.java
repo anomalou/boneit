@@ -124,6 +124,6 @@ public class Toolbar extends JPanel {
     }
 
     private void loadProperties() {
-        iconScale = propertiesController.getInt("toolicon.scale");
+        iconScale = propertiesController.getInt("tool.icon.scale");
     }
 }
