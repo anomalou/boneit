@@ -7,6 +7,7 @@ import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.ProjectsManagerController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.controller.ToolsManagerController;
+import org.anomalou.model.tools.Tool;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -33,6 +34,7 @@ public class UIManager {
 
     private CanvasPanel canvasPanel;
     private InspectorPanel inspectorPanel;
+    private InspectorPanel toolInspectorPanel;
     private ObjectTreePanel objectTreePanel;
     private Toolbar toolbar;
 
@@ -224,7 +226,8 @@ public class UIManager {
         JPanel content = new JPanel();
 
         canvasPanel = new CanvasPanel(this);
-        inspectorPanel = new InspectorPanel(this);
+        inspectorPanel = new InspectorPanel(this, "Inspector");
+        toolInspectorPanel = new InspectorPanel(this, "Tool inspector");
         objectTreePanel = new ObjectTreePanel(this);
         toolbar = new Toolbar(this);
 
@@ -235,7 +238,13 @@ public class UIManager {
 
         JSplitPane rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, canvasContainer, objectTreePanel);
         rightSplitPane.setResizeWeight(0.9);
-        JSplitPane leftSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, inspectorPanel, rightSplitPane);
+
+        JPanel inspectorContainer = new JPanel();
+        inspectorContainer.setLayout(new BorderLayout());
+        inspectorContainer.add(toolInspectorPanel, BorderLayout.PAGE_START);
+        inspectorContainer.add(inspectorPanel, BorderLayout.PAGE_END);
+
+        JSplitPane leftSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, inspectorContainer, rightSplitPane);
         leftSplitPane.setResizeWeight(0.1);
 
         content.setLayout(new BorderLayout());
@@ -252,7 +261,7 @@ public class UIManager {
             return;
 
         canvasController = new CanvasController(projectsManagerController.getProject().getCanvas());
-        toolsManagerController = new ToolsManagerController(projectsManagerController.getToolPanel());
+        toolsManagerController = new ToolsManagerController(projectsManagerController.getToolManager());
     }
 
     public void updateCanvas() { //TODO need optimization
@@ -262,7 +271,12 @@ public class UIManager {
 
     public void updateInspector() { //TODO need optimization
         inspectorPanel.repaint();
-        inspectorPanel.updateFields();
+        inspectorPanel.updateFields(canvasController.getSelection());
+    }
+
+    public void updateToolInspector(Tool tool){
+        toolInspectorPanel.repaint();
+        toolInspectorPanel.updateFields(tool);
     }
 
     public void updateTree() { //TODO need optimization

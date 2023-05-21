@@ -14,8 +14,6 @@ public class ObjectTreeCellRenderer extends DefaultTreeCellRenderer {
     private final int width;
     private final int height;
 
-    private JButton button;
-
     public ObjectTreeCellRenderer(int width, int height) {
         super();
 

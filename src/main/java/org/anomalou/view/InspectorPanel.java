@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class InspectorPanel extends JPanel {
+    private final String name;
     private final UIManager uiManager;
-    private final CanvasController canvasController;
 
     private final JPanel container;
 
-    public InspectorPanel(UIManager uiManager) {
+    public InspectorPanel(UIManager uiManager, String name) {
+        this.name = name;
         this.uiManager = uiManager;
-        this.canvasController = uiManager.getCanvasController();
 
         container = new JPanel();
 
@@ -36,24 +36,22 @@ public class InspectorPanel extends JPanel {
 
     private void initialize() {
         setLayout(new BorderLayout());
-        add(new JLabel("Inspector"), BorderLayout.PAGE_START);
+        add(new JLabel(name), BorderLayout.PAGE_START);
         container.setLayout(new GridBagLayout());
         add(new JScrollPane(container), BorderLayout.CENTER);
     }
 
-    public void updateFields() {
+    public void updateFields(Object objectToInspect) {
         container.removeAll();
 
-        if (canvasController.getSelection() != null)
-            buildFieldsEditor();
+        if (objectToInspect != null)
+            buildFieldsEditor(objectToInspect);
 
         revalidate();
     }
 
-    private void buildFieldsEditor() {
-        SceneObject selected = canvasController.getSelection();
-
-        Field[] fields = unpackFields(selected.getClass());
+    private void buildFieldsEditor(Object objectToInspect) {
+        Field[] fields = unpackFields(objectToInspect.getClass());
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -61,7 +59,7 @@ public class InspectorPanel extends JPanel {
         constraints.gridx = 0;
         for (int i = 0; i < fields.length; i++) {
             if (fields[i].isAnnotationPresent(Editable.class)) {
-                JPanel component = getFieldEditor(fields[i], selected);
+                JPanel component = getFieldEditor(fields[i], objectToInspect);
                 if (component != null) {
                     component.setBorder(BorderFactory.createTitledBorder(new EmptyBorder(0, 0, 0, 0), fields[i].getAnnotation(Editable.class).name()));
                     component.setToolTipText(fields[i].getAnnotation(Editable.class).description());

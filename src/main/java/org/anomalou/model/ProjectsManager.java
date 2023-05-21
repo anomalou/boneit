@@ -118,7 +118,8 @@ public class ProjectsManager {
 
         for(SceneObject object : project.getCanvas().sort()){
             if(object instanceof Layer layer){
-                g2d.drawImage(layer.getResultBitmap(), (int) Math.round(layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), (int) Math.round(layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), null);
+                if(layer.isVisible())
+                    g2d.drawImage(layer.getResultBitmap(), (int) Math.round(layer.getGlobalPosition().x - layer.getRootVectorOrigin().x), (int) Math.round(layer.getGlobalPosition().y - layer.getRootVectorOrigin().y), null);
             }
         }
 

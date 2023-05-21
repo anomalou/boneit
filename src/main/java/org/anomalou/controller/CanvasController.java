@@ -40,27 +40,6 @@ public class CanvasController extends Controller {
         return canvas.sort();
     }
 
-    //TODO work!
-    public void applyTransform(TransformObject object) {
-        object.applyTransformation();
-    }
-
-    public double calculateRotationAngle(TransformObject object, FPoint direction) {
-        return object.calculateRotationAngle(direction);
-    }
-
-    public FPoint normalizeSourceVector(TransformObject object) {
-        return object.normalizeSourceVector();
-    }
-
-    public FPoint calculateParentRotationVector(TransformObject object) {
-        return object.calculateParentRotationVector();
-    }
-
-    public FPoint calculateFullRotationVector(TransformObject object) {
-        return object.calculateFullRotationVector();
-    }
-
     public int getWidth() {
         return canvas.getWidth();
     }

@@ -5,8 +5,6 @@ import java.net.URL;
 import java.util.Properties;
 
 public class PropertiesController extends Controller {
-    private final URL propertiesPath = getClass().getResource("config.properties"); //TODO move it to resources
-
     private final Properties properties;
 
     public PropertiesController() {

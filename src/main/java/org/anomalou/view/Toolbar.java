@@ -59,7 +59,7 @@ public class Toolbar extends JPanel {
         setLayout(new BorderLayout());
     }
 
-    private Component createTool(Tool tool) {
+    private JComponent createTool(Tool tool) {
         JButton toolButton = new JButton();
         toolButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -70,13 +70,14 @@ public class Toolbar extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 toolsManagerController.setCurrentTool(tool);
+                uiManager.updateToolInspector(tool);
             }
         });
 
         return toolButton;
     }
 
-    private Component createPalette(){
+    private JComponent createPalette(){
         JPanel paletteContent = new JPanel();
 
         Palette palette = toolsManagerController.getPalette();

@@ -1,5 +1,7 @@
 package org.anomalou.model.tools;
 
+import org.anomalou.annotation.Editable;
+import org.anomalou.annotation.EditorType;
 import org.anomalou.model.Canvas;
 import org.anomalou.model.FPoint;
 import org.anomalou.model.scene.Layer;
@@ -19,12 +21,17 @@ public class BrushTool implements Tool {
     private Point oldPosition;
     private boolean useStatus;
 
+    @Editable(name = "Brush width", description = "Set current brush width", editorType = EditorType.TEXT_FIELD)
+    private Integer brushWidth;
+
     public BrushTool(Canvas canvas, Palette palette) {
         name = "Brush";
         this.canvas = canvas;
         this.palette = palette;
         oldPosition = new Point();
         useStatus = false;
+
+        brushWidth = 1;
 
         loadResources();
     }
@@ -93,7 +100,10 @@ public class BrushTool implements Tool {
 
             Graphics2D g2d = layer.getSourceBitmap().createGraphics();
             Color oldColor = g2d.getColor();
+            Stroke oldStroke = g2d.getStroke();
+
             g2d.setColor(color);
+            g2d.setStroke(new BasicStroke(brushWidth));
             g2d.drawLine(oldPosition.x, oldPosition.y, position.x, position.y);
             g2d.setColor(oldColor);
 

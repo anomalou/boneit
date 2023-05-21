@@ -29,7 +29,7 @@ public class ProjectsManagerController extends Controller{
         return projectsManager.getProjects();
     }
 
-    public ToolsManager getToolPanel(){
+    public ToolsManager getToolManager(){
         return projectsManager.getToolsManager();
     }
 
