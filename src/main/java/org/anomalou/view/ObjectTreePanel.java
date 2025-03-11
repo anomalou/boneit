@@ -2,10 +2,7 @@ package org.anomalou.view;
 
 import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.PropertiesController;
-import org.anomalou.model.scene.Bone;
-import org.anomalou.model.scene.Group;
-import org.anomalou.model.scene.Layer;
-import org.anomalou.model.scene.SceneObject;
+import org.anomalou.model.scene.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -228,7 +225,9 @@ public class ObjectTreePanel extends JPanel {
                 }
 
                 SceneObject selection = canvasController.getSelection();
-                SceneObject newLayer = new Layer(width, height);
+                Layer newLayer = new Layer(width, height);
+                newLayer.setRootVectorOrigin(new Point(newLayer.getSourceBitmap().getWidth() / 2, newLayer.getSourceBitmap().getHeight() / 2));
+                newLayer.setRootVectorDirection(new Point(newLayer.getSourceBitmap().getWidth(), newLayer.getSourceBitmap().getHeight() / 2));
                 canvasController.registerObject(newLayer);
                 canvasController.addObject(selection, newLayer);
                 if(!(selection instanceof Group<?>))
@@ -247,7 +246,9 @@ public class ObjectTreePanel extends JPanel {
                     if (file != null) {
                         try {
                             SceneObject selection = canvasController.getSelection();
-                            SceneObject newLayer = new Layer(ImageIO.read(file));
+                            Layer newLayer = new Layer(ImageIO.read(file));
+                            newLayer.setRootVectorOrigin(new Point(newLayer.getSourceBitmap().getWidth() / 2, newLayer.getSourceBitmap().getHeight() / 2));
+                            newLayer.setRootVectorDirection(new Point(newLayer.getSourceBitmap().getWidth(), newLayer.getSourceBitmap().getHeight() / 2));
                             canvasController.registerObject(newLayer);
                             canvasController.addObject(selection, newLayer);
                             if(!(selection instanceof Group<?>))

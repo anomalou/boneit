@@ -3,10 +3,8 @@ package org.anomalou.model.tools;
 import org.anomalou.annotation.Editable;
 import org.anomalou.annotation.EditorType;
 import org.anomalou.model.Canvas;
-import org.anomalou.model.FPoint;
 import org.anomalou.model.scene.Layer;
 import org.anomalou.model.scene.SceneObject;
-import org.anomalou.view.CanvasPanel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -22,7 +20,7 @@ public class BrushTool implements Tool {
     private boolean useStatus;
 
     @Editable(name = "Brush width", description = "Set current brush width", editorType = EditorType.TEXT_FIELD)
-    private Integer brushWidth;
+    private Integer brushSize;
 
     public BrushTool(Canvas canvas, Palette palette) {
         name = "Brush";
@@ -31,7 +29,7 @@ public class BrushTool implements Tool {
         oldPosition = new Point();
         useStatus = false;
 
-        brushWidth = 1;
+        brushSize = 1;
 
         loadResources();
     }
@@ -103,7 +101,7 @@ public class BrushTool implements Tool {
             Stroke oldStroke = g2d.getStroke();
 
             g2d.setColor(color);
-            g2d.setStroke(new BasicStroke(brushWidth));
+            g2d.setStroke(new BasicStroke(brushSize));
             g2d.drawLine(oldPosition.x, oldPosition.y, position.x, position.y);
             g2d.setColor(oldColor);
 
