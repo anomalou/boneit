@@ -7,6 +7,8 @@ import org.anomalou.controller.CanvasController;
 import org.anomalou.controller.ProjectsManagerController;
 import org.anomalou.controller.PropertiesController;
 import org.anomalou.controller.ToolsManagerController;
+import org.anomalou.model.alg.PrecisionAlgorithm;
+import org.anomalou.model.alg.RasterisationAlgorithm;
 import org.anomalou.model.tools.Tool;
 
 import javax.imageio.ImageIO;
@@ -186,7 +188,26 @@ public class UIManager {
         fileMenu.add(saveAsItem);
         exportItem.add(exportAsPngItem);
         fileMenu.add(exportItem);
+
+        JMenu configMenu = new JMenu("Config");
+        JMenu algorithmMenu = new JMenu("Transformation algorithm");
+        JMenuItem precisionAlg = new JMenuItem("Precision algorithm");
+        JMenuItem rasterisationAlg = new JMenuItem("Rasterisation algorithm");
+
+        precisionAlg.addActionListener(action -> {
+            projectsManagerController.setTransformationAlg(new PrecisionAlgorithm());
+        });
+
+        rasterisationAlg.addActionListener(action -> {
+            projectsManagerController.setTransformationAlg(new RasterisationAlgorithm());
+        });
+
+        algorithmMenu.add(precisionAlg);
+        algorithmMenu.add(rasterisationAlg);
+        configMenu.add(algorithmMenu);
+
         menuBar.add(fileMenu);
+        menuBar.add(configMenu);
 
         return menuBar;
     }

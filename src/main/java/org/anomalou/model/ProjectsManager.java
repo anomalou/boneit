@@ -3,6 +3,7 @@ package org.anomalou.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.anomalou.controller.PropertiesController;
+import org.anomalou.model.alg.TransformationAlgorithm;
 import org.anomalou.model.scene.Layer;
 import org.anomalou.model.scene.SceneObject;
 import org.anomalou.model.tools.ToolsManager;
@@ -33,6 +34,10 @@ public class ProjectsManager {
     private String projectsDirectory;
     @Getter
     private Map<String, String> projects;
+
+    @Getter
+    @Setter
+    private TransformationAlgorithm transformationAlgorithm;
 
     public ProjectsManager(PropertiesController propertiesController) {
         this.propertiesController = propertiesController;

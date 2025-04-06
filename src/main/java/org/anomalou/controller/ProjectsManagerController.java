@@ -2,6 +2,7 @@ package org.anomalou.controller;
 
 import org.anomalou.model.Project;
 import org.anomalou.model.ProjectsManager;
+import org.anomalou.model.alg.TransformationAlgorithm;
 import org.anomalou.model.tools.ToolsManager;
 
 import java.util.Map;
@@ -64,4 +65,6 @@ public class ProjectsManagerController extends Controller{
     public void exportPng(String path){
         projectsManager.exportPng(path);
     }
+
+    public void setTransformationAlg(TransformationAlgorithm algorithm) {projectsManager.setTransformationAlgorithm(algorithm);}
 }
