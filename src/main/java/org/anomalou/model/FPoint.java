@@ -28,4 +28,22 @@ public class FPoint implements Serializable {
     public String toString() {
         return String.format("[%f; %f]", x, y);
     }
+    
+    public FPoint plus(FPoint point) {
+        this.x += point.x;
+        this.y += point.y;
+        
+        return this;
+    }
+    
+    public FPoint plus(Point point) {
+        return plus(new FPoint(point));
+    }
+    
+    public FPoint mul(double value) {
+        this.x *= value;
+        this.y *= value;
+        
+        return this;
+    }
 }

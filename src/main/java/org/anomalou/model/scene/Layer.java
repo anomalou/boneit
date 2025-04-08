@@ -2,6 +2,7 @@ package org.anomalou.model.scene;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.anomalou.Application;
 import org.anomalou.annotation.Editable;
 import org.anomalou.annotation.EditorType;
 
@@ -79,8 +80,9 @@ public class Layer extends TransformObject { //a base class for layers or bones
         Graphics2D g2d = getResultBitmap().createGraphics();
         double angle = (rotationAngle + parentRotationAngle) * -1;
 //        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.rotate(angle, getRootVectorOrigin().x, getRootVectorOrigin().y);
-        g2d.drawImage(getSourceBitmap(), null, 0, 0);
+//        g2d.rotate(angle, getRootVectorOrigin().x, getRootVectorOrigin().y);
+        BufferedImage rotatedImage = Application.projectsManagerController.getRotationAlgorithm().rotate(getSourceBitmap(), angle, getRootVectorOrigin());
+        g2d.drawImage(rotatedImage, null, 0, 0);
         g2d.dispose();
 
 //        logger.fine(String.format("Bone %s rotated to %f angle!", getUuid(), -angle)); //TODO

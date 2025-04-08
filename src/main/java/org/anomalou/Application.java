@@ -10,8 +10,8 @@ public class Application {
     private ProjectsManager projectsManager;
     private UIManager uiManager;
 
-    private final PropertiesController propertiesController;
-    private final ProjectsManagerController projectsManagerController;
+    public static PropertiesController propertiesController = null;
+    public static ProjectsManagerController projectsManagerController = null;
 
 
     //TODO here will be view, shortcut controller and etc
