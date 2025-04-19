@@ -28,7 +28,11 @@ public class FPoint implements Serializable {
     public String toString() {
         return String.format("[%f; %f]", x, y);
     }
-    
+
+    public boolean equals(FPoint point) {
+        return !(Double.compare(point.x, x) != 0 || Double.compare(point.y, y) != 0);
+    }
+
     public FPoint plus(FPoint point) {
         this.x += point.x;
         this.y += point.y;

@@ -33,5 +33,12 @@ public class CoordinatesUtils {
     public static FPoint rotatePoint(Point point, double angle, Point origin) {
         return rotatePoint(new FPoint(point), angle, origin);
     }
+
+    public static class PixelCorners {
+        public boolean leftUpper;
+        public boolean rightUpper;
+        public boolean leftBottom;
+        public boolean rightBottom;
+    }
     
 }
