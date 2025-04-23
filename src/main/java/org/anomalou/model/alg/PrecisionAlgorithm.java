@@ -1,15 +1,15 @@
 package org.anomalou.model.alg;
 
 import org.anomalou.model.FPoint;
+import org.anomalou.model.Line;
 import org.anomalou.model.PixelCorner;
 import org.anomalou.model.PixelData;
-import org.anomalou.utils.CoordinatesUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class PrecisionAlgorithm implements TransformationAlgorithm{
     @Override
@@ -35,6 +35,8 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
     
 
     private List<FPoint> calculateFigure(PixelData data, PixelCorner corner) {
+        List<FPoint> figure = new ArrayList<>(); // Corners of figure in clockwise direction
+        
         FPoint pixel = switch (corner) {
             case LU -> findPixel(data.getLeftUpper());
             case RU -> findPixel(data.getRightUpper());
@@ -42,55 +44,68 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
             case LB -> findPixel(data.getLeftBottom());
         };
         
+        Line l1 = null, l2 = null;
         
-    }
-
-    private FPoint findIntersectionHorisontal(FPoint p1, FPoint p2, double k) {
-        double x1 = p1.x, y1 = p1.y;
-        double x2 = p2.x, y2 = p2.y;
-        
-        // Проверяем, лежит ли k между y1 и y2
-        if (Math.min(y1, y2) <= k && k <= Math.max(y1, y2)) {
-            if (y1 == y2) {
-                // Отрезок горизонтальный, проверяем совпадение y
-                if (y1 == k) {
-                    return new FPoint(x1, k); // Любая точка отрезка
-                } else {
-                    return null; // Нет пересечения
-                }
+        switch (corner) {
+            case LU -> {
+                l1 = new Line(data.getLeftUpper(), data.getLeftBottom());
+                l2 = new Line(data.getLeftUpper(), data.getRightUpper());
             }
-            
-            // Вычисляем параметр t
-            double t = (k - y1) / (y2 - y1);
-            double x = x1 + t * (x2 - x1);
-            return new FPoint(x, k);
+            case RU -> {
+                l1 = new Line(data.getRightUpper(), data.getLeftUpper());
+                l2 = new Line(data.getRightUpper(), data.getRightBottom());
+            }
+            case RB -> {
+                l1 = new Line(data.getRightBottom(), data.getRightUpper());
+                l2 = new Line(data.getRightBottom(), data.getLeftBottom());
+            }
+            case LB -> {
+                l1 = new Line(data.getLeftBottom(), data.getLeftUpper());
+                l2 = new Line(data.getLeftBottom(), data.getRightBottom());
+            }
         }
         
-        return null; // Нет пересечения
+        FPoint line1Intersection = findIntersectionWithPixel(l1, pixel);
+        FPoint line2Intersection = findIntersectionWithPixel(l2, pixel);
+        
+        // I never found situation when pixel side intersected by two matrix pixel sides in same time
+        // So the two variants should be enough. Also, I do not calculate square of part that been formed without pixel corner in head of it
+        if (Objects.nonNull(line1Intersection) && Objects.nonNull(line2Intersection)) {
+            // Triangle or pentagon / hexagon situation
+            // Need define matrix pixel side with lines intersects and  then use matrix pixel coordinates for creation of figure corners
+        } else {
+            // Two pixel corner in matrix pixel. Need recalculate another intersection by the corner
+        }
+        
     }
     
-    private FPoint findIntesectionVertical(FPoint p1, FPoint p2, double k) {
-        double x1 = p1.x, y1 = p1.y;
-        double x2 = p2.x, y2 = p2.y;
+    private FPoint findIntersectionWithPixel(Line line, FPoint pixel) {
+        FPoint hIntersection = line.findIntersectionHorisontal(Math.max(0, pixel.y));
+        FPoint vIntersection = line.findIntersectionVertical(Math.max(0, pixel.x));
         
-        // Проверяем, лежит ли k между x1 и x2
-        if (Math.min(x1, x2) <= k && k <= Math.max(x1, x2)) {
-            if (x1 == x2) {
-                // Отрезок вертикальный, проверяем совпадение x
-                if (x1 == k) {
-                    return new FPoint(k, y1); // Любая точка отрезка
-                } else {
-                    return null; // Нет пересечения
-                }
-            }
-            
-            // Вычисляем параметр t
-            double t = (k - x1) / (x2 - x1);
-            double y = y1 + t * (y2 - y1);
-            return new FPoint(k, y);
+        if (Objects.isNull(hIntersection)) {
+            hIntersection = line.findIntersectionHorisontal(pixel.y + 1);
+        }
+        if (Objects.isNull(vIntersection)) {
+            vIntersection = line.findIntersectionVertical(pixel.x + 1);
         }
         
-        return null; // Нет пересечения
+        if (Objects.nonNull(hIntersection) && Objects.nonNull(vIntersection)) {
+            double hLength = findLength(line.p1, hIntersection);
+            double vLength = findLength(line.p1, vIntersection);
+            
+            if (hLength < vLength) {
+                return hIntersection;
+            } else {
+                return vIntersection;
+            }
+        }
+        
+        if (Objects.nonNull(hIntersection)) {
+            return hIntersection;
+        } else {
+            return vIntersection;
+        }
     }
     
     private double findLength(FPoint p1, FPoint p2) {
