@@ -1,5 +1,6 @@
 package org.anomalou.model.alg;
 
+import lombok.NonNull;
 import org.anomalou.model.FPoint;
 import org.anomalou.model.Line;
 import org.anomalou.model.PixelCorner;
@@ -7,9 +8,8 @@ import org.anomalou.model.PixelData;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 public class PrecisionAlgorithm implements TransformationAlgorithm{
     @Override
@@ -28,13 +28,21 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
             // Process all pixel in color
         } else {
             // Calculate pixel areas squares
+            Set<PixelCorner> pixelCorners = new HashSet<>();
             
+            for (PixelCorner corner : PixelCorner.values()) {
+                if (!pixelCorners.contains(corner)) {
+                    List<FPoint> figureCorners = calculateFigure(pixelData, corner, pixelCorners);
+                    // calculate square here
+                    // paint corner pixel in color by square proportion
+                }
+            }
         }
     }
 
     
 
-    private List<FPoint> calculateFigure(PixelData data, PixelCorner corner) {
+    private List<FPoint> calculateFigure(PixelData data, PixelCorner corner, @NonNull Set<PixelCorner> usedCorners) {
         List<FPoint> figure = new ArrayList<>(); // Corners of figure in clockwise direction
         
         FPoint pixel = switch (corner) {
@@ -73,6 +81,7 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
         if (Objects.nonNull(line1Intersection) && Objects.nonNull(line2Intersection)) {
             // Triangle or pentagon / hexagon situation
             // Need define matrix pixel side with lines intersects and  then use matrix pixel coordinates for creation of figure corners
+            usedCorners.add(corner);
         } else {
             // Two pixel corner in matrix pixel. Need recalculate another intersection by the corner
         }
