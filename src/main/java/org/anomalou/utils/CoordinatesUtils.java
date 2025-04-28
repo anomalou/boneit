@@ -14,7 +14,7 @@ public class CoordinatesUtils {
         double sin = Math.sin(angle);
         double cos = Math.cos(angle);
         
-        return new FPoint(point.x * cos - point.y * sin, point.x * sin + point.y * cos);
+        return new FPoint(Math.round((point.x * cos - point.y * sin) * 1e6) / 1e6, Math.round((point.x * sin + point.y * cos) * 1e6) / 1e6);
     }
     
     public static FPoint rotateNormalizedPoint(Point point, double angle) {

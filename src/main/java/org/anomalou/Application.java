@@ -3,6 +3,7 @@ package org.anomalou;
 import lombok.Getter;
 import org.anomalou.controller.*;
 import org.anomalou.model.ProjectsManager;
+import org.anomalou.model.alg.PrecisionAlgorithm;
 import org.anomalou.view.UIManager;
 
 public class Application {
@@ -21,6 +22,7 @@ public class Application {
 
         projectsManager = new ProjectsManager(propertiesController);
         projectsManagerController = new ProjectsManagerController(projectsManager);
+        projectsManagerController.setTransformationAlg(new PrecisionAlgorithm());
 
 
         uiManager = new UIManager(propertiesController, projectsManagerController);
