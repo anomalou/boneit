@@ -36,4 +36,13 @@ public class Color {
         return new Color(alpha, red, green, blue);
     }
 
+    public Color plus(Color color) {
+        int alpha = Math.min(255, this.alpha + color.alpha);
+        int red = Math.min(255, this.red + color.red);
+        int green = Math.min(255, this.green + color.green);
+        int blue = Math.min(255, this.blue + color.blue);
+
+        return new Color(alpha, red, green, blue);
+    }
+
 }

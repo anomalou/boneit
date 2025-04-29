@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.awt.*;
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -29,7 +28,7 @@ public class PixelData {
         this.rightBottom = new FPoint(luCorner.x + 1, luCorner.y + 1);
     }
 
-    public FPoint getLeftUpperCorner() {
+    public FPoint getLeftUpperBound() {
         FPoint point = new FPoint();
         point.x = Stream.of(leftUpper.x, rightUpper.x, leftBottom.x, rightBottom.x).min(Double::compareTo).get();
         point.y = Stream.of(leftUpper.y, rightUpper.y, leftBottom.y, rightBottom.y).min(Double::compareTo).get();
