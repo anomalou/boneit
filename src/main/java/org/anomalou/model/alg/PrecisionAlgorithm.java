@@ -31,14 +31,77 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
         FPoint realPixel = pixelData.getLeftUpperBound(); // left upper pixel bound
 
         if (Double.compare(pixelData.getLeftUpper().y, pixelData.getRightUpper().y) == 0 ||
-            Double.compare(pixelData.getLeftUpper().x, pixelData.getRightUpper().x) == 0) {
-            dest.setRGB((int) Math.round(realPixel.x), (int) Math.round(realPixel.y), source.getRGB(pixel.x, pixel.y));
+                Double.compare(pixelData.getLeftUpper().x, pixelData.getRightUpper().x) == 0) {
+            if (realPixel.x >= 0 && realPixel.x < dest.getWidth() &&
+                    realPixel.y >= 0 && realPixel.y < dest.getHeight()) {
+
+                dest.setRGB((int) Math.round(realPixel.x), (int) Math.round(realPixel.y), source.getRGB(pixel.x, pixel.y));
+            }
+        } else if ((Double.compare(pixelData.getLeftUpper().x, pixelData.getRightBottom().x) == 0 && pixelData.getLeftUpper().x % 1 == 0) ||
+                    (Double.compare(pixelData.getRightUpper().x, pixelData.getLeftBottom().x) == 0 && pixelData.getRightUpper().x % 1 == 0)) {
+            // pixel opposite corners lay on Y axis
+
+            if (pixelData.getLeftUpper().x % 1 == 0) {
+                Line l1 = new Line(pixelData.getLeftBottom(), pixelData.getLeftUpper());
+                Line l2 = new Line(pixelData.getLeftBottom(), pixelData.getRightBottom());
+
+                FPoint cornerPixel = findPixel(pixelData.getLeftBottom());
+
+                FPoint int1 = findIntersectionWithPixel(l1, cornerPixel);
+                FPoint int2 = findIntersectionWithPixel(l2, cornerPixel);
+
+                // situation when pixel on two pixels
+                if (Double.compare(int1.x, pixelData.getLeftUpper().x) == 0 || Double.compare(int2.x, pixelData.getLeftUpper().x) == 0) {
+                    FPoint crossPoint = calcPixelCross(pixelData.getLeftUpperBound());
+                    FPoint rectPixel;
+                    double pentagonPart = calculateSquare(List.of(pixelData.getLeftBottom(), int1, crossPoint, int2));
+                    double rectanglePart = Math.round((1.0 - pentagonPart * 2) / 2 * 1e6) / 1e6;
+
+                    if (int1.x % 1 == 0) {
+                        rectPixel = findPixel(pixelData.getLeftUpper());
+                    } else {
+                        rectPixel = findPixel(pixelData.getRightBottom());
+                    }
+
+                    drawColor(source, dest, pixel, new FPoint(crossPoint.x - 1, crossPoint.y), pentagonPart);
+                    drawColor(source, dest, pixel, crossPoint, pentagonPart);
+
+                    drawColor(source, dest, pixel, new FPoint(rectPixel.x - 1, rectPixel.y), rectanglePart);
+                    drawColor(source, dest, pixel, rectPixel, rectanglePart);
+                } else {
+
+                }
+            } else {
+
+            }
+
+            // pixel center in cross of four pixels
+            if (pixelData.getLeftUpper().y % 1 == 0 || pixelData.getRightUpper().y % 1 == 0) {
+                FPoint crossPixel = calcPixelCross(pixelData.getLeftUpperBound());
+
+                double part = 1.0 / 4.0;
+
+                FPoint destPixel = new FPoint(crossPixel.x - 1, crossPixel.y - 1);
+                drawColor(source, dest, pixel, destPixel, part);
+
+                destPixel = new FPoint(crossPixel.x - 1, crossPixel.y);
+                drawColor(source, dest, pixel, destPixel, part);
+
+                destPixel = new FPoint(crossPixel.x, crossPixel.y - 1);
+                drawColor(source, dest, pixel, destPixel, part);
+
+                destPixel = new FPoint(crossPixel.x, crossPixel.y);
+                drawColor(source, dest, pixel, destPixel, part);
+
+            } else {
+                // same but another side (looks like very rare situation so will implement it late)
+            }
         } else {
             // Calculate pixel areas squares
             Set<PixelCorner> pixelCorners = new HashSet<>();
 
             double partSum = 0;
-            int rectangleNumber = 0;
+            int triangleNumber = 0;
             FPoint pentagonPixel = null;
 
             for (PixelCorner corner : PixelCorner.values()) {
@@ -49,13 +112,13 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
 
                     if (figureCorners.size() == 3) {
                         // triangle
-                        rectangleNumber += 1;
+                        triangleNumber += 1;
                         FPoint destPixel = findPixel(figureCorners.get(0));
+                        double part = calculateSquare(figureCorners);
+                        partSum += part;
+
                         if (destPixel.x >= 0 && destPixel.x < dest.getWidth() &&
                             destPixel.y >= 0 && destPixel.y < dest.getHeight()) {
-
-                            double part = calculateSquare(figureCorners);
-                            partSum += part;
 
                             Color sourceColor = Color.unpack(source.getRGB(pixel.x, pixel.y));
                             Color destColor = Color.unpack(dest.getRGB((int) destPixel.x, (int) destPixel.y));
@@ -70,11 +133,11 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
                     } else {
                         // rectangle
                         FPoint destPixel = findPixel(figureCorners.get(0));
-                        if (destPixel.x >= 0 && destPixel.x < dest.getWidth() &&
-                                destPixel.y >= 0 && destPixel.y < dest.getHeight()) {
+                        double part = calculateSquare(figureCorners);
+                        partSum += part;
 
-                            double part = calculateSquare(figureCorners);
-                            partSum += part;
+                        if (destPixel.x >= 0 && destPixel.x < dest.getWidth() &&
+                            destPixel.y >= 0 && destPixel.y < dest.getHeight()) {
 
                             Color sourceColor = Color.unpack(source.getRGB(pixel.x, pixel.y));
                             Color destColor = Color.unpack(dest.getRGB((int) destPixel.x, (int) destPixel.y));
@@ -86,7 +149,7 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
                 }
             }
 
-            if (rectangleNumber == 4 && partSum < 1.0) {
+            if (triangleNumber == 4 && partSum < 1.0) {
                 // pixel in center of dest pixel
                 FPoint centerPixel = calcPixelCross(realPixel);
 
@@ -110,6 +173,7 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
                     dest.setRGB((int) pentagonPixel.x, (int) pentagonPixel.y, destPartColor.pack());
                 }
             }
+            // partSum may be not = 1.0
         }
     }
 
@@ -164,7 +228,7 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
                 Double.compare(line1Intersection.y, line2Intersection.y) == 0) {
                 // triangle
                 figure.addAll(List.of(cornerPoint, line2Intersection, line1Intersection));
-            } else if (isSideBySide(line1Intersection, line2Intersection)){
+            } else if (isSideBySide(line1Intersection, line2Intersection) && !checkIfPixelCross(line1Intersection) && !checkIfPixelCross(line2Intersection)){
                 // pentagon, hexagon etc
                 figure.add(cornerPoint);
             } else {
@@ -232,15 +296,15 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
         for (int i = 0; i < n; i++) {
             FPoint current = figure.get(i);
             FPoint next = figure.get((i + 1) % n);
-            sum += (current.x * next.y) - (next.x * current.y);
+            sum += (Math.round(current.x * next.y * 1e6) / 1e6) - (Math.round(next.x * current.y * 1e6) / 1e6);
         }
 
         return Math.abs(sum) / 2.0;
     }
     
     private FPoint findIntersectionWithPixel(Line line, FPoint pixel) {
-        FPoint hIntersection = line.findIntersectionHorisontal(Math.max(0, pixel.y));
-        FPoint vIntersection = line.findIntersectionVertical(Math.max(0, pixel.x));
+        FPoint hIntersection = line.findIntersectionHorisontal(pixel.y);
+        FPoint vIntersection = line.findIntersectionVertical(pixel.x);
         
         if (Objects.isNull(hIntersection)) {
             hIntersection = line.findIntersectionHorisontal(pixel.y + 1);
@@ -281,11 +345,31 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
     }
 
     private boolean isSideBySide(FPoint p1, FPoint p2) {
-        return (p1.x + 1) == p2.x || (p1.x - 1) == p2.x || (p1.y + 1) == p2.y || (p2.y - 1) == p2.y;
+        return Math.abs(p1.x - p2.x) == 1 || Math.abs(p1.y - p2.y) == 1;
     }
 
     private FPoint calcPixelCross(FPoint luRealPixelBound) {
         return new FPoint(Math.ceil(luRealPixelBound.x), Math.ceil(luRealPixelBound.y));
+    }
+
+    private Color appendColor(int sColor, int dColor, double part) {
+        Color sourceColor = Color.unpack(sColor);
+        Color destColor = Color.unpack(dColor);
+        return destColor.plus(sourceColor.part(1.0 - part));
+    }
+
+    private void drawColor(BufferedImage source, BufferedImage dest, Point sPixel, FPoint dPixel, double part) {
+        if (dPixel.x >= 0 && dPixel.x < dest.getWidth() &&
+            dPixel.y >= 0 && dPixel.y < dest.getHeight()) {
+
+            Color destColor = appendColor(source.getRGB(sPixel.x, sPixel.y), dest.getRGB((int) dPixel.x, (int) dPixel.y), part);
+            dest.setRGB((int) dPixel.x, (int) dPixel.y, destColor.pack());
+        }
+    }
+
+    // check if intersection point lay on cross of four pixels
+    private boolean checkIfPixelCross(FPoint p) {
+        return (p.x % 1 == 0 && p.y % 1 == 0);
     }
 
 }

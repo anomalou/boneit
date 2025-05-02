@@ -26,6 +26,10 @@ public class Line {
                     return null; // Нет пересечения
                 }
             }
+
+            if (Double.compare(k, y1) == 0) {
+                return null;
+            }
             
             // Вычисляем параметр t
             double t = (k - y1) / (y2 - y1);
@@ -49,6 +53,10 @@ public class Line {
                 } else {
                     return null; // Нет пересечения
                 }
+            }
+
+            if (Double.compare(k, x1) == 0) {
+                return null;
             }
             
             // Вычисляем параметр t
