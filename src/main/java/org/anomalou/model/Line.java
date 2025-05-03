@@ -1,6 +1,12 @@
 package org.anomalou.model;
 
 import lombok.AllArgsConstructor;
+import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+import org.apache.commons.math3.optim.linear.LinearObjectiveFunction;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Author: Aleksandr Borodin
@@ -66,6 +72,16 @@ public class Line {
         }
         
         return null; // Нет пересечения
+    }
+
+    public FPoint interpolate(double y) {
+        LinearInterpolator interpolator = new LinearInterpolator();
+        PolynomialSplineFunction splineFunction = interpolator.interpolate(new double[]{p1.y, p2.y}, new double[]{p1.x, p2.x});
+        return new FPoint(splineFunction.value(y), y);
+    }
+
+    public FPoint center() {
+        return new FPoint(Math.round((p1.x + p2.x) / 2 * 1e6) / 1e6, Math.round((p1.y + p2.y) / 2 * 1e6) / 1e6);
     }
     
 }
