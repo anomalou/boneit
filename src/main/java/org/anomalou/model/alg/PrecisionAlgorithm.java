@@ -6,6 +6,7 @@ import org.anomalou.model.FPoint;
 import org.anomalou.model.Line;
 import org.anomalou.model.PixelCorner;
 import org.anomalou.model.PixelData;
+import org.anomalou.utils.CoordinatesUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -27,7 +28,7 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
     }
 
     private void calculatePixel(BufferedImage source, BufferedImage dest, Point pixel, double angle, Point pivot) {
-        PixelData pixelData = rotatePixel(pixel, angle, pivot);
+        PixelData pixelData = CoordinatesUtils.rotatePixel(pixel, angle, pivot);
         FPoint realPixel = pixelData.getLeftUpperBound(); // left upper pixel bound
 
         if (Double.compare(pixelData.getLeftUpper().y, pixelData.getRightUpper().y) == 0 ||

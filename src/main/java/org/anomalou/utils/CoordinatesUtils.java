@@ -1,6 +1,7 @@
 package org.anomalou.utils;
 
 import org.anomalou.model.FPoint;
+import org.anomalou.model.PixelData;
 
 import java.awt.*;
 
@@ -32,6 +33,17 @@ public class CoordinatesUtils {
     
     public static FPoint rotatePoint(Point point, double angle, Point origin) {
         return rotatePoint(new FPoint(point), angle, origin);
+    }
+
+    public static PixelData rotatePixel(Point luCorner, double angle, Point origin) {
+        PixelData pixelData = new PixelData(luCorner);
+
+        pixelData.setLeftUpper(CoordinatesUtils.rotatePoint(pixelData.getLeftUpper(), angle, origin));
+        pixelData.setRightUpper(CoordinatesUtils.rotatePoint(pixelData.getRightUpper(), angle, origin));
+        pixelData.setLeftBottom(CoordinatesUtils.rotatePoint(pixelData.getLeftBottom(), angle, origin));
+        pixelData.setRightBottom(CoordinatesUtils.rotatePoint(pixelData.getRightBottom(), angle, origin));
+
+        return pixelData;
     }
 
     public static class PixelCorners {
