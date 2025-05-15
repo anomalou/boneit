@@ -24,14 +24,14 @@ public class Layer extends TransformObject { //a base class for layers or bones
      * Just image of the layer, its shape MUST be 1x1 or larger! <br>
      * Do not try to transform this image, its just raw pixel information for future transformation!
      */
-    @Editable(name = "Source image", description = "Source image to apply transformations", editorType = EditorType.IMAGE_PREVIEW)
+//    @Editable(name = "Source image", description = "Source image to apply transformations", editorType = EditorType.IMAGE_PREVIEW)
     @Getter
     @Setter
     protected transient BufferedImage sourceBitmap;
     /**
      * Result image after all transformations.
      */
-    @Editable(name = "Result preview", description = "Result image after all transformations", editorType = EditorType.IMAGE_PREVIEW)
+//    @Editable(name = "Result preview", description = "Result image after all transformations", editorType = EditorType.IMAGE_PREVIEW)
     @Getter
     @Setter
     private transient BufferedImage resultBitmap;

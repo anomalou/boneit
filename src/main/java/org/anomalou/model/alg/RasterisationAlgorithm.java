@@ -13,6 +13,10 @@ import java.util.Objects;
 public class RasterisationAlgorithm implements TransformationAlgorithm{
     @Override
     public BufferedImage rotate(BufferedImage image, double angle, Point origin) {
+        long start = System.nanoTime();
+        Runtime runtime = Runtime.getRuntime();
+        System.out.println("Start rasterisation memory usage: " + (runtime.totalMemory() - runtime.freeMemory())/1024 + "/" + runtime.totalMemory()/1024 + " B");
+        
         BufferedImage buffer = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
         drawRectangle(buffer, image, angle, origin,
@@ -38,6 +42,10 @@ public class RasterisationAlgorithm implements TransformationAlgorithm{
             new FPoint(1, 0),
             new FPoint(1, 1)
         ), new Color(255, 0, 0, 255));
+        
+        long stop = System.nanoTime() - start;
+        System.out.println("Total time rasterisation rotation: " + String.valueOf(stop / 1e9) + " sec");
+        System.out.println("End rasterisation memory usage: " + (runtime.totalMemory() - runtime.freeMemory())/1024 + "/" + runtime.totalMemory()/1024 + " B");
 
         return buffer;
     }

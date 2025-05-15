@@ -16,6 +16,10 @@ import java.util.List;
 public class PrecisionAlgorithm implements TransformationAlgorithm{
     @Override
     public BufferedImage rotate(BufferedImage image, double angle, Point origin) {
+        long start = System.nanoTime();
+        Runtime runtime = Runtime.getRuntime();
+        System.out.println("Start precision memory usage: " + (runtime.totalMemory() - runtime.freeMemory())/1024 + "/" + runtime.totalMemory()/1024 + " B");
+        
         BufferedImage buffer = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
         for (int x = 0; x < image.getWidth(); x++) {
@@ -23,6 +27,10 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
                 calculatePixel(image, buffer, new Point(x, y), angle, origin);
             }
         }
+        
+        long stop = System.nanoTime() - start;
+        System.out.println("Total time precision rotation: " + String.valueOf(stop / 1e9) + " sec");
+        System.out.println("End precision memory usage: " + (runtime.totalMemory() - runtime.freeMemory())/1024 + "/" + runtime.totalMemory()/1024 + " B");
 
         return buffer;
     }
@@ -175,6 +183,18 @@ public class PrecisionAlgorithm implements TransformationAlgorithm{
                 }
             }
             // partSum may be not = 1.0
+        }
+        
+        Point destPoint = new Point((int) realPixel.x, (int) realPixel.y);
+        
+        if ((destPoint.x >= 0 && destPoint.x < dest.getWidth()) &&
+            (destPoint.y >= 0 && destPoint.y < dest.getHeight())) {
+            
+            Color sourceColor = Color.unpack(dest.getRGB(destPoint.x, destPoint.y));
+            if (sourceColor.getAlpha() == 0) {
+                sourceColor.setAlpha(1);
+                dest.setRGB(destPoint.x, destPoint.y, sourceColor.pack());
+            }
         }
     }
 
